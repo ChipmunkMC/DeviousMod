@@ -3,7 +3,6 @@ package me.allinkdev.deviousmod.data;
 import com.github.steveice10.opennbt.NBTIO;
 import com.github.steveice10.opennbt.tag.builtin.CompoundTag;
 import lombok.Getter;
-import me.allinkdev.deviousmod.data.exception.DataDirCreateException;
 import me.allinkdev.deviousmod.data.exception.DataLoadException;
 import me.allinkdev.deviousmod.data.exception.DataSaveException;
 
@@ -24,18 +23,6 @@ public class DataCompound {
         this.file = location.toFile();
 
         if (!this.file.exists()) {
-            final String parent = this.file.getParent();
-            final Path parentPath = directory.resolve(parent);
-            final File parentFile = parentPath.toFile();
-
-            if (!parentFile.exists()) {
-                boolean success = parentFile.mkdirs();
-
-                if (!success) {
-                    throw new DataDirCreateException(parentFile);
-                }
-            }
-
             this.compoundTag = new CompoundTag(compoundName);
             return;
         }

@@ -10,7 +10,7 @@ import java.nio.file.Path;
 import java.util.HashSet;
 import java.util.Set;
 
-import static me.allinkdev.deviousmod.DeviousMod.LOGGER;
+import static me.allinkdev.deviousmod.DeviousMod.logger;
 
 public class ModuleManager extends NoConstructor {
     @Getter
@@ -20,8 +20,10 @@ public class ModuleManager extends NoConstructor {
     private static final Set<DModule> modules = new HashSet<>();
 
     public static void init() {
-        modules.add(new TestModule());
+        final TestModule testModule = new TestModule();
+        modules.add(testModule);
 
-        LOGGER.info("Loaded {} modules!", modules.size());
+        logger.info("Loaded {} modules!", modules.size());
+        testModule.setModuleState(true);
     }
 }

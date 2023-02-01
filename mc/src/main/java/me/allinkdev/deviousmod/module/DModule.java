@@ -2,12 +2,17 @@ package me.allinkdev.deviousmod.module;
 
 import com.github.steveice10.opennbt.tag.builtin.ByteTag;
 import com.github.steveice10.opennbt.tag.builtin.CompoundTag;
+import me.allinkdev.deviousmod.DeviousMod;
 import me.allinkdev.deviousmod.data.DataCompound;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.nio.file.Path;
 import java.util.Optional;
 
 public abstract class DModule {
+    protected final Logger logger = LoggerFactory.getLogger(this.getClass());
+    protected final DeviousMod deviousMod = DeviousMod.getInstance();
     protected final DataCompound settings;
 
     protected DModule() {
@@ -49,5 +54,12 @@ public abstract class DModule {
 
         compoundTag.put(newTag);
         moduleSettings.save();
+
+        if (newState) {
+            deviousMod.subscribeEvents(this);
+            return;
+        }
+
+        deviousMod.unsubscribeEvents(this);
     }
 }

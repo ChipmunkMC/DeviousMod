@@ -8,7 +8,7 @@ import net.minecraft.command.CommandRegistryAccess;
 import java.util.HashSet;
 import java.util.Set;
 
-import static me.allinkdev.deviousmod.DeviousMod.LOGGER;
+import static me.allinkdev.deviousmod.DeviousMod.logger;
 
 public class CommandManager {
     private static final Set<DCommand> commands = new HashSet<>();
@@ -16,7 +16,7 @@ public class CommandManager {
     public static void init() {
         commands.add(new TestCommand());
 
-        LOGGER.info("Loaded {} commands!", commands.size());
+        logger.info("Loaded {} commands!", commands.size());
     }
 
     public static void register(CommandDispatcher<FabricClientCommandSource> dispatcher, CommandRegistryAccess registryAccess) {
