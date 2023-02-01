@@ -10,6 +10,7 @@
   ],
   "license": "LGPL-3.0-only",
   "environment": "client",
+  "icon": "assets/deviousmod/icon.png",
   "entrypoints": {
     "main": [
       "me.allinkdev.deviousmod.DeviousMod"
