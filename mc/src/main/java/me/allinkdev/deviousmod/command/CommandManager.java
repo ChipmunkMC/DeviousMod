@@ -1,6 +1,7 @@
 package me.allinkdev.deviousmod.command;
 
 import com.mojang.brigadier.CommandDispatcher;
+import me.allinkdev.deviousmod.command.impl.ModulesCommand;
 import me.allinkdev.deviousmod.command.impl.TestCommand;
 import net.fabricmc.fabric.api.client.command.v2.FabricClientCommandSource;
 import net.minecraft.command.CommandRegistryAccess;
@@ -15,6 +16,7 @@ public class CommandManager {
 
     public static void init() {
         commands.add(new TestCommand());
+        commands.add(new ModulesCommand());
 
         logger.info("Loaded {} commands!", commands.size());
     }
