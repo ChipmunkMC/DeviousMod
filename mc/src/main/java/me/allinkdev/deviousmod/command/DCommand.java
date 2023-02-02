@@ -15,9 +15,9 @@ public interface DCommand {
                 .executes(this::execute);
     }
 
-    default void register(CommandDispatcher<FabricClientCommandSource> dispatcher, CommandRegistryAccess ignoredRegistryAccess) {
+    default void register(final CommandDispatcher<FabricClientCommandSource> dispatcher, final CommandRegistryAccess ignoredRegistryAccess) {
         dispatcher.register(this.getNode());
     }
 
-    int execute(CommandContext<FabricClientCommandSource> context) throws CommandSyntaxException;
+    int execute(final CommandContext<FabricClientCommandSource> context) throws CommandSyntaxException;
 }
