@@ -12,7 +12,7 @@ public class TestCommand implements DCommand {
     }
 
     @Override
-    public int execute(CommandContext<FabricClientCommandSource> context) {
+    public int execute(final CommandContext<FabricClientCommandSource> context) {
         context.getSource().sendFeedback(Text.literal("Test!"));
 
         return 1;
