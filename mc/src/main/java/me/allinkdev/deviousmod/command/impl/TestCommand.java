@@ -5,7 +5,7 @@ import me.allinkdev.deviousmod.command.DCommand;
 import net.fabricmc.fabric.api.client.command.v2.FabricClientCommandSource;
 import net.minecraft.text.Text;
 
-public class TestCommand extends DCommand {
+public class TestCommand implements DCommand {
     @Override
     public String getCommandName() {
         return "test";

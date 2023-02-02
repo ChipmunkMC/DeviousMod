@@ -7,20 +7,17 @@ import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import net.fabricmc.fabric.api.client.command.v2.FabricClientCommandSource;
 import net.minecraft.command.CommandRegistryAccess;
 
-public abstract class DCommand {
-    protected DCommand() {
-    }
+public interface DCommand {
+    String getCommandName();
 
-    public abstract String getCommandName();
-
-    public LiteralArgumentBuilder<FabricClientCommandSource> getNode() {
+    default LiteralArgumentBuilder<FabricClientCommandSource> getNode() {
         return LiteralArgumentBuilder.<FabricClientCommandSource>literal(this.getCommandName())
                 .executes(this::execute);
     }
 
-    public void register(CommandDispatcher<FabricClientCommandSource> dispatcher, CommandRegistryAccess ignoredRegistryAccess) {
+    default void register(CommandDispatcher<FabricClientCommandSource> dispatcher, CommandRegistryAccess ignoredRegistryAccess) {
         dispatcher.register(this.getNode());
     }
 
-    public abstract int execute(CommandContext<FabricClientCommandSource> context) throws CommandSyntaxException;
+    int execute(CommandContext<FabricClientCommandSource> context) throws CommandSyntaxException;
 }
