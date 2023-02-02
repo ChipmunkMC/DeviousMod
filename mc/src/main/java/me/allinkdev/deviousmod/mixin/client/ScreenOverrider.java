@@ -54,7 +54,7 @@ public abstract class ScreenOverrider {
     public abstract void updateWindowTitle();
 
     @Inject(method = "setScreen", at = @At(value = "HEAD"), cancellable = true)
-    public void onSetScreen(Screen providedScreen, CallbackInfo ci) {
+    public void onSetScreen(final Screen providedScreen, final CallbackInfo ci) {
         final Optional<Screen> newScreenOptional = ScreenOpenEvent.getOverriddenScreen(providedScreen);
         final boolean empty = newScreenOptional.isEmpty();
 
