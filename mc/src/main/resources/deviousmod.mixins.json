@@ -4,9 +4,13 @@
   "package": "me.allinkdev.deviousmod.mixin",
   "compatibilityLevel": "JAVA_17",
   "client": [
+    "client.EntityEvents",
     "client.ScreenOverrider"
   ],
   "injectors": {
     "defaultRequire": 1
-  }
+  },
+  "mixins": [
+    "client.EntityEvents$EntityRemoval"
+  ]
 }
