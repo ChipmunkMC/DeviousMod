@@ -21,7 +21,7 @@ public class KeepCorpsesModule extends DModule {
     public void onEntityRemove(final EntityRemoveEvent event) {
         final Entity entity = event.getEntity();
 
-        if (!entity.isAlive()) {
+        if (entity.isAlive()) {
             return;
         }
 
