@@ -1,10 +1,8 @@
 package me.allinkdev.deviousmod.module.impl;
 
 import com.google.common.eventbus.Subscribe;
-import me.allinkdev.deviousmod.event.entity.living.impl.LivingEntityEquipmentUpdateEvent;
+import me.allinkdev.deviousmod.event.packet.impl.PacketS2CEvent;
 import me.allinkdev.deviousmod.module.DModule;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.Items;
 
 public class TestModule extends DModule {
     @Override
@@ -18,8 +16,12 @@ public class TestModule extends DModule {
     }
 
     @Subscribe
-    public void onEquipmentUpdate(final LivingEntityEquipmentUpdateEvent event) {
-        logger.info("{}", event.getNewStack());
-        event.setReplacedStack(new ItemStack(Items.DIRT));
+    public void onPacketS2C(final PacketS2CEvent event) {
+        logger.info("s2c: {}", event.getPacket().getClass().getTypeName());
+    }
+
+    @Subscribe
+    public void onPacketC2S(final PacketS2CEvent event) {
+        logger.info("c2s: {}", event.getPacket().getClass().getTypeName());
     }
 }
