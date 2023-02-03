@@ -1,9 +1,10 @@
 package me.allinkdev.deviousmod.module.impl;
 
 import com.google.common.eventbus.Subscribe;
-import me.allinkdev.deviousmod.event.entity.impl.EntityAddEvent;
-import me.allinkdev.deviousmod.event.entity.impl.EntityRemoveEvent;
+import me.allinkdev.deviousmod.event.entity.living.impl.LivingEntityEquipmentUpdateEvent;
 import me.allinkdev.deviousmod.module.DModule;
+import net.minecraft.item.ItemStack;
+import net.minecraft.item.Items;
 
 public class TestModule extends DModule {
     @Override
@@ -17,13 +18,8 @@ public class TestModule extends DModule {
     }
 
     @Subscribe
-    public void onEntityAdd(final EntityAddEvent event) {
-        logger.info("{} added!", event.getEntity().getEntityName());
-        event.setCancelled(true);
-    }
-
-    @Subscribe
-    public void onEntityRemove(final EntityRemoveEvent event) {
-        logger.info("{} removed!", event.getEntity().getEntityName());
+    public void onEquipmentUpdate(final LivingEntityEquipmentUpdateEvent event) {
+        logger.info("{}", event.getNewStack());
+        event.setReplacedStack(new ItemStack(Items.DIRT));
     }
 }
