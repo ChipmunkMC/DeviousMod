@@ -1,20 +1,18 @@
 package me.allinkdev.deviousmod.event.tick.impl;
 
 import lombok.Getter;
-import me.allinkdev.deviousmod.event.tick.ClientTickEvent;
-import me.allinkdev.deviousmod.event.tick.TickEventDataContainer;
+import me.allinkdev.deviousmod.event.tick.GenericClientTickEvent;
 import net.minecraft.client.MinecraftClient;
 
 @Getter
-public class ClientTickEndEvent extends ClientTickEvent {
-
-    public ClientTickEndEvent(TickEventDataContainer data) {
-        super(data);
+public class ClientTickEndEvent extends GenericClientTickEvent {
+    public ClientTickEndEvent(final MinecraftClient client) {
+        super(client);
     }
 
-    public static void onEndTick(final MinecraftClient client) {
-        final TickEventDataContainer data = getContainer(client);
-        final ClientTickEndEvent event = new ClientTickEndEvent(data);
+    public static void onTickEnd(final MinecraftClient client) {
+        final ClientTickEndEvent event = new ClientTickEndEvent(client);
+
         eventBus.post(event);
     }
 }

@@ -1,5 +1,8 @@
 package me.allinkdev.deviousmod.mixin.client.entity;
 
+import com.google.common.eventbus.EventBus;
+import com.mojang.datafixers.util.Pair;
+import me.allinkdev.deviousmod.event.Event;
 import me.allinkdev.deviousmod.event.entity.living.impl.LivingEntityEquipmentUpdateEvent;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.network.ClientPlayNetworkHandler;
@@ -16,8 +19,6 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Overwrite;
 import org.spongepowered.asm.mixin.Shadow;
 
-import java.util.Optional;
-
 @Mixin(ClientPlayNetworkHandler.class)
 public class EntityEquipmentOverrider {
     @Shadow
@@ -32,8 +33,8 @@ public class EntityEquipmentOverrider {
      * @reason Allow overriding of entity equipment updates
      */
     @Overwrite
-    public void onEntityEquipmentUpdate(EntityEquipmentUpdateS2CPacket packet) {
-        NetworkThreadUtils.forceMainThread(packet, (ClientPlayPacketListener) (Object) this, this.client);
+    public void onEntityEquipmentUpdate(final EntityEquipmentUpdateS2CPacket packet) {
+        NetworkThreadUtils.forceMainThread(packet, (ClientPlayPacketListener) this, this.client);
         final Entity entity = this.world.getEntityById(packet.getId());
 
         if (entity == null) {
@@ -44,17 +45,19 @@ public class EntityEquipmentOverrider {
             return;
         }
 
-        for (com.mojang.datafixers.util.Pair<EquipmentSlot, ItemStack> pair : packet.getEquipmentList()) {
+        for (final Pair<EquipmentSlot, ItemStack> pair : packet.getEquipmentList()) {
             final EquipmentSlot slot = pair.getFirst();
             final ItemStack oldStack = livingEntity.getEquippedStack(slot);
             final ItemStack newStack = pair.getSecond();
-            final Optional<ItemStack> overrideOptional = LivingEntityEquipmentUpdateEvent.updateEntityEquipment(livingEntity, newStack, oldStack);
+            final LivingEntityEquipmentUpdateEvent event = new LivingEntityEquipmentUpdateEvent(livingEntity, newStack, oldStack);
+            final EventBus eventBus = Event.getEventBus();
+            eventBus.post(event);
 
-            if (overrideOptional.isEmpty()) {
+            if (event.isCancelled()) {
                 continue;
             }
 
-            final ItemStack override = overrideOptional.get();
+            final ItemStack override = event.getReplacedStack();
 
             livingEntity.equipStack(slot, override);
         }

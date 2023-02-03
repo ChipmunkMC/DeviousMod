@@ -1,6 +1,8 @@
 package me.allinkdev.deviousmod.mixin.client.screen;
 
-import me.allinkdev.deviousmod.event.screen.impl.ScreenOpenEvent;
+import com.google.common.eventbus.EventBus;
+import me.allinkdev.deviousmod.event.Event;
+import me.allinkdev.deviousmod.event.screen.impl.SetScreenEvent;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.Mouse;
 import net.minecraft.client.gui.screen.DeathScreen;
@@ -21,9 +23,6 @@ import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
-
-import java.util.Objects;
-import java.util.Optional;
 
 @Mixin(MinecraftClient.class)
 public abstract class ScreenOverrider {
@@ -53,28 +52,23 @@ public abstract class ScreenOverrider {
     @Shadow
     public abstract void updateWindowTitle();
 
-    @Inject(method = "setScreen", at = @At(value = "HEAD"), cancellable = true)
+    @Inject(method = "setScreen", at = @At("HEAD"), cancellable = true)
     public void onSetScreen(final Screen providedScreen, final CallbackInfo ci) {
-        final Optional<Screen> newScreenOptional = ScreenOpenEvent.getOverriddenScreen(providedScreen);
-        final boolean empty = newScreenOptional.isEmpty();
+        final SetScreenEvent event = new SetScreenEvent(providedScreen);
+        final EventBus eventBus = Event.getEventBus();
+        eventBus.post(event);
 
-        if (empty && providedScreen == null) {
-            // Let vanilla code handle this
-            return;
+        Screen overriddenScreen = event.getTarget();
+
+        if (overriddenScreen == null) {
+            overriddenScreen = onNullScreen();
         }
 
         final Class<? extends Screen> clazz = providedScreen == null ? Screen.class : providedScreen.getClass();
         final String name = clazz.getTypeName();
         logger.info("Processing setScreen {}...", name);
 
-        final Screen screen = newScreenOptional.orElse(onNullScreen());
-
-        if (Objects.equals(screen, providedScreen)) {
-            logger.info("Not overriding!");
-            return;
-        }
-
-        customSetScreen(screen);
+        customSetScreen(overriddenScreen);
         ci.cancel();
     }
 
@@ -105,9 +99,6 @@ public abstract class ScreenOverrider {
         currentScreen = screen;
         BufferRenderer.reset();
         if (screen != null) {
-            final Class<? extends Screen> clazz = screen.getClass();
-            final String name = clazz.getTypeName();
-            logger.info("Overriding with {}!", name);
             this.mouse.unlockCursor();
             KeyBinding.unpressAll();
             screen.init((MinecraftClient) (Object) this, window.getScaledWidth(), window.getScaledHeight());

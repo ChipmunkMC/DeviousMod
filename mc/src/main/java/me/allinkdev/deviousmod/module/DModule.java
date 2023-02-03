@@ -45,7 +45,7 @@ public abstract class DModule {
         return tag.getValue() == (byte) 1;
     }
 
-    public void setModuleState(boolean newState) {
+    public void setModuleState(final boolean newState) {
         final String name = getModuleName();
         final ByteTag newTag = new ByteTag(name, (byte) (newState ? 1 : 0));
 

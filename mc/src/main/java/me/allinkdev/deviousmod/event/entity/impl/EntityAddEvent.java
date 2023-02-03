@@ -9,12 +9,4 @@ public class EntityAddEvent extends GenericEntityEvent {
     public EntityAddEvent(final Entity entity) {
         super(entity);
     }
-
-    public static boolean addEntity(final Entity entity) {
-        final EntityAddEvent event = new EntityAddEvent(entity);
-
-        eventBus.post(event);
-
-        return event.isCancelled();
-    }
 }

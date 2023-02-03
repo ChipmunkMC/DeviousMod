@@ -47,10 +47,10 @@ public class DeviousMod implements ModInitializer {
         ClientCommandRegistrationCallback.EVENT.register(CommandManager::register);
 
         ClientTickEvents.START_CLIENT_TICK.register(ClientTickStartEvent::onStartTick);
-        ClientTickEvents.END_CLIENT_TICK.register(ClientTickEndEvent::onEndTick);
+        ClientTickEvents.END_CLIENT_TICK.register(ClientTickEndEvent::onTickEnd);
 
-        ClientTickEvents.START_WORLD_TICK.register(WorldTickStartEvent::onStartTick);
-        ClientTickEvents.START_WORLD_TICK.register(WorldTickEndEvent::onEndTick);
+        ClientTickEvents.START_WORLD_TICK.register(WorldTickStartEvent::onWorldTickStart);
+        ClientTickEvents.START_WORLD_TICK.register(WorldTickEndEvent::onWorldTickEnd);
     }
 
     public void subscribeEvents(final Object object) {

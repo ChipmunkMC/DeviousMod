@@ -15,7 +15,7 @@ class DataCompoundTest {
     private static final Logger LOGGER = LoggerFactory.getLogger("DeviousMod/Tests");
     private static final SecureRandom RANDOM = new SecureRandom();
 
-    protected Tag generateRandomTag(int depth) {
+    protected Tag generateRandomTag(final int depth) {
         final int type = RANDOM.nextInt(1, 12);
         final int keyLen = RANDOM.nextInt(3, 20);
         final int arrayLen = RANDOM.nextInt(1, 30);

@@ -1,4 +1,5 @@
 plugins {
+    id 'checkstyle'
     id 'fabric-loom' version '1.0-SNAPSHOT'
     id 'io.freefair.lombok' version '6.6.1'
 }
@@ -52,6 +53,10 @@ processResources {
 tasks.withType(JavaCompile).configureEach {
     // Minecraft 1.18 (1.18-pre2) upwards uses Java 17.
     it.options.release = 17
+}
+
+assemble {
+    dependsOn(checkstyleMain)
 }
 
 test {

@@ -98,7 +98,7 @@ public class ModulesCommand implements DCommand {
         Component component = Component.text("Module states:")
                 .append(Component.newline());
 
-        for (DModule module : modules) {
+        for (final DModule module : modules) {
             final boolean state = module.getModuleState();
             component = component.append(Component.text(" - "))
                     .append(constructModuleListStatus(module))

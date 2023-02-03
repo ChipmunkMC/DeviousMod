@@ -7,12 +7,10 @@
     "client.entity.EntityEquipmentOverrider",
     "client.entity.EntityStateEvents",
     "client.entity.EntityStateEvents$EntityRemoval",
+    "client.network.PacketSendAndReceive",
     "client.screen.ScreenOverrider"
   ],
   "injectors": {
     "defaultRequire": 1
-  },
-  "mixins": [
-    "client.network.PacketSendAndReceive"
-  ]
+  }
 }
