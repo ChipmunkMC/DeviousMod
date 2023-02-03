@@ -5,13 +5,13 @@ import me.allinkdev.deviousmod.event.entity.GenericEntityEvent;
 import net.minecraft.entity.Entity;
 
 @Getter
-public class AddEntityEvent extends GenericEntityEvent {
-    public AddEntityEvent(final Entity entity) {
+public class EntityAddEvent extends GenericEntityEvent {
+    public EntityAddEvent(final Entity entity) {
         super(entity);
     }
 
     public static boolean addEntity(final Entity entity) {
-        final AddEntityEvent event = new AddEntityEvent(entity);
+        final EntityAddEvent event = new EntityAddEvent(entity);
 
         eventBus.post(event);
 

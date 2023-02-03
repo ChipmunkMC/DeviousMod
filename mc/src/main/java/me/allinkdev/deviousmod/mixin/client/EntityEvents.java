@@ -1,7 +1,7 @@
 package me.allinkdev.deviousmod.mixin.client;
 
-import me.allinkdev.deviousmod.event.entity.impl.AddEntityEvent;
-import me.allinkdev.deviousmod.event.entity.impl.RemoveEntityEvent;
+import me.allinkdev.deviousmod.event.entity.impl.EntityAddEvent;
+import me.allinkdev.deviousmod.event.entity.impl.EntityRemoveEvent;
 import net.minecraft.client.world.ClientEntityManager;
 import net.minecraft.client.world.ClientWorld;
 import net.minecraft.entity.Entity;
@@ -21,7 +21,7 @@ public class EntityEvents {
             return;
         }
 
-        final boolean cancelled = AddEntityEvent.addEntity(entity);
+        final boolean cancelled = EntityAddEvent.addEntity(entity);
 
         if (!cancelled) {
             return;
@@ -40,7 +40,7 @@ public class EntityEvents {
                 return entityLike;
             }
 
-            final boolean cancelled = RemoveEntityEvent.removeEntity(entity);
+            final boolean cancelled = EntityRemoveEvent.removeEntity(entity);
 
             if (!cancelled) {
                 return entity;
