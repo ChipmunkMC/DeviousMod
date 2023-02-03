@@ -6,6 +6,7 @@ import lombok.Getter;
 import me.allinkdev.deviousmod.DeviousMod;
 import me.allinkdev.deviousmod.data.Config;
 import me.allinkdev.deviousmod.data.DataCompound;
+import me.allinkdev.deviousmod.module.impl.ClientsideInventoryModule;
 import me.allinkdev.deviousmod.module.impl.KeepCorpsesModule;
 import me.allinkdev.deviousmod.module.impl.TestModule;
 import me.allinkdev.deviousmod.util.NoConstructor;
@@ -34,6 +35,7 @@ public class ModuleManager extends NoConstructor {
         }
 
         modules.add(new KeepCorpsesModule());
+        modules.add(new ClientsideInventoryModule());
 
         logger.info("Loaded {} modules!", modules.size());
 
