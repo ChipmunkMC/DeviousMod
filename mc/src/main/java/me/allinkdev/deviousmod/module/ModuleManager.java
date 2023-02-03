@@ -3,6 +3,7 @@ package me.allinkdev.deviousmod.module;
 import com.github.steveice10.opennbt.tag.builtin.ByteTag;
 import com.github.steveice10.opennbt.tag.builtin.CompoundTag;
 import lombok.Getter;
+import me.allinkdev.deviousmod.DeviousMod;
 import me.allinkdev.deviousmod.data.Config;
 import me.allinkdev.deviousmod.data.DataCompound;
 import me.allinkdev.deviousmod.module.impl.KeepCorpsesModule;
@@ -27,7 +28,11 @@ public class ModuleManager extends NoConstructor {
 
     public static void init() {
         modules.clear();
-        modules.add(new TestModule());
+
+        if (DeviousMod.isDevelopment()) {
+            modules.add(new TestModule());
+        }
+
         modules.add(new KeepCorpsesModule());
 
         logger.info("Loaded {} modules!", modules.size());

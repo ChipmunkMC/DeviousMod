@@ -11,17 +11,30 @@ import me.allinkdev.deviousmod.module.ModuleManager;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.client.command.v2.ClientCommandRegistrationCallback;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
+import net.minecraft.client.MinecraftClient;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.lang.management.ManagementFactory;
+import java.lang.management.RuntimeMXBean;
+import java.util.List;
+
 public class DeviousMod implements ModInitializer {
     public static final Logger logger = LoggerFactory.getLogger("deviousmod");
+    public static final MinecraftClient client = MinecraftClient.getInstance();
     private static DeviousMod instance;
     @Getter
     private final EventBus eventBus = new EventBus();
 
     public static DeviousMod getInstance() {
         return instance;
+    }
+
+    public static boolean isDevelopment() {
+        final RuntimeMXBean bean = ManagementFactory.getRuntimeMXBean();
+        final List<String> inputArguments = bean.getInputArguments();
+
+        return inputArguments.stream().anyMatch(s -> s.startsWith("-agentlib:jdwp"));
     }
 
     @Override
