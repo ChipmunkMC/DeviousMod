@@ -1,4 +1,4 @@
-package me.allinkdev.deviousmod.mixin.client;
+package me.allinkdev.deviousmod.mixin.client.screen;
 
 import me.allinkdev.deviousmod.event.screen.impl.ScreenOpenEvent;
 import net.minecraft.client.MinecraftClient;

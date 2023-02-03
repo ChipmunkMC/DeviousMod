@@ -1,4 +1,4 @@
-package me.allinkdev.deviousmod.mixin.client;
+package me.allinkdev.deviousmod.mixin.client.entity;
 
 import me.allinkdev.deviousmod.event.entity.impl.EntityAddEvent;
 import me.allinkdev.deviousmod.event.entity.impl.EntityRemoveEvent;
@@ -14,7 +14,7 @@ import org.spongepowered.asm.mixin.injection.Redirect;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(ClientEntityManager.class)
-public class EntityEvents {
+public class EntityStateEvents {
     @Inject(method = "addEntity", at = @At("HEAD"), cancellable = true)
     public void onAddEntity(final EntityLike entityLike, final CallbackInfo ci) {
         if (!(entityLike instanceof final Entity entity)) {
