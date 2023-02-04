@@ -3,19 +3,27 @@ package me.allinkdev.deviousmod.module.impl;
 import com.google.common.eventbus.Subscribe;
 import me.allinkdev.deviousmod.event.packet.impl.PacketC2SEvent;
 import me.allinkdev.deviousmod.event.packet.impl.PacketS2CEvent;
+import me.allinkdev.deviousmod.event.tick.impl.ClientTickEndEvent;
 import me.allinkdev.deviousmod.module.DModule;
 import net.minecraft.client.network.ClientPlayNetworkHandler;
 import net.minecraft.client.network.ClientPlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.item.ItemStack;
+import net.minecraft.network.ClientConnection;
 import net.minecraft.network.Packet;
 import net.minecraft.network.packet.c2s.play.CreativeInventoryActionC2SPacket;
-import net.minecraft.network.packet.c2s.play.UpdateSelectedSlotC2SPacket;
+import net.minecraft.network.packet.c2s.play.PlayerInteractBlockC2SPacket;
+import net.minecraft.network.packet.c2s.play.PlayerInteractEntityC2SPacket;
 import net.minecraft.network.packet.s2c.play.InventoryS2CPacket;
 import net.minecraft.network.packet.s2c.play.ScreenHandlerSlotUpdateS2CPacket;
 import net.minecraft.network.packet.s2c.play.UpdateSelectedSlotS2CPacket;
 
+import java.util.HashSet;
+import java.util.Set;
+
 public class ClientsideInventoryModule extends DModule {
+    private final Set<Packet<?>> sendNextTick = new HashSet<>();
+    private int sendingSlot = -1;
 
     @Override
     public String getModuleName() {
@@ -39,7 +47,9 @@ public class ClientsideInventoryModule extends DModule {
         final int networkSlot = creativeAction.getSlot();
         final int slot = networkSlot - 36;
 
-        if (inventory.selectedSlot == slot) {
+        if (sendingSlot == slot) {
+            sendingSlot = -1;
+            sendNextTick.add(new CreativeInventoryActionC2SPacket(networkSlot, ItemStack.EMPTY));
             return;
         }
 
@@ -51,10 +61,7 @@ public class ClientsideInventoryModule extends DModule {
         inventory.setStack(slot, stack);
     }
 
-    private void processSlotUpdate(final UpdateSelectedSlotC2SPacket packet) {
-        final int slot = packet.getSelectedSlot();
-        final int networkSlot = slot + 36;
-
+    private void interact() {
         final ClientPlayerEntity player = client.player;
 
         if (player == null) {
@@ -62,19 +69,13 @@ public class ClientsideInventoryModule extends DModule {
         }
 
         final PlayerInventory inventory = player.getInventory();
+        final int selectedSlot = inventory.selectedSlot;
+        final ItemStack selectedItem = inventory.getStack(selectedSlot);
+        final int networkSlot = selectedSlot + 36;
+
         final ClientPlayNetworkHandler networkHandler = player.networkHandler;
-        inventory.selectedSlot = slot;
-
-        networkHandler.sendPacket(new CreativeInventoryActionC2SPacket(networkSlot, inventory.getStack(slot)));
-
-        for (int i = 0; i < 9; i++) {
-            if (i == slot) {
-                continue;
-            }
-
-            final int loopNetworkSlot = i + 36;
-            networkHandler.sendPacket(new CreativeInventoryActionC2SPacket(loopNetworkSlot, ItemStack.EMPTY));
-        }
+        sendingSlot = selectedSlot;
+        networkHandler.sendPacket(new CreativeInventoryActionC2SPacket(networkSlot, selectedItem));
     }
 
     @Subscribe
@@ -83,8 +84,8 @@ public class ClientsideInventoryModule extends DModule {
 
         if (packet instanceof final CreativeInventoryActionC2SPacket creativeAction) {
             this.processCreativePacket(creativeAction, event);
-        } else if (packet instanceof final UpdateSelectedSlotC2SPacket updateSlot) {
-            this.processSlotUpdate(updateSlot);
+        } else if (packet instanceof PlayerInteractBlockC2SPacket || packet instanceof PlayerInteractEntityC2SPacket) {
+            this.interact();
         }
     }
 
@@ -95,5 +96,26 @@ public class ClientsideInventoryModule extends DModule {
         if (packet instanceof InventoryS2CPacket || packet instanceof ScreenHandlerSlotUpdateS2CPacket || packet instanceof UpdateSelectedSlotS2CPacket) {
             event.setCancelled(true);
         }
+    }
+
+    @Subscribe
+    public void onEndClientTick(final ClientTickEndEvent event) {
+        final ClientPlayNetworkHandler networkHandler = client.getNetworkHandler();
+
+        if (networkHandler == null) {
+            return;
+        }
+
+        final ClientConnection connection = networkHandler.getConnection();
+
+        if (!connection.isOpen()) {
+            return;
+        }
+
+        for (final Packet<?> packet : sendNextTick) {
+            networkHandler.sendPacket(packet);
+        }
+
+        sendNextTick.clear();
     }
 }
