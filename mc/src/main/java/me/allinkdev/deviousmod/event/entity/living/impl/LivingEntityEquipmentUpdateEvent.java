@@ -17,5 +17,6 @@ public class LivingEntityEquipmentUpdateEvent extends GenericLivingEntityEvent {
         super(entity);
         this.newStack = newStack;
         this.oldStack = oldStack;
+        this.replacedStack = newStack.copy();
     }
 }
