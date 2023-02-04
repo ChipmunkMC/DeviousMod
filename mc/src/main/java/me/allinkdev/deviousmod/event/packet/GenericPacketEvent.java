@@ -1,12 +1,14 @@
 package me.allinkdev.deviousmod.event.packet;
 
+import lombok.AllArgsConstructor;
 import lombok.Getter;
-import lombok.RequiredArgsConstructor;
+import lombok.Setter;
 import me.allinkdev.deviousmod.event.Cancellable;
 import net.minecraft.network.Packet;
 
 @Getter
-@RequiredArgsConstructor
+@Setter
+@AllArgsConstructor
 public class GenericPacketEvent extends Cancellable {
-    private final Packet<?> packet;
+    private Packet<?> packet;
 }

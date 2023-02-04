@@ -3,6 +3,14 @@ package me.allinkdev.deviousmod.module.impl;
 import com.google.common.eventbus.Subscribe;
 import me.allinkdev.deviousmod.event.packet.impl.PacketS2CEvent;
 import me.allinkdev.deviousmod.module.DModule;
+import net.minecraft.network.message.*;
+import net.minecraft.network.packet.c2s.play.ChatMessageC2SPacket;
+import net.minecraft.network.packet.s2c.play.ChatMessageS2CPacket;
+import net.minecraft.text.Text;
+
+import java.time.Instant;
+import java.util.BitSet;
+import java.util.UUID;
 
 public class TestModule extends DModule {
     @Override
@@ -16,12 +24,20 @@ public class TestModule extends DModule {
     }
 
     @Subscribe
-    public void onPacketS2C(final PacketS2CEvent event) {
-        logger.info("s2c: {}", event.getPacket().getClass().getTypeName());
+    public void onPacketC2S(final PacketS2CEvent event) {
+        if (!(event.getPacket() instanceof ChatMessageC2SPacket)) {
+            return;
+        }
+
+        event.setPacket(new ChatMessageC2SPacket("Testing 123", Instant.now(), 0L, null, new LastSeenMessageList.Acknowledgment(0, BitSet.valueOf(new byte[0]))));
     }
 
     @Subscribe
-    public void onPacketC2S(final PacketS2CEvent event) {
-        logger.info("c2s: {}", event.getPacket().getClass().getTypeName());
+    public void onPacketS2C(final PacketS2CEvent event) {
+        if (!(event.getPacket() instanceof ChatMessageS2CPacket)) {
+            return;
+        }
+
+        event.setPacket(new ChatMessageS2CPacket(UUID.randomUUID(), 0, null, MessageBody.ofUnsigned("SEX!!!").toSerialized(MessageSignatureStorage.create()), Text.of("SEXU"), FilterMask.PASS_THROUGH, new MessageType.Serialized(0, Text.of("sxe"), Text.of("SAX"))));
     }
 }
