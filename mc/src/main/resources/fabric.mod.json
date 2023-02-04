@@ -2,7 +2,6 @@
   "schemaVersion": 1,
   "id": "deviousmod",
   "version": "${version}",
-
   "name": "Devious Mod",
   "description": "A Minecraft mod for cool people",
   "authors": [
@@ -11,6 +10,7 @@
   "license": "LGPL-3.0-only",
   "environment": "client",
   "icon": "assets/deviousmod/icon.png",
+  "accessWidener": "deviousmod.accesswidener",
   "entrypoints": {
     "main": [
       "me.allinkdev.deviousmod.DeviousMod"
@@ -19,11 +19,17 @@
   "mixins": [
     "deviousmod.mixins.json"
   ],
-
   "depends": {
     "fabricloader": ">=0.14.11",
     "fabric-api": "*",
     "minecraft": "~1.19.3",
     "java": ">=17"
+  },
+  "recommends": {
+    "shutupmojang": "*"
+  },
+  "breaks": {
+    "meteorclient": "*",
+    "wurst": "*"
   }
 }
