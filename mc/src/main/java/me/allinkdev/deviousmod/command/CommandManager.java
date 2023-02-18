@@ -12,7 +12,7 @@ import java.util.Set;
 
 import static me.allinkdev.deviousmod.DeviousMod.logger;
 
-public class CommandManager extends NoConstructor {
+public final class CommandManager extends NoConstructor {
     private static final Set<DCommand> commands = new HashSet<>();
 
     public static void init() {

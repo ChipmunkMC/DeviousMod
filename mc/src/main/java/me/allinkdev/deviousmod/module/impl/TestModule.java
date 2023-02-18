@@ -12,7 +12,7 @@ import java.time.Instant;
 import java.util.BitSet;
 import java.util.UUID;
 
-public class TestModule extends DModule {
+public final class TestModule extends DModule {
     @Override
     public String getModuleName() {
         return "Test";

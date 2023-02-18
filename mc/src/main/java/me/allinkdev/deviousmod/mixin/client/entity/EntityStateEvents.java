@@ -16,7 +16,7 @@ import org.spongepowered.asm.mixin.injection.Redirect;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(ClientEntityManager.class)
-public class EntityStateEvents {
+public final class EntityStateEvents {
     @Inject(method = "addEntity", at = @At("HEAD"), cancellable = true)
     public void onAddEntity(final EntityLike entityLike, final CallbackInfo ci) {
         if (!(entityLike instanceof final Entity entity)) {
@@ -35,7 +35,7 @@ public class EntityStateEvents {
     }
 
     @Mixin(ClientWorld.class)
-    private static class EntityRemoval {
+    private static final class EntityRemoval {
         @Redirect(method = "removeEntity", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/EntityLookup;get(I)Lnet/minecraft/world/entity/EntityLike;"))
         public EntityLike onRemoveEntity(final EntityLookup instance, final int id) {
             final EntityLike entityLike = instance.get(id);

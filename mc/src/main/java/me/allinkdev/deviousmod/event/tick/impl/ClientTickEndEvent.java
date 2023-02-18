@@ -5,7 +5,7 @@ import me.allinkdev.deviousmod.event.tick.GenericClientTickEvent;
 import net.minecraft.client.MinecraftClient;
 
 @Getter
-public class ClientTickEndEvent extends GenericClientTickEvent {
+public final class ClientTickEndEvent extends GenericClientTickEvent {
     public ClientTickEndEvent(final MinecraftClient client) {
         super(client);
     }

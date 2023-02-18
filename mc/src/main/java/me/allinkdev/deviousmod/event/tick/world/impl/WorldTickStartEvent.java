@@ -6,7 +6,7 @@ import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.network.ClientPlayerEntity;
 import net.minecraft.client.world.ClientWorld;
 
-public class WorldTickStartEvent extends GenericWorldTickEvent {
+public final class WorldTickStartEvent extends GenericWorldTickEvent {
     public WorldTickStartEvent(final MinecraftClient client, final ClientPlayerEntity player, final ClientWorld world) {
         super(client, player, world);
     }

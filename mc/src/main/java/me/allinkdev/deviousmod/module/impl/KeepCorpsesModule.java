@@ -6,7 +6,7 @@ import me.allinkdev.deviousmod.module.DModule;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
 
-public class KeepCorpsesModule extends DModule {
+public final class KeepCorpsesModule extends DModule {
     @Override
     public String getModuleName() {
         return "KeepCorpses";

@@ -5,7 +5,7 @@ import me.allinkdev.deviousmod.event.entity.GenericEntityEvent;
 import net.minecraft.entity.Entity;
 
 @Getter
-public class EntityAddEvent extends GenericEntityEvent {
+public final class EntityAddEvent extends GenericEntityEvent {
     public EntityAddEvent(final Entity entity) {
         super(entity);
     }

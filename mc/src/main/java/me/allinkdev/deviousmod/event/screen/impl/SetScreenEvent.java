@@ -8,7 +8,7 @@ import net.minecraft.client.gui.screen.Screen;
 
 @Getter
 @AllArgsConstructor
-public class SetScreenEvent extends Event {
+public final class SetScreenEvent extends Event {
     @Setter
     private Screen target;
 }

@@ -18,7 +18,7 @@ import net.minecraft.text.Text;
 import java.util.Optional;
 import java.util.Set;
 
-public class ModulesCommand implements DCommand {
+public final class ModulesCommand implements DCommand {
     private static final String moduleArgumentName = "module";
     private static final CommandSyntaxException moduleNotFound = new SimpleCommandExceptionType(Text.of("Module not found!"))
             .create();

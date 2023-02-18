@@ -9,7 +9,7 @@ import org.jetbrains.annotations.Nullable;
 
 @Getter
 @Setter
-public class PacketC2SEvent extends GenericPacketEvent {
+public final class PacketC2SEvent extends GenericPacketEvent {
     /**
      * Should we add a listener that fires exceptions on failures?
      * Defaults to true.

@@ -12,7 +12,7 @@ import java.util.Collection;
 import java.util.Set;
 import java.util.concurrent.CompletableFuture;
 
-public class ModuleArgumentType implements ArgumentType<String> {
+public final class ModuleArgumentType implements ArgumentType<String> {
     private static final Set<String> suggestions = ModuleManager.getModuleNames();
 
     public static ModuleArgumentType getType() {

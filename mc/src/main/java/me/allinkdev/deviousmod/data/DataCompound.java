@@ -11,7 +11,7 @@ import java.io.IOException;
 import java.nio.file.Path;
 
 @Getter
-public class DataCompound {
+public final class DataCompound {
     private final CompoundTag compoundTag;
     private final String compoundName;
     private final Path location;

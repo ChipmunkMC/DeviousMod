@@ -7,7 +7,7 @@ import net.minecraft.entity.LivingEntity;
 import net.minecraft.item.ItemStack;
 
 @Getter
-public class LivingEntityEquipmentUpdateEvent extends GenericLivingEntityEvent {
+public final class LivingEntityEquipmentUpdateEvent extends GenericLivingEntityEvent {
     private final ItemStack newStack;
     private final ItemStack oldStack;
     @Setter

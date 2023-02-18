@@ -21,7 +21,7 @@ import net.minecraft.network.packet.s2c.play.UpdateSelectedSlotS2CPacket;
 import java.util.HashSet;
 import java.util.Set;
 
-public class ClientsideInventoryModule extends DModule {
+public final class ClientsideInventoryModule extends DModule {
     private final Set<Packet<?>> sendNextTick = new HashSet<>();
     private int sendingSlot = -1;
 
