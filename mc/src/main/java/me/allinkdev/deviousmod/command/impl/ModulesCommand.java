@@ -19,7 +19,7 @@ import java.util.Optional;
 import java.util.Set;
 
 public final class ModulesCommand implements DCommand {
-    private static final String moduleArgumentName = "module";
+    private static final String MODULE_ARGUMENT_NAME = "module";
     private static final CommandSyntaxException moduleNotFound = new SimpleCommandExceptionType(Text.of("Module not found!"))
             .create();
     private static final CommandSyntaxException moduleAlreadyEnabled = new SimpleCommandExceptionType(Text.of("Module already enabled!"))
@@ -37,7 +37,7 @@ public final class ModulesCommand implements DCommand {
     }
 
     private DModule genericExecute(final CommandContext<FabricClientCommandSource> context) throws CommandSyntaxException {
-        final String argument = StringArgumentType.getString(context, moduleArgumentName);
+        final String argument = StringArgumentType.getString(context, MODULE_ARGUMENT_NAME);
         final Optional<DModule> moduleOptional = ModuleManager.findModule(argument);
 
         if (moduleOptional.isEmpty()) {
@@ -78,7 +78,7 @@ public final class ModulesCommand implements DCommand {
     }
 
     public int executeStatus(final CommandContext<FabricClientCommandSource> context) throws CommandSyntaxException {
-        final String moduleName = StringArgumentType.getString(context, moduleArgumentName);
+        final String moduleName = StringArgumentType.getString(context, MODULE_ARGUMENT_NAME);
         final Optional<DModule> moduleOptional = ModuleManager.findModule(moduleName);
 
         if (moduleOptional.isEmpty()) {
@@ -150,17 +150,17 @@ public final class ModulesCommand implements DCommand {
 
         return ClientCommandManager.literal("modules")
                 .then(ClientCommandManager.literal("enable")
-                        .then(ClientCommandManager.argument(moduleArgumentName, type)
+                        .then(ClientCommandManager.argument(MODULE_ARGUMENT_NAME, type)
                                 .executes(this::executeEnable)))
                 .then(ClientCommandManager.literal("disable")
-                        .then(ClientCommandManager.argument(moduleArgumentName, type)
+                        .then(ClientCommandManager.argument(MODULE_ARGUMENT_NAME, type)
                                 .executes(this::executeDisable)))
                 .then(ClientCommandManager.literal("toggle")
-                        .then(ClientCommandManager.argument(moduleArgumentName, type)
+                        .then(ClientCommandManager.argument(MODULE_ARGUMENT_NAME, type)
                                 .executes(this::executeToggle)))
                 .then(ClientCommandManager.literal("status")
                         .executes(this::executeStatusNoArgs)
-                        .then(ClientCommandManager.argument(moduleArgumentName, type)
+                        .then(ClientCommandManager.argument(MODULE_ARGUMENT_NAME, type)
                                 .executes(this::executeStatus)));
     }
 
