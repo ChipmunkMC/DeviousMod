@@ -5,10 +5,10 @@ import com.mojang.brigadier.builder.LiteralArgumentBuilder;
 import com.mojang.brigadier.context.CommandContext;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import com.mojang.brigadier.exceptions.SimpleCommandExceptionType;
+import me.allinkdev.deviousmod.DeviousMod;
 import me.allinkdev.deviousmod.command.DCommand;
 import me.allinkdev.deviousmod.command.args.ModuleArgumentType;
 import me.allinkdev.deviousmod.module.DModule;
-import me.allinkdev.deviousmod.module.ModuleManager;
 import net.fabricmc.fabric.api.client.command.v2.ClientCommandManager;
 import net.fabricmc.fabric.api.client.command.v2.FabricClientCommandSource;
 import net.kyori.adventure.text.Component;
@@ -18,7 +18,7 @@ import net.minecraft.text.Text;
 import java.util.Optional;
 import java.util.Set;
 
-public final class ModulesCommand implements DCommand {
+public final class ModulesCommand extends DCommand {
     private static final String MODULE_ARGUMENT_NAME = "module";
     private static final CommandSyntaxException moduleNotFound = new SimpleCommandExceptionType(Text.of("Module not found!"))
             .create();
@@ -26,6 +26,10 @@ public final class ModulesCommand implements DCommand {
             .create();
     private static final CommandSyntaxException moduleAlreadyDisabled = new SimpleCommandExceptionType(Text.of("Module already disabled!"))
             .create();
+
+    public ModulesCommand(final DeviousMod deviousMod) {
+        super(deviousMod);
+    }
 
     private Component getStatusComponent(final boolean state) {
         return state ? Component.text("enabled", NamedTextColor.GREEN) : Component.text("disabled", NamedTextColor.RED);
@@ -38,7 +42,7 @@ public final class ModulesCommand implements DCommand {
 
     private DModule genericExecute(final CommandContext<FabricClientCommandSource> context) throws CommandSyntaxException {
         final String argument = StringArgumentType.getString(context, MODULE_ARGUMENT_NAME);
-        final Optional<DModule> moduleOptional = ModuleManager.findModule(argument);
+        final Optional<DModule> moduleOptional = moduleManager.findModule(argument);
 
         if (moduleOptional.isEmpty()) {
             throw moduleNotFound;
@@ -79,7 +83,7 @@ public final class ModulesCommand implements DCommand {
 
     public int executeStatus(final CommandContext<FabricClientCommandSource> context) throws CommandSyntaxException {
         final String moduleName = StringArgumentType.getString(context, MODULE_ARGUMENT_NAME);
-        final Optional<DModule> moduleOptional = ModuleManager.findModule(moduleName);
+        final Optional<DModule> moduleOptional = moduleManager.findModule(moduleName);
 
         if (moduleOptional.isEmpty()) {
             throw moduleNotFound;
@@ -93,7 +97,7 @@ public final class ModulesCommand implements DCommand {
     }
 
     public int executeStatusNoArgs(final CommandContext<FabricClientCommandSource> context) {
-        final Set<DModule> modules = ModuleManager.getModules();
+        final Set<DModule> modules = moduleManager.getModules();
         int enabled = 0;
         Component component = Component.text("Module states:")
                 .append(Component.newline());

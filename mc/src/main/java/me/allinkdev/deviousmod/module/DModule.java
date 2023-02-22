@@ -4,22 +4,38 @@ import com.github.steveice10.opennbt.tag.builtin.ByteTag;
 import com.github.steveice10.opennbt.tag.builtin.CompoundTag;
 import me.allinkdev.deviousmod.DeviousMod;
 import me.allinkdev.deviousmod.data.DataCompound;
+import me.allinkdev.deviousmod.event.transformer.impl.Transformer;
 import net.minecraft.client.MinecraftClient;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.nio.file.Path;
+import java.util.Collections;
+import java.util.HashSet;
 import java.util.Optional;
+import java.util.Set;
 
 public abstract class DModule {
     protected final Logger logger = LoggerFactory.getLogger(this.getClass());
-    protected final DeviousMod deviousMod = DeviousMod.getInstance();
+    protected final DeviousMod deviousMod;
     protected final MinecraftClient client = MinecraftClient.getInstance();
     protected final DataCompound settings;
+    private final Set<Transformer> transformers = new HashSet<>();
+    private final ModuleManager moduleManager;
 
-    protected DModule() {
+    protected DModule(final ModuleManager moduleManager) {
+        this.moduleManager = moduleManager;
+        this.deviousMod = moduleManager.getDeviousMod();
+
         final String moduleName = this.getModuleName();
-        this.settings = new DataCompound(moduleName, ModuleManager.getModuleConfigPath(), Path.of(moduleName));
+        this.settings = new DataCompound(moduleName, moduleManager.getModuleConfigPath(), Path.of(moduleName));
+    }
+
+    /***
+     * Called on world initialization and module enable
+     */
+    public void init() {
+
     }
 
     public abstract String getModuleName();
@@ -28,7 +44,7 @@ public abstract class DModule {
 
     protected Optional<ByteTag> getTag() {
         final String moduleName = getModuleName();
-        final DataCompound moduleSettings = ModuleManager.getSettings();
+        final DataCompound moduleSettings = moduleManager.getSettings();
         final CompoundTag tag = moduleSettings.getCompoundTag();
         final ByteTag moduleStateTag = tag.get(moduleName);
 
@@ -51,17 +67,29 @@ public abstract class DModule {
         final String name = getModuleName();
         final ByteTag newTag = new ByteTag(name, (byte) (newState ? 1 : 0));
 
-        final DataCompound moduleSettings = ModuleManager.getSettings();
+        final DataCompound moduleSettings = moduleManager.getSettings();
         final CompoundTag compoundTag = moduleSettings.getCompoundTag();
 
         compoundTag.put(newTag);
         moduleSettings.save();
 
         if (newState) {
-            deviousMod.subscribeEvents(this);
+            moduleManager.load(this);
             return;
         }
 
-        deviousMod.unsubscribeEvents(this);
+        moduleManager.unload(this);
+    }
+
+    public Set<Transformer> getTransformers() {
+        return Collections.unmodifiableSet(transformers);
+    }
+
+    protected void addTransformer(final Transformer transformer) {
+        this.transformers.add(transformer);
+    }
+
+    protected void clearTransformers() {
+        this.transformers.clear();
     }
 }

@@ -8,6 +8,7 @@
     "client.entity.EntityStateEvents",
     "client.entity.EntityStateEvents$EntityRemoval",
     "client.network.PacketSendAndReceive",
+    "client.screen.HudTransformer",
     "client.screen.ScreenOverrider"
   ],
   "injectors": {
