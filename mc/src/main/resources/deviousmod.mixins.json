@@ -9,9 +9,15 @@
     "client.entity.EntityStateEvents$EntityRemoval",
     "client.network.PacketSendAndReceive",
     "client.screen.HudTransformer",
-    "client.screen.ScreenOverrider"
+    "client.screen.ScreenOverrider",
+    "patches.text.ParticleCrashFix"
   ],
   "injectors": {
     "defaultRequire": 1
-  }
+  },
+  "mixins": [
+    "patches.tag.BigTagKickFix",
+    "patches.text.NestingOverflowFix",
+    "patches.text.OOBTranslateArgFix"
+  ]
 }

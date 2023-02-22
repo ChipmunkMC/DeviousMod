@@ -1,1 +1,5 @@
 accessWidener	v1	named
+
+accessible method net/minecraft/text/Text$Serializer optimizeArgument (Ljava/lang/Object;)Ljava/lang/Object;
+mutable field net/minecraft/nbt/NbtList TYPE Lnet/minecraft/nbt/NbtType;
+accessible method net/minecraft/nbt/NbtList <init> (Ljava/util/List;B)V
