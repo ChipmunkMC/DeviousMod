@@ -1,9 +1,9 @@
 package me.allinkdev.deviousmod.command;
 
 import com.mojang.brigadier.CommandDispatcher;
+import me.allinkdev.deviousmod.DeviousMod;
 import me.allinkdev.deviousmod.command.impl.ModulesCommand;
 import me.allinkdev.deviousmod.command.impl.TestCommand;
-import me.allinkdev.deviousmod.util.NoConstructor;
 import net.fabricmc.fabric.api.client.command.v2.FabricClientCommandSource;
 import net.minecraft.command.CommandRegistryAccess;
 
@@ -12,18 +12,18 @@ import java.util.Set;
 
 import static me.allinkdev.deviousmod.DeviousMod.logger;
 
-public final class CommandManager extends NoConstructor {
-    private static final Set<DCommand> commands = new HashSet<>();
+public final class CommandManager {
+    private final Set<DCommand> commands = new HashSet<>();
 
-    public static void init() {
-        commands.add(new TestCommand());
-        commands.add(new ModulesCommand());
+    public CommandManager(final DeviousMod deviousMod) {
+        commands.add(new TestCommand(deviousMod));
+        commands.add(new ModulesCommand(deviousMod));
 
         logger.info("Loaded {} commands!", commands.size());
     }
 
-    public static void register(final CommandDispatcher<FabricClientCommandSource> dispatcher, final CommandRegistryAccess registryAccess) {
-        for (final DCommand command : commands) {
+    public void register(final CommandDispatcher<FabricClientCommandSource> dispatcher, final CommandRegistryAccess registryAccess) {
+        for (final DCommand command : this.commands) {
             command.register(dispatcher, registryAccess);
         }
     }

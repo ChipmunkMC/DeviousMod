@@ -3,10 +3,15 @@ package me.allinkdev.deviousmod.module.impl;
 import com.google.common.eventbus.Subscribe;
 import me.allinkdev.deviousmod.event.entity.impl.EntityRemoveEvent;
 import me.allinkdev.deviousmod.module.DModule;
+import me.allinkdev.deviousmod.module.ModuleManager;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
 
 public final class KeepCorpsesModule extends DModule {
+    public KeepCorpsesModule(final ModuleManager moduleManager) {
+        super(moduleManager);
+    }
+
     @Override
     public String getModuleName() {
         return "KeepCorpses";

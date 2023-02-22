@@ -25,6 +25,10 @@ public class DeviousMod implements ModInitializer {
     private static DeviousMod instance;
     @Getter
     private final EventBus eventBus = new EventBus();
+    @Getter
+    private final ModuleManager moduleManager = new ModuleManager(this);
+    @Getter
+    private final CommandManager commandManager = new CommandManager(this);
 
     public static DeviousMod getInstance() {
         return instance;
@@ -41,10 +45,7 @@ public class DeviousMod implements ModInitializer {
     public void onInitialize() {
         instance = this;
 
-        CommandManager.init();
-        ModuleManager.init();
-
-        ClientCommandRegistrationCallback.EVENT.register(CommandManager::register);
+        ClientCommandRegistrationCallback.EVENT.register(commandManager::register);
 
         ClientTickEvents.START_CLIENT_TICK.register(ClientTickStartEvent::onStartTick);
         ClientTickEvents.END_CLIENT_TICK.register(ClientTickEndEvent::onTickEnd);

@@ -5,6 +5,7 @@ import me.allinkdev.deviousmod.event.packet.impl.PacketC2SEvent;
 import me.allinkdev.deviousmod.event.packet.impl.PacketS2CEvent;
 import me.allinkdev.deviousmod.event.tick.impl.ClientTickEndEvent;
 import me.allinkdev.deviousmod.module.DModule;
+import me.allinkdev.deviousmod.module.ModuleManager;
 import net.minecraft.client.network.ClientPlayNetworkHandler;
 import net.minecraft.client.network.ClientPlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
@@ -26,6 +27,10 @@ public final class ClientsideInventoryModule extends DModule {
     private final Set<Packet<?>> sendNextTick = new HashSet<>();
     private final Set<Packet<?>> removeNextTick = new HashSet<>();
     private int sendingSlot = -1;
+
+    public ClientsideInventoryModule(final ModuleManager moduleManager) {
+        super(moduleManager);
+    }
 
     @Override
     public String getModuleName() {
