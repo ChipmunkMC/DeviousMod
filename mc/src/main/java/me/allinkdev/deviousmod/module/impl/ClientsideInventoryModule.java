@@ -11,6 +11,7 @@ import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.network.ClientConnection;
 import net.minecraft.network.Packet;
+import net.minecraft.network.PacketCallbacks;
 import net.minecraft.network.packet.c2s.play.CreativeInventoryActionC2SPacket;
 import net.minecraft.network.packet.c2s.play.PlayerInteractBlockC2SPacket;
 import net.minecraft.network.packet.c2s.play.PlayerInteractEntityC2SPacket;
@@ -23,6 +24,7 @@ import java.util.Set;
 
 public final class ClientsideInventoryModule extends DModule {
     private final Set<Packet<?>> sendNextTick = new HashSet<>();
+    private final Set<Packet<?>> removeNextTick = new HashSet<>();
     private int sendingSlot = -1;
 
     @Override
@@ -112,10 +114,8 @@ public final class ClientsideInventoryModule extends DModule {
             return;
         }
 
-        for (final Packet<?> packet : sendNextTick) {
-            networkHandler.sendPacket(packet);
+        for (final Packet<?> packet : Set.copyOf(sendNextTick)) {
+            connection.send(packet, PacketCallbacks.always(() -> sendNextTick.remove(packet)));
         }
-
-        sendNextTick.clear();
     }
 }
