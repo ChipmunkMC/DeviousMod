@@ -4,7 +4,7 @@ import com.google.common.eventbus.Subscribe;
 import me.allinkdev.deviousmod.event.packet.impl.PacketS2CEvent;
 import me.allinkdev.deviousmod.module.DModule;
 import me.allinkdev.deviousmod.module.ModuleManager;
-import net.minecraft.network.Packet;
+import net.minecraft.network.packet.Packet;
 import net.minecraft.network.packet.s2c.play.ParticleS2CPacket;
 
 public class DisableParticlesModule extends DModule {

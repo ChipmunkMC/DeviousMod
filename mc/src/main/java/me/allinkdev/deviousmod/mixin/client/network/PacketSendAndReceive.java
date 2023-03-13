@@ -8,8 +8,12 @@ import io.netty.channel.ChannelHandlerContext;
 import me.allinkdev.deviousmod.event.Event;
 import me.allinkdev.deviousmod.event.packet.impl.PacketC2SEvent;
 import me.allinkdev.deviousmod.event.packet.impl.PacketS2CEvent;
-import net.minecraft.network.*;
+import net.minecraft.network.ClientConnection;
+import net.minecraft.network.NetworkState;
+import net.minecraft.network.OffThreadException;
+import net.minecraft.network.PacketCallbacks;
 import net.minecraft.network.listener.PacketListener;
+import net.minecraft.network.packet.Packet;
 import net.minecraft.text.Text;
 import org.jetbrains.annotations.Nullable;
 import org.slf4j.Logger;
@@ -96,7 +100,7 @@ public abstract class PacketSendAndReceive {
         }));
     }
 
-    @Inject(method = "channelRead0(Lio/netty/channel/ChannelHandlerContext;Lnet/minecraft/network/Packet;)V", at = @At("HEAD"), cancellable = true)
+    @Inject(method = "channelRead0(Lio/netty/channel/ChannelHandlerContext;Lnet/minecraft/network/packet/Packet;)V", at = @At("HEAD"), cancellable = true)
     public void onChannelRead0(final ChannelHandlerContext channelHandlerContext, final Packet<?> packet, final CallbackInfo ci) {
         ci.cancel();
 

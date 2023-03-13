@@ -3,8 +3,8 @@ package me.allinkdev.deviousmod.event.packet.impl;
 import lombok.Getter;
 import lombok.Setter;
 import me.allinkdev.deviousmod.event.packet.GenericPacketEvent;
-import net.minecraft.network.Packet;
 import net.minecraft.network.PacketCallbacks;
+import net.minecraft.network.packet.Packet;
 import org.jetbrains.annotations.Nullable;
 
 @Getter

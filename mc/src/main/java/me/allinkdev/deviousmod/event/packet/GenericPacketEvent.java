@@ -4,7 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
 import me.allinkdev.deviousmod.event.Cancellable;
-import net.minecraft.network.Packet;
+import net.minecraft.network.packet.Packet;
 
 @Getter
 @Setter
