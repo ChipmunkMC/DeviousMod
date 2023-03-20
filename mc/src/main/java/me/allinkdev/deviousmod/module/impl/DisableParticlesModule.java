@@ -7,7 +7,7 @@ import me.allinkdev.deviousmod.module.ModuleManager;
 import net.minecraft.network.packet.Packet;
 import net.minecraft.network.packet.s2c.play.ParticleS2CPacket;
 
-public class DisableParticlesModule extends DModule {
+public final class DisableParticlesModule extends DModule {
     public DisableParticlesModule(final ModuleManager moduleManager) {
         super(moduleManager);
     }
