@@ -16,6 +16,7 @@
     "defaultRequire": 1
   },
   "mixins": [
+    "patches.entity.AreaEffectCloudParticleLimiter",
     "patches.tag.BigTagKickFix",
     "patches.text.NestingOverflowFix",
     "patches.text.OOBTranslateArgFix"
