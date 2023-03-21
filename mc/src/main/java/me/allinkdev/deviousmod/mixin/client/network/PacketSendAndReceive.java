@@ -71,6 +71,10 @@ public abstract class PacketSendAndReceive {
         final Packet<?> packet = event.getPacket();
         final PacketCallbacks callbacks = event.getPacketCallbacks();
 
+        if (packet == null) {
+            return;
+        }
+
         final ChannelFuture channelFuture = this.channel.writeAndFlush(packet);
 
         if (event.isThrowingExceptions()) {
@@ -88,7 +92,7 @@ public abstract class PacketSendAndReceive {
 
             final Packet<?> failurePacket = callbacks.getFailurePacket();
 
-            if (packet == null) {
+            if (failurePacket == null) {
                 return;
             }
 
