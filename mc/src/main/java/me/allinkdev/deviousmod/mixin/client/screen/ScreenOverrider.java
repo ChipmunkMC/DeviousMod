@@ -53,7 +53,7 @@ public abstract class ScreenOverrider {
     public abstract void updateWindowTitle();
 
     @Inject(method = "setScreen", at = @At("HEAD"), cancellable = true)
-    public void onSetScreen(final Screen providedScreen, final CallbackInfo ci) {
+    private void onSetScreen(final Screen providedScreen, final CallbackInfo ci) {
         final SetScreenEvent event = new SetScreenEvent(providedScreen);
         final EventBus eventBus = Event.getEventBus();
         eventBus.post(event);

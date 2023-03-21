@@ -8,9 +8,9 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(ClientPlayNetworkHandler.class)
-public class ParticleCrashFix {
+public final class ParticleCrashFix {
     @Inject(method = "onParticle", at = @At("HEAD"), cancellable = true)
-    public void onAddParticle(final ParticleS2CPacket packet, final CallbackInfo ci) {
+    private void onAddParticle(final ParticleS2CPacket packet, final CallbackInfo ci) {
         final int count = packet.getCount();
 
         if (count < 1000) {

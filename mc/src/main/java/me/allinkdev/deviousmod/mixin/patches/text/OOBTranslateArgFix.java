@@ -9,9 +9,9 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 @Mixin(TranslatableTextContent.class)
-public class OOBTranslateArgFix {
+public final class OOBTranslateArgFix {
     @Inject(method = "getArg", at = @At("HEAD"), cancellable = true)
-    public void onGetArg(final int index, final CallbackInfoReturnable<StringVisitable> cir) {
+    private void onGetArg(final int index, final CallbackInfoReturnable<StringVisitable> cir) {
         if (index < 0) {
             cir.setReturnValue(TextUtil.INVALID_JSON);
         }

@@ -13,7 +13,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import java.util.List;
 
 @Mixin(InGameHud.class)
-public class HudTransformer {
+public final class HudTransformer {
     private List<InGameUITransformer> getTransformers() {
         final DeviousMod deviousMod = DeviousMod.getInstance();
         final ModuleManager moduleManager = deviousMod.getModuleManager();
@@ -22,7 +22,7 @@ public class HudTransformer {
     }
 
     @Inject(method = "render", at = @At(value = "HEAD"), cancellable = true)
-    public void onRender(final MatrixStack matrices, final float tickDelta, final CallbackInfo ci) {
+    private void onRender(final MatrixStack matrices, final float tickDelta, final CallbackInfo ci) {
         final List<InGameUITransformer> transformers = getTransformers();
 
         for (final InGameUITransformer transformer : transformers) {
@@ -32,7 +32,7 @@ public class HudTransformer {
     }
 
     @Inject(method = "render", at = @At(value = "RETURN"))
-    public void onPostRender(final MatrixStack matrices, final float tickDelta, final CallbackInfo ci) {
+    private void onPostRender(final MatrixStack matrices, final float tickDelta, final CallbackInfo ci) {
         final List<InGameUITransformer> transformers = getTransformers();
 
         for (final InGameUITransformer transformer : transformers) {

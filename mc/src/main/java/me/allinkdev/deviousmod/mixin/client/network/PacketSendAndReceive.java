@@ -49,13 +49,13 @@ public abstract class PacketSendAndReceive {
     public abstract void disconnect(Text disconnectReason);
 
     @Inject(method = "sendInternal", at = @At("HEAD"), cancellable = true)
-    public void onSendInternal(final Packet<?> packet, final @Nullable PacketCallbacks callbacks, final NetworkState packetState, final NetworkState currentState, final CallbackInfo ci) {
+    private void onSendInternal(final Packet<?> packet, final @Nullable PacketCallbacks callbacks, final NetworkState packetState, final NetworkState currentState, final CallbackInfo ci) {
         ci.cancel();
 
         customSendInternal(packet, callbacks, packetState, currentState);
     }
 
-    public void customSendInternal(final Packet<?> originalPacket, final @Nullable PacketCallbacks originalCallbacks, final NetworkState packetState, final NetworkState currentState) {
+    private void customSendInternal(final Packet<?> originalPacket, final @Nullable PacketCallbacks originalCallbacks, final NetworkState packetState, final NetworkState currentState) {
         final PacketC2SEvent event = new PacketC2SEvent(originalPacket, originalCallbacks);
         final EventBus eventBus = Event.getEventBus();
         eventBus.post(event);
