@@ -3,6 +3,8 @@ package me.allinkdev.deviousmod.module.impl;
 import com.google.common.eventbus.Subscribe;
 import com.mojang.brigadier.suggestion.Suggestion;
 import me.allinkdev.deviousmod.command.CommandCompletionManager;
+import me.allinkdev.deviousmod.event.network.connection.ConnectionEndEvent;
+import me.allinkdev.deviousmod.event.network.connection.ConnectionStartEvent;
 import me.allinkdev.deviousmod.event.self.chat.impl.SelfSendCommandEvent;
 import me.allinkdev.deviousmod.event.tick.impl.ClientTickEndEvent;
 import me.allinkdev.deviousmod.module.DModule;
@@ -95,7 +97,6 @@ public final class CommandPlaceholdersModule extends DModule {
     public void onTick(final ClientTickEndEvent event) {
         tickCount++;
 
-
         final ClientPlayNetworkHandler networkHandler = client.getNetworkHandler();
 
         if (networkHandler == null) {
@@ -116,7 +117,16 @@ public final class CommandPlaceholdersModule extends DModule {
             return;
         }
 
-        networkHandler.sendChatCommand(command);
+        networkHandler.sendChatCommand(command.trim());
     }
 
+    @Subscribe
+    public void onConnectionEnd(final ConnectionEndEvent event) {
+        this.commandQueue.clear();
+    }
+
+    @Subscribe
+    public void onConnectionStart(final ConnectionStartEvent event) {
+        this.commandQueue.clear();
+    }
 }

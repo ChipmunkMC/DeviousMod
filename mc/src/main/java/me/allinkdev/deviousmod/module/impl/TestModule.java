@@ -1,7 +1,7 @@
 package me.allinkdev.deviousmod.module.impl;
 
 import com.google.common.eventbus.Subscribe;
-import me.allinkdev.deviousmod.event.packet.impl.PacketS2CEvent;
+import me.allinkdev.deviousmod.event.network.packet.impl.PacketS2CEvent;
 import me.allinkdev.deviousmod.module.DModule;
 import me.allinkdev.deviousmod.module.ModuleManager;
 import net.minecraft.network.message.*;

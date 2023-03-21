@@ -1,4 +1,4 @@
-package me.allinkdev.deviousmod.event.packet;
+package me.allinkdev.deviousmod.event.network.packet;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

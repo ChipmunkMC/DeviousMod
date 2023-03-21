@@ -1,8 +1,8 @@
-package me.allinkdev.deviousmod.event.packet.impl;
+package me.allinkdev.deviousmod.event.network.packet.impl;
 
 import lombok.Getter;
 import lombok.Setter;
-import me.allinkdev.deviousmod.event.packet.GenericPacketEvent;
+import me.allinkdev.deviousmod.event.network.packet.GenericPacketEvent;
 import net.minecraft.network.packet.Packet;
 
 @Getter

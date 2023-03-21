@@ -1,8 +1,8 @@
 package me.allinkdev.deviousmod.module.impl;
 
 import com.google.common.eventbus.Subscribe;
-import me.allinkdev.deviousmod.event.packet.impl.PacketC2SEvent;
-import me.allinkdev.deviousmod.event.packet.impl.PacketS2CEvent;
+import me.allinkdev.deviousmod.event.network.packet.impl.PacketC2SEvent;
+import me.allinkdev.deviousmod.event.network.packet.impl.PacketS2CEvent;
 import me.allinkdev.deviousmod.event.tick.impl.ClientTickEndEvent;
 import me.allinkdev.deviousmod.module.DModule;
 import me.allinkdev.deviousmod.module.ModuleManager;
