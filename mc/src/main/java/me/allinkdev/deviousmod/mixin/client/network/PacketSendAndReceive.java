@@ -88,6 +88,7 @@ public abstract class PacketSendAndReceive {
         channelFuture.addListener((future -> {
             if (future.isSuccess()) {
                 callbacks.onSuccess();
+                return;
             }
 
             final Packet<?> failurePacket = callbacks.getFailurePacket();
