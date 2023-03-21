@@ -64,18 +64,18 @@ public final class CommandPlaceholdersModule extends DModule {
 
         final String[] partialCommandParts = Arrays.copyOfRange(parts, 0, partIndex);
         final String[] commandRemainderParts = Arrays.copyOfRange(parts, partIndex + 1, parts.length);
-        final String partialCommand = String.join(" ", partialCommandParts) + " ";
+        final String partialCommand = String.join(" ", partialCommandParts);
         final String commandRemainder = String.join(" ", commandRemainderParts);
         logger.info(partialCommand);
 
-        CommandCompletionManager.getCompletion(partialCommand, (suggestions -> {
+        CommandCompletionManager.getCompletion(partialCommand + " ", (suggestions -> {
             final Set<String> completions = suggestions.getList()
                     .stream()
                     .map(Suggestion::getText)
                     .collect(Collectors.toUnmodifiableSet());
 
             for (final String completion : completions) {
-                final String completedCommand = partialCommand + completion + " " + commandRemainder;
+                final String completedCommand = partialCommand + " " + completion + " " + commandRemainder;
                 this.queueCommand(completedCommand);
             }
         }));
