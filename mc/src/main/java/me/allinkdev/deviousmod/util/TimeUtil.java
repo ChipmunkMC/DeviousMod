@@ -39,7 +39,7 @@ public final class TimeUtil extends NoConstructor {
                 .findFirst()
                 .orElseThrow();
 
-        final long delay = BASELINE_COMMAND_DELAY + playerListEntry.getLatency();
+        final long delay = Math.min(BASELINE_COMMAND_DELAY + playerListEntry.getLatency(), 200);
 
         currentCommandDelay = Pair.of(now, delay);
 
