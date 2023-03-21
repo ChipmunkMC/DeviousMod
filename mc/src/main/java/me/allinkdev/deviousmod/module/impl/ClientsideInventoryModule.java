@@ -54,14 +54,18 @@ public final class ClientsideInventoryModule extends DModule {
         final int networkSlot = creativeAction.getSlot();
         final int slot = networkSlot - 36;
 
-        if (sendingSlot == slot) {
-            sendingSlot = -1;
-            sendNextTick.add(new CreativeInventoryActionC2SPacket(networkSlot, ItemStack.EMPTY));
+        if (stack == ItemStack.EMPTY) {
+            if (sendingSlot == slot) {
+                sendingSlot = -1;
+                return;
+            }
+
+            inventory.setStack(networkSlot, ItemStack.EMPTY);
             return;
         }
 
-        if (stack == ItemStack.EMPTY) {
-            inventory.setStack(slot, ItemStack.EMPTY);
+        if (sendingSlot == slot) {
+            sendNextTick.add(new CreativeInventoryActionC2SPacket(networkSlot, ItemStack.EMPTY));
             return;
         }
 
