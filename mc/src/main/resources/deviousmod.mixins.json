@@ -18,6 +18,7 @@
   "mixins": [
     "patches.entity.AreaEffectCloudParticleLimiter",
     "patches.tag.BigTagKickFix",
-    "patches.text.NestingOverflowFix"
+    "patches.text.NestingOverflowFix",
+    "patches.text.PlaceholderLimiter"
   ]
 }

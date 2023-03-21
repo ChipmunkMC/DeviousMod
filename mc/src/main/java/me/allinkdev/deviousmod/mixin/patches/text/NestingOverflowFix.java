@@ -64,13 +64,18 @@ public abstract class NestingOverflowFix {
 
                         for (int i = 0; i < objects.length; ++i) {
                             final JsonElement jsonElement1 = jsonArray.get(i);
+                            final JsonObject asObj = jsonElement1.getAsJsonObject();
 
-                            if (jsonElement1.isJsonArray()) {
-                                objects[i] = Text.Serializer.optimizeArgument(this.deserializeSafe(jsonArray.get(i), type, jsonDeserializationContext, depth + 1));
+                            if (asObj.has("translate")) {
                                 continue;
                             }
 
-                            objects[i] = Text.Serializer.optimizeArgument(this.deserializeSafe(jsonArray.get(i), type, jsonDeserializationContext));
+                            if (jsonElement1.isJsonArray()) {
+                                objects[i] = Text.Serializer.optimizeArgument(this.deserializeSafe(jsonElement1, type, jsonDeserializationContext, depth + 1));
+                                continue;
+                            }
+
+                            objects[i] = Text.Serializer.optimizeArgument(this.deserializeSafe(jsonElement1, type, jsonDeserializationContext));
                         }
 
                         mutableText = Text.translatable(string, objects);
