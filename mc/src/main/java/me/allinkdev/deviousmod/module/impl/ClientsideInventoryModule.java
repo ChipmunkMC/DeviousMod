@@ -61,6 +61,7 @@ public final class ClientsideInventoryModule extends DModule {
         }
 
         if (stack == ItemStack.EMPTY) {
+            inventory.setStack(slot, ItemStack.EMPTY);
             return;
         }
 
