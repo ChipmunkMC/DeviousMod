@@ -7,6 +7,8 @@
     "client.entity.EntityEquipmentOverrider",
     "client.entity.EntityStateEvents",
     "client.entity.EntityStateEvents$EntityRemoval",
+    "client.network.CommandCompletionStealer",
+    "client.network.CommandInterceptor",
     "client.network.PacketSendAndReceive",
     "client.screen.HudTransformer",
     "client.screen.ScreenOverrider",
@@ -16,6 +18,7 @@
     "defaultRequire": 1
   },
   "mixins": [
+    "client.network.NetworkStateMixin",
     "patches.entity.AreaEffectCloudParticleLimiter",
     "patches.tag.BigTagKickFix",
     "patches.text.NestingOverflowFix",

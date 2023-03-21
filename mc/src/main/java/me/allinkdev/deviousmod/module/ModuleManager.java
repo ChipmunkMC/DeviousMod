@@ -38,6 +38,7 @@ public class ModuleManager {
         modules.add(new ClientsideInventoryModule(this));
         modules.add(new LogosModule(this));
         modules.add(new DisableParticlesModule(this));
+        modules.add(new CommandPlaceholdersModule(this));
 
         logger.info("Loaded {} modules!", modules.size());
 
