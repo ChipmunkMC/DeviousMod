@@ -38,6 +38,7 @@ public abstract class PacketSendAndReceive {
     @Shadow
     private int packetsReceivedCounter;
 
+    @SuppressWarnings("unchecked")
     private static <T extends PacketListener> void handlePacket(final Packet<T> packet, final PacketListener listener) {
         packet.apply((T) listener);
     }
