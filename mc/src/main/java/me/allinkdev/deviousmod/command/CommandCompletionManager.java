@@ -7,27 +7,29 @@ import net.minecraft.network.packet.c2s.play.RequestCommandCompletionsC2SPacket;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.atomic.AtomicInteger;
-import java.util.function.Consumer;
 
 public final class CommandCompletionManager {
     private static final AtomicInteger completionId = new AtomicInteger();
-    private static final Map<Integer, Consumer<Suggestions>> futureMap = new HashMap<>();
+    private static final Map<Integer, CompletableFuture<Suggestions>> futureMap = new HashMap<>();
 
     public static boolean handleCompletion(final int id, final Suggestions suggestions) {
         if (!futureMap.containsKey(id)) {
             return false;
         }
 
-        final Consumer<Suggestions> consumer = futureMap.get(id);
-        consumer.accept(suggestions);
+        final CompletableFuture<Suggestions> consumer = futureMap.get(id);
+        consumer.complete(suggestions);
         futureMap.remove(id);
         return true;
     }
 
-    public static void getCompletion(final String command, final Consumer<Suggestions> consumer) {
+    public static CompletableFuture<Suggestions> getCompletion(final String command) {
+        final CompletableFuture<Suggestions> future = new CompletableFuture<>();
+
         final int id = completionId.decrementAndGet();
-        futureMap.put(id, consumer);
+        futureMap.put(id, future);
 
         final MinecraftClient client = MinecraftClient.getInstance();
         final ClientPlayNetworkHandler networkHandler = client.getNetworkHandler();
@@ -38,5 +40,7 @@ public final class CommandCompletionManager {
 
         final RequestCommandCompletionsC2SPacket packet = new RequestCommandCompletionsC2SPacket(id, command);
         networkHandler.sendPacket(packet);
+
+        return future;
     }
 }
