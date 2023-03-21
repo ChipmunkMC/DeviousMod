@@ -7,6 +7,7 @@ import me.allinkdev.deviousmod.DeviousMod;
 import me.allinkdev.deviousmod.event.network.connection.ConnectionEndEvent;
 import net.minecraft.client.network.ClientPlayNetworkHandler;
 import net.minecraft.client.network.PlayerListEntry;
+import net.minecraft.client.network.ServerInfo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -27,6 +28,16 @@ public final class TimeUtil {
     }
 
     public static long calculateCommandDelay(@NonNull final ClientPlayNetworkHandler networkHandler) {
+        final ServerInfo serverInfo = networkHandler.getServerInfo();
+
+        if (serverInfo == null) {
+            return BASELINE_COMMAND_DELAY;
+        }
+
+        if (serverInfo.isLocal()) {
+            return BASELINE_COMMAND_DELAY;
+        }
+
         final long now = System.currentTimeMillis();
         final long cachedCommandDelayTimestamp = currentCommandDelay.first();
 

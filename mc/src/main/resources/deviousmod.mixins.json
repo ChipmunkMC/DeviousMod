@@ -20,6 +20,7 @@
   "mixins": [
     "client.network.NetworkStateMixin",
     "patches.entity.AreaEffectCloudParticleLimiter",
+    "patches.network.LongCommandCompletionsKickFix",
     "patches.tag.BigTagKickFix",
     "patches.text.PlaceholderLimiter"
   ]
