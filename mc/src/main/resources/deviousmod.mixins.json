@@ -11,6 +11,7 @@
     "client.network.CommandInterceptor",
     "client.network.PacketSendAndReceive",
     "client.screen.HudTransformer",
+    "client.screen.InfiniChat",
     "client.screen.ScreenOverrider",
     "patches.text.ParticleCrashFix"
   ],

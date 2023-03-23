@@ -114,8 +114,6 @@ public final class CommandPlaceholdersModule extends DModule {
             sections[i] = String.join(" ", section);
         }
 
-        logger.info("{}", Arrays.toString(sections));
-
         final List<String> prefixes = new ArrayList<>();
         prefixes.add(""); // dirty hack
 
@@ -126,7 +124,6 @@ public final class CommandPlaceholdersModule extends DModule {
             for (final String prefix : prefixes) {
                 final String partialCommand = prefix + section + " ";
 
-                logger.info(partialCommand);
                 final CompletableFuture<Suggestions> suggestionsFuture = CommandCompletionManager.getCompletion(partialCommand);
                 final Suggestions suggestions = suggestionsFuture.join();
                 final Set<String> suggestionContent = getSuggestionContent(suggestions)
@@ -145,6 +142,7 @@ public final class CommandPlaceholdersModule extends DModule {
         final List<String> commands = prefixes.stream()
                 .map(String::trim)
                 .toList();
+        logger.info("{}", commands.size());
 
         this.queueCommands(commands);
     }

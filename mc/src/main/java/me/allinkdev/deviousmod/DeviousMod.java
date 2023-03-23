@@ -7,6 +7,7 @@ import me.allinkdev.deviousmod.event.tick.impl.ClientTickEndEvent;
 import me.allinkdev.deviousmod.event.tick.impl.ClientTickStartEvent;
 import me.allinkdev.deviousmod.event.tick.world.impl.WorldTickEndEvent;
 import me.allinkdev.deviousmod.event.tick.world.impl.WorldTickStartEvent;
+import me.allinkdev.deviousmod.keying.BotKeyProvider;
 import me.allinkdev.deviousmod.module.ModuleManager;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.client.command.v2.ClientCommandRegistrationCallback;
@@ -29,6 +30,8 @@ public class DeviousMod implements ModInitializer {
     private final ModuleManager moduleManager = new ModuleManager(this);
     @Getter
     private final CommandManager commandManager = new CommandManager(this);
+    @Getter
+    private final BotKeyProvider botKeyProvider = new BotKeyProvider();
 
     public static DeviousMod getInstance() {
         return instance;

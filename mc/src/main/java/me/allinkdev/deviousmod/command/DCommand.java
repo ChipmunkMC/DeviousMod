@@ -10,10 +10,12 @@ import me.allinkdev.deviousmod.util.TextUtil;
 import net.fabricmc.fabric.api.client.command.v2.ClientCommandManager;
 import net.fabricmc.fabric.api.client.command.v2.FabricClientCommandSource;
 import net.kyori.adventure.text.Component;
+import net.minecraft.client.MinecraftClient;
 import net.minecraft.command.CommandRegistryAccess;
 import net.minecraft.text.Text;
 
 public abstract class DCommand {
+    protected final MinecraftClient client = MinecraftClient.getInstance();
     protected final DeviousMod deviousMod;
     protected final ModuleManager moduleManager;
 
