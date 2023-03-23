@@ -8,6 +8,7 @@ import me.allinkdev.deviousmod.event.network.connection.ConnectionEndEvent;
 import net.minecraft.client.network.ClientPlayNetworkHandler;
 import net.minecraft.client.network.PlayerListEntry;
 import net.minecraft.client.network.ServerInfo;
+import net.minecraft.util.math.MathHelper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -52,7 +53,7 @@ public final class TimeUtil {
                 .findFirst()
                 .orElseThrow();
 
-        final long delay = Math.min(BASELINE_COMMAND_DELAY + playerListEntry.getLatency(), 200);
+        final long delay = (long) MathHelper.clamp(BASELINE_COMMAND_DELAY + playerListEntry.getLatency(), BASELINE_COMMAND_DELAY, 200);
 
         currentCommandDelay = Pair.of(now, delay);
 
