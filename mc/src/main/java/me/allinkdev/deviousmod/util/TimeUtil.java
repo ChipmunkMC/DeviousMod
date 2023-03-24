@@ -21,8 +21,8 @@ public final class TimeUtil {
     private static final long BASELINE_COMMAND_DELAY = 70L;
     private static Pair<Long, Long> currentCommandDelay = Pair.of(0L, 0L);
 
-    static {
-        DeviousMod.getInstance().subscribeEvents(new TimeUtil());
+    public static void init(final DeviousMod deviousMod) {
+        deviousMod.subscribeEvents(new TimeUtil());
     }
 
     public static long getInTicks(final long ms) {

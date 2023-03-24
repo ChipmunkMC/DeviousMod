@@ -5,15 +5,13 @@ import com.github.steveice10.opennbt.tag.builtin.CompoundTag;
 import me.allinkdev.deviousmod.DeviousMod;
 import me.allinkdev.deviousmod.data.DataCompound;
 import me.allinkdev.deviousmod.event.transformer.impl.Transformer;
+import net.kyori.adventure.text.Component;
 import net.minecraft.client.MinecraftClient;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.nio.file.Path;
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 
 public abstract class DModule {
     protected final Logger logger = LoggerFactory.getLogger(this.getClass());
@@ -91,5 +89,13 @@ public abstract class DModule {
 
     protected void clearTransformers() {
         this.transformers.clear();
+    }
+
+    protected void sendMessage(final Component component) {
+        deviousMod.sendMessage(component);
+    }
+
+    protected void sendMultipleMessages(final List<Component> components) {
+        deviousMod.sendMultipleMessages(components);
     }
 }

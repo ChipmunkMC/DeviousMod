@@ -39,6 +39,7 @@ public class ModuleManager {
         modules.add(new LogosModule(this));
         modules.add(new DisableParticlesModule(this));
         modules.add(new CommandPlaceholdersModule(this));
+        modules.add(new MonitorModule(this));
 
         logger.info("Loaded {} modules!", modules.size());
 
