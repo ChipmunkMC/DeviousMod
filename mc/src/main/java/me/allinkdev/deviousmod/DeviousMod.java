@@ -26,15 +26,15 @@ import java.lang.management.RuntimeMXBean;
 import java.util.List;
 
 public class DeviousMod implements ModInitializer {
-    public static final Logger logger = LoggerFactory.getLogger("deviousmod");
-    public static final MinecraftClient client = MinecraftClient.getInstance();
-    private static final Component messagePrefix = Component.text("[", NamedTextColor.YELLOW)
+    public static final Logger LOGGER = LoggerFactory.getLogger("deviousmod");
+    public static final MinecraftClient CLIENT = MinecraftClient.getInstance();
+    private static final Component MESSAGE_PREFIX = Component.text("[", NamedTextColor.YELLOW)
             .append(Component.text("DeviousMod Message", NamedTextColor.GOLD))
             .append(Component.text("]", NamedTextColor.YELLOW))
             .append(Component.space());
-    private static final Audience clientAudience = FabricClientAudiences.of()
+    private static final Audience CLIENT_AUDIENCE = FabricClientAudiences.of()
             .audience();
-    private static DeviousMod instance;
+    private static DeviousMod INSTANCE;
     @Getter
     private final EventBus eventBus = new EventBus();
     @Getter
@@ -44,8 +44,8 @@ public class DeviousMod implements ModInitializer {
     @Getter
     private final BotKeyProvider botKeyProvider = new BotKeyProvider();
 
-    public static DeviousMod getInstance() {
-        return instance;
+    public static DeviousMod getINSTANCE() {
+        return INSTANCE;
     }
 
     public static boolean isDevelopment() {
@@ -57,7 +57,7 @@ public class DeviousMod implements ModInitializer {
 
     @Override
     public void onInitialize() {
-        instance = this;
+        INSTANCE = this;
 
         ClientCommandRegistrationCallback.EVENT.register(commandManager::register);
 
@@ -82,7 +82,7 @@ public class DeviousMod implements ModInitializer {
     }
 
     public void sendMessage(final Component component) {
-        clientAudience.sendMessage(messagePrefix.append(component));
+        CLIENT_AUDIENCE.sendMessage(MESSAGE_PREFIX.append(component));
     }
 
     public void sendMultipleMessages(final List<Component> messages) {

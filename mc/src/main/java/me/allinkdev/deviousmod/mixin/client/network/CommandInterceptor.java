@@ -17,7 +17,7 @@ public abstract class CommandInterceptor {
 
     @Inject(method = "sendChatCommand", at = @At("HEAD"), cancellable = true)
     public void onSendChatCommand(final String command, final CallbackInfo ci) {
-        final DeviousMod deviousMod = DeviousMod.getInstance();
+        final DeviousMod deviousMod = DeviousMod.getINSTANCE();
         final EventBus eventBus = deviousMod.getEventBus();
         final SelfSendCommandEvent commandEvent = new SelfSendCommandEvent(command);
         eventBus.post(commandEvent);
@@ -28,7 +28,7 @@ public abstract class CommandInterceptor {
         }
 
         final String replacementCommand = commandEvent.getMessage();
-        
+
         if (!replacementCommand.equals(command)) {
             ci.cancel();
             this.sendChatCommand(replacementCommand);

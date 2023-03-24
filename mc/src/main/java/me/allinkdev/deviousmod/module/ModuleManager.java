@@ -13,7 +13,7 @@ import java.nio.file.Path;
 import java.util.*;
 import java.util.stream.Collectors;
 
-import static me.allinkdev.deviousmod.DeviousMod.logger;
+import static me.allinkdev.deviousmod.DeviousMod.LOGGER;
 
 public class ModuleManager {
     private static final Set<DModule> modules = new HashSet<>();
@@ -41,7 +41,7 @@ public class ModuleManager {
         modules.add(new CommandPlaceholdersModule(this));
         modules.add(new MonitorModule(this));
 
-        logger.info("Loaded {} modules!", modules.size());
+        LOGGER.info("Loaded {} modules!", modules.size());
 
         for (final DModule module : modules) {
             final String moduleName = module.getModuleName();
@@ -56,7 +56,7 @@ public class ModuleManager {
                 continue;
             }
 
-            logger.info("Enabling {}!", module.getModuleName());
+            LOGGER.info("Enabling {}!", module.getModuleName());
             initModule(module);
             module.setModuleState(true);
         }

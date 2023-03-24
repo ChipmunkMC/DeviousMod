@@ -12,7 +12,7 @@ import net.minecraft.command.CommandRegistryAccess;
 import java.util.HashSet;
 import java.util.Set;
 
-import static me.allinkdev.deviousmod.DeviousMod.logger;
+import static me.allinkdev.deviousmod.DeviousMod.LOGGER;
 
 public final class CommandManager {
     private final Set<DCommand> commands = new HashSet<>();
@@ -23,7 +23,7 @@ public final class CommandManager {
         commands.add(new KeyringCommand(deviousMod));
         commands.add(new BotEvalCommand(deviousMod));
 
-        logger.info("Loaded {} commands!", commands.size());
+        LOGGER.info("Loaded {} commands!", commands.size());
     }
 
     public void register(final CommandDispatcher<FabricClientCommandSource> dispatcher, final CommandRegistryAccess registryAccess) {

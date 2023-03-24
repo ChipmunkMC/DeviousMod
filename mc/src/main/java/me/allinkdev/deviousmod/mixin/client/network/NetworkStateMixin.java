@@ -15,7 +15,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 public final class NetworkStateMixin {
     @Inject(method = "channelInactive", at = @At("HEAD"))
     public void onChannelInactive(final ChannelHandlerContext context, final CallbackInfo ci) {
-        final DeviousMod deviousMod = DeviousMod.getInstance();
+        final DeviousMod deviousMod = DeviousMod.getINSTANCE();
         final EventBus eventBus = deviousMod.getEventBus();
         final ConnectionEndEvent event = new ConnectionEndEvent();
         eventBus.post(event);
@@ -23,7 +23,7 @@ public final class NetworkStateMixin {
 
     @Inject(method = "channelActive", at = @At("HEAD"))
     public void onChannelActive(final ChannelHandlerContext context, final CallbackInfo ci) {
-        final DeviousMod deviousMod = DeviousMod.getInstance();
+        final DeviousMod deviousMod = DeviousMod.getINSTANCE();
         final EventBus eventBus = deviousMod.getEventBus();
         final ConnectionStartEvent event = new ConnectionStartEvent();
         eventBus.post(event);
