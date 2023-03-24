@@ -13,6 +13,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.Collection;
+import java.util.Optional;
 import java.util.UUID;
 
 public final class TimeUtil {
@@ -48,10 +49,15 @@ public final class TimeUtil {
 
         final Collection<PlayerListEntry> playerList = networkHandler.getPlayerList();
         final UUID myUuid = UUIDUtil.getSelfUUID();
-        final PlayerListEntry playerListEntry = playerList.stream()
+        final Optional<PlayerListEntry> playerListEntryOptional = playerList.stream()
                 .filter(entry -> entry.getProfile().getId().equals(myUuid))
-                .findFirst()
-                .orElseThrow();
+                .findFirst();
+
+        if (playerListEntryOptional.isEmpty()) {
+            return BASELINE_COMMAND_DELAY;
+        }
+
+        final PlayerListEntry playerListEntry = playerListEntryOptional.get();
 
         final long delay = (long) MathHelper.clamp(BASELINE_COMMAND_DELAY + playerListEntry.getLatency(), BASELINE_COMMAND_DELAY, 200);
 
