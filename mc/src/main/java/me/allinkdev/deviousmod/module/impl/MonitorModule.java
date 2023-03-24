@@ -1,6 +1,7 @@
 package me.allinkdev.deviousmod.module.impl;
 
 import com.google.common.eventbus.Subscribe;
+import com.mojang.authlib.GameProfile;
 import it.unimi.dsi.fastutil.Pair;
 import me.allinkdev.deviousmod.event.network.connection.ConnectionEndEvent;
 import me.allinkdev.deviousmod.event.network.connection.ConnectionStartEvent;
@@ -11,10 +12,13 @@ import me.allinkdev.deviousmod.module.ModuleManager;
 import me.allinkdev.deviousmod.util.TimeUtil;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
+import net.minecraft.client.network.ClientPlayNetworkHandler;
+import net.minecraft.client.network.PlayerListEntry;
 import net.minecraft.network.packet.Packet;
 import net.minecraft.network.packet.s2c.play.PlayerListS2CPacket;
 import net.minecraft.network.packet.s2c.play.PlayerRemoveS2CPacket;
 import net.minecraft.network.packet.s2c.play.WorldTimeUpdateS2CPacket;
+import net.minecraft.text.Text;
 import net.minecraft.world.GameMode;
 
 import java.util.*;
@@ -139,7 +143,7 @@ public final class MonitorModule extends DModule {
         if (componentList.isEmpty()) {
             return;
         }
-        
+
         this.sendMultipleMessages(componentList);
     }
 
@@ -176,5 +180,35 @@ public final class MonitorModule extends DModule {
             this.sendMessage(Component.text("Server is now lagging!", NamedTextColor.RED));
             notifiedAboutLag = true;
         }
+    }
+
+    @Override
+    public void onEnable() {
+        this.playerListInformationPairMap.clear();
+
+        final ClientPlayNetworkHandler networkHandler = client.getNetworkHandler();
+
+        if (networkHandler == null) {
+            return;
+        }
+
+        final Collection<PlayerListEntry> entries = networkHandler.getPlayerList();
+
+        for (final PlayerListEntry entry : entries) {
+            final GameProfile profile = entry.getProfile();
+            final String username = profile.getName();
+            final UUID profileId = profile.getId();
+            final GameMode gameMode = entry.getGameMode();
+            final Text displayName = entry.getDisplayName();
+            final Component name = displayName == null ? Component.text(username) : displayName.asComponent();
+            final Pair<Component, GameMode> pair = Pair.of(name, gameMode);
+
+            this.playerListInformationPairMap.put(profileId, pair);
+        }
+    }
+
+    @Override
+    public void onDisable() {
+        this.playerListInformationPairMap.clear();
     }
 }

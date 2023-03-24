@@ -72,11 +72,21 @@ public abstract class DModule {
         moduleSettings.save();
 
         if (newState) {
+            this.onEnable();
             moduleManager.load(this);
             return;
         }
 
+        this.onDisable();
         moduleManager.unload(this);
+    }
+
+    public void onEnable() {
+        //
+    }
+
+    public void onDisable() {
+        //
     }
 
     public Set<Transformer> getTransformers() {
