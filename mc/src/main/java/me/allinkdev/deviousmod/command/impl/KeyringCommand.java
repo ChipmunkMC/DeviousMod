@@ -61,7 +61,9 @@ public final class KeyringCommand extends DCommand {
         }
 
         botKeyProvider.removeKey(botKey);
-        sendFeedback(context, Component.text("Key successfully removed.", NamedTextColor.GREEN));
+        sendFeedback(context, Component.text("Removed key \"", NamedTextColor.GREEN)
+                .append(Component.text(botKey.getIdentifier(), NamedTextColor.GREEN))
+                .append(Component.text("\" from the keyring.", NamedTextColor.GREEN)));
         return 1;
     }
 

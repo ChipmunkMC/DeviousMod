@@ -29,10 +29,7 @@ public final class BotKey {
             throw new IllegalArgumentException("Identifier tag not found!");
         }
 
-        final String rawIdentifier = identifierTag.getValue();
-
-        final int lastIndexOfUnderscore = rawIdentifier.lastIndexOf('_');
-        final String identifier = rawIdentifier.substring(0, lastIndexOfUnderscore);
+        final String identifier = identifierTag.getValue();
 
         final StringTag keyTag = tag.get("Key");
 
@@ -123,7 +120,7 @@ public final class BotKey {
 
     public CompoundTag getAsTag() {
         final CompoundTag tag = new CompoundTag("");
-        final StringTag identifierTag = new StringTag("Identifier", "Key_" + identifier);
+        final StringTag identifierTag = new StringTag("Identifier", identifier);
         final StringTag keyTag = new StringTag("Key", key);
         final StringTag algorithmTag = new StringTag("Algorithm", algorithm);
         final StringTag templateTag = new StringTag("Template", template);

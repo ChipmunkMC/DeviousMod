@@ -66,10 +66,11 @@ public final class BotKeyProvider {
     }
 
     public void removeKey(final BotKey key) {
+        LOGGER.info("Removing key {}!", key);
         loadedKeys.remove(key);
 
         final CompoundTag compoundTag = key.getAsTag();
-        listTag.add(compoundTag);
+        listTag.remove(compoundTag);
 
         this.compound.save();
     }
