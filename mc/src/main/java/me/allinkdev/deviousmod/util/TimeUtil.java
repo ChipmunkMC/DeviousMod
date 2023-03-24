@@ -17,7 +17,7 @@ import java.util.Optional;
 import java.util.UUID;
 
 public final class TimeUtil {
-    private static final Logger logger = LoggerFactory.getLogger("Time Util");
+    private static final Logger LOGGER = LoggerFactory.getLogger("Time Util");
     private static final long BASELINE_COMMAND_DELAY = 70L;
     private static Pair<Long, Long> currentCommandDelay = Pair.of(0L, 0L);
 
@@ -63,7 +63,7 @@ public final class TimeUtil {
 
         currentCommandDelay = Pair.of(now, delay);
 
-        logger.info("Lazily calculated current command delay to be {}ms.", delay);
+        LOGGER.info("Lazily calculated current command delay to be {}ms.", delay);
 
         return delay;
     }
@@ -71,6 +71,6 @@ public final class TimeUtil {
     @Subscribe
     public void onConnectionEnd(final ConnectionEndEvent event) {
         currentCommandDelay = Pair.of(0L, 0L);
-        logger.info("Command delay invalidated!");
+        LOGGER.info("Command delay invalidated!");
     }
 }
