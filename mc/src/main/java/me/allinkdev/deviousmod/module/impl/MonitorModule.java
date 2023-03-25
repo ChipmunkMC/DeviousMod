@@ -149,13 +149,17 @@ public final class MonitorModule extends DModule {
 
     @Subscribe
     public void onConnectionEnd(final ConnectionEndEvent event) {
+        worldTickCount = 0;
         this.playerListInformationPairMap.clear();
+        notifiedAboutLag = false;
+        lastTimePacket = System.currentTimeMillis();
     }
 
     @Subscribe
     public void onConnectionStart(final ConnectionStartEvent event) {
         worldTickCount = 0;
         lastTimePacket = System.currentTimeMillis();
+        notifiedAboutLag = false;
     }
 
     @Subscribe
