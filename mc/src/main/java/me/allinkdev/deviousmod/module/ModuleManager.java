@@ -1,5 +1,6 @@
 package me.allinkdev.deviousmod.module;
 
+import com.github.allinkdev.reflector.Reflector;
 import com.github.steveice10.opennbt.tag.builtin.ByteTag;
 import com.github.steveice10.opennbt.tag.builtin.CompoundTag;
 import lombok.Getter;
@@ -7,7 +8,7 @@ import me.allinkdev.deviousmod.DeviousMod;
 import me.allinkdev.deviousmod.data.Config;
 import me.allinkdev.deviousmod.data.DataCompound;
 import me.allinkdev.deviousmod.event.transformer.impl.Transformer;
-import me.allinkdev.deviousmod.module.impl.*;
+import me.allinkdev.deviousmod.module.impl.TestModule;
 
 import java.nio.file.Path;
 import java.util.*;
@@ -30,16 +31,15 @@ public class ModuleManager {
 
         deviousMod.subscribeEvents(this);
 
-        if (DeviousMod.isDevelopment()) {
-            modules.add(new TestModule(this));
-        }
+        final List<? extends DModule> newModules = Reflector.createNew(DModule.class)
+                .allSubClassesInSubPackage("impl")
+                .map(Reflector::createNew)
+                .map(r -> r.create(this))
+                .map(Optional::orElseThrow)
+                .filter(m -> !(m instanceof TestModule) || DeviousMod.isDevelopment())
+                .toList();
 
-        modules.add(new KeepCorpsesModule(this));
-        modules.add(new ClientsideInventoryModule(this));
-        modules.add(new LogosModule(this));
-        modules.add(new DisableParticlesModule(this));
-        modules.add(new CommandPlaceholdersModule(this));
-        modules.add(new MonitorModule(this));
+        modules.addAll(newModules);
 
         LOGGER.info("Loaded {} modules!", modules.size());
 
