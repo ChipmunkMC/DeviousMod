@@ -48,7 +48,7 @@ dependencies {
      * NOTE: You must include EVERY dependency or else it won't launch!
      **/
     include(implementation("com.github.steveice10:opennbt:1.5-SNAPSHOT"))
-    include(implementation("com.github.allinkdev:Reflector:1.0.0"))
+    include(implementation("com.github.allinkdev:Reflector:1.1.0"))
     include(modImplementation("net.kyori:adventure-platform-fabric:5.8.0"))
 }
 
