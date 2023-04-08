@@ -19,10 +19,13 @@
     "defaultRequire": 1
   },
   "mixins": [
+    "client.network.ClientConnectionMixin",
     "client.network.NetworkStateMixin",
     "patches.entity.AreaEffectCloudParticleLimiter",
     "patches.network.LongCommandCompletionsKickFix",
     "patches.tag.BigTagKickFix",
-    "patches.text.PlaceholderLimiter"
+    "patches.text.NullComponentFallback",
+    "patches.text.PlaceholderLimiter",
+    "patches.text.TellKickFix"
   ]
 }

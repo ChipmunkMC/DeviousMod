@@ -15,7 +15,7 @@ import java.util.List;
 @Mixin(InGameHud.class)
 public final class HudTransformer {
     private List<InGameUITransformer> getTransformers() {
-        final DeviousMod deviousMod = DeviousMod.getINSTANCE();
+        final DeviousMod deviousMod = DeviousMod.getInstance();
         final ModuleManager moduleManager = deviousMod.getModuleManager();
 
         return moduleManager.getTransformers(InGameUITransformer.class);

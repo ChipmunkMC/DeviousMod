@@ -3,7 +3,9 @@ package me.allinkdev.deviousmod.module.impl;
 import com.google.common.eventbus.Subscribe;
 import com.mojang.authlib.GameProfile;
 import it.unimi.dsi.fastutil.Pair;
+import me.allinkdev.deviousmod.DeviousMod;
 import me.allinkdev.deviousmod.event.network.connection.ConnectionEndEvent;
+import me.allinkdev.deviousmod.event.network.connection.ConnectionErrorEvent;
 import me.allinkdev.deviousmod.event.network.connection.ConnectionStartEvent;
 import me.allinkdev.deviousmod.event.network.packet.impl.PacketS2CEvent;
 import me.allinkdev.deviousmod.event.tick.world.impl.WorldTickEndEvent;
@@ -160,6 +162,13 @@ public final class MonitorModule extends DModule {
         worldTickCount = 0;
         lastTimePacket = System.currentTimeMillis();
         notifiedAboutLag = false;
+    }
+
+    @Subscribe
+    public void onConnectionError(final ConnectionErrorEvent event) {
+        final Throwable throwable = event.getThrowable();
+
+        DeviousMod.LOGGER.error("Packet error: ", throwable);
     }
 
     @Subscribe

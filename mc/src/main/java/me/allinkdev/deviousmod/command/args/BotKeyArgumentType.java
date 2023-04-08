@@ -19,7 +19,7 @@ import java.util.concurrent.CompletableFuture;
 import java.util.stream.Collectors;
 
 public final class BotKeyArgumentType implements ArgumentType<BotKey> {
-    private static final DeviousMod DEVIOUS_MOD = DeviousMod.getINSTANCE();
+    private static final DeviousMod DEVIOUS_MOD = DeviousMod.getInstance();
 
     public static <S> BotKey getBotKey(final CommandContext<S> context, final String name) {
         return context.getArgument(name, BotKey.class);

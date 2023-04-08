@@ -44,7 +44,7 @@ public class DeviousMod implements ModInitializer {
     @Getter
     private final BotKeyProvider botKeyProvider = new BotKeyProvider();
 
-    public static DeviousMod getINSTANCE() {
+    public static DeviousMod getInstance() {
         return INSTANCE;
     }
 
