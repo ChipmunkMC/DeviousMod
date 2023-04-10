@@ -3,7 +3,6 @@ package me.allinkdev.deviousmod.module.impl;
 import com.google.common.eventbus.Subscribe;
 import com.mojang.authlib.GameProfile;
 import it.unimi.dsi.fastutil.Pair;
-import me.allinkdev.deviousmod.DeviousMod;
 import me.allinkdev.deviousmod.event.network.connection.ConnectionEndEvent;
 import me.allinkdev.deviousmod.event.network.connection.ConnectionErrorEvent;
 import me.allinkdev.deviousmod.event.network.connection.ConnectionStartEvent;
@@ -166,9 +165,9 @@ public final class MonitorModule extends DModule {
 
     @Subscribe
     public void onConnectionError(final ConnectionErrorEvent event) {
-        final Throwable throwable = event.getThrowable();
+        //final Throwable throwable = event.getThrowable();
 
-        DeviousMod.LOGGER.error("Packet error: ", throwable);
+        //DeviousMod.LOGGER.error("Packet error: ", throwable);
     }
 
     @Subscribe
