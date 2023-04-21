@@ -3,7 +3,6 @@ package me.allinkdev.deviousmod.command;
 import com.mojang.brigadier.suggestion.Suggestions;
 import me.allinkdev.deviousmod.DeviousMod;
 import me.allinkdev.deviousmod.util.NoConstructor;
-import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.network.ClientPlayNetworkHandler;
 import net.minecraft.network.packet.c2s.play.RequestCommandCompletionsC2SPacket;
 
