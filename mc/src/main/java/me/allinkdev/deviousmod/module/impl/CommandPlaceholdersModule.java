@@ -19,6 +19,7 @@ import java.util.concurrent.LinkedBlockingQueue;
 import java.util.stream.Collectors;
 
 public final class CommandPlaceholdersModule extends DModule {
+    private static final String SEARCH_STRING = "all_suggestions";
     private final Queue<String> commandQueue = new LinkedBlockingQueue<>();
     private long tickCount = 0;
 
@@ -40,7 +41,7 @@ public final class CommandPlaceholdersModule extends DModule {
     public void onSendCommandEvent(final SelfSendCommandEvent event) {
         final String command = event.getMessage();
 
-        if (!command.contains("all_suggestions")) {
+        if (!command.contains(SEARCH_STRING)) {
             return;
         }
 
@@ -52,7 +53,7 @@ public final class CommandPlaceholdersModule extends DModule {
         for (int i = 0; i < parts.length; i++) {
             final String element = parts[i];
 
-            if (element.equals("all_suggestions")) {
+            if (element.equals(SEARCH_STRING)) {
                 if (partIndex != -1) {
                     this.parseRecursive(parts);
                     return;
@@ -72,7 +73,7 @@ public final class CommandPlaceholdersModule extends DModule {
         final String partialCommand = String.join(" ", partialCommandParts);
         final String commandRemainder = String.join(" ", commandRemainderParts);
 
-        if (partialCommand.contains("all_suggestions") || commandRemainder.contains("all_suggestions")) {
+        if (partialCommand.contains(SEARCH_STRING) || commandRemainder.contains(SEARCH_STRING)) {
             this.parseRecursive(parts);
             return;
         }
@@ -98,7 +99,7 @@ public final class CommandPlaceholdersModule extends DModule {
         for (int i = 0; i < parts.length; i++) {
             final String part = parts[i];
 
-            if (part.equals("all_suggestions")) {
+            if (part.equals(SEARCH_STRING)) {
                 indexes.add(i);
             }
         }
