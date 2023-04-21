@@ -130,7 +130,6 @@ public final class CommandPlaceholdersModule extends DModule {
                         .stream()
                         .map(s -> partialCommand + s + " ")
                         .collect(Collectors.toUnmodifiableSet());
-                logger.info("{}", suggestionContent);
 
                 newPrefixes.addAll(suggestionContent);
             }
@@ -142,7 +141,6 @@ public final class CommandPlaceholdersModule extends DModule {
         final List<String> commands = prefixes.stream()
                 .map(String::trim)
                 .toList();
-        logger.info("{}", commands.size());
 
         this.queueCommands(commands);
     }
