@@ -5,6 +5,18 @@ public final class ThrowableUtil {
         throw new UnsupportedOperationException("ThrowableUtil is not to be instantiated!");
     }
 
+    public static void appendStackTrace(final StackTraceElement[] traceElements, final StringBuilder builder) {
+        for (final StackTraceElement traceElement : traceElements) {
+            builder.append("\tat ").append(traceElement).append("\n");
+        }
+    }
+
+    public static String getStackTrace(final StackTraceElement[] elements) {
+        final StringBuilder builder = new StringBuilder();
+        appendStackTrace(elements, builder);
+        return builder.toString();
+    }
+
     public static String getStackTrace(final Throwable ex, final int depth) {
         final StringBuilder builder = new StringBuilder();
 
@@ -13,10 +25,9 @@ public final class ThrowableUtil {
         }
 
         builder.append(ex).append("\n");
-        final StackTraceElement[] trace = ex.getStackTrace();
-        for (final StackTraceElement traceElement : trace) {
-            builder.append("\tat ").append(traceElement).append("\n");
-        }
+
+        final StackTraceElement[] elements = ex.getStackTrace();
+        appendStackTrace(elements, builder);
 
         for (final Throwable se : ex.getSuppressed()) {
             builder.append("\tSuppressed: ").append(getStackTrace(se, depth + 1)).append("\n");

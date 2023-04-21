@@ -9,6 +9,7 @@ import me.allinkdev.deviousmod.event.tick.world.impl.WorldTickEndEvent;
 import me.allinkdev.deviousmod.event.tick.world.impl.WorldTickStartEvent;
 import me.allinkdev.deviousmod.keying.BotKeyProvider;
 import me.allinkdev.deviousmod.module.ModuleManager;
+import me.allinkdev.deviousmod.thread.DeviousPuppy;
 import me.allinkdev.deviousmod.util.TimeUtil;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.client.command.v2.ClientCommandRegistrationCallback;
