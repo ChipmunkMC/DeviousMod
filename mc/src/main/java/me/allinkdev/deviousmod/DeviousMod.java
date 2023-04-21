@@ -65,9 +65,6 @@ public final class DeviousMod implements ClientModInitializer {
 
         ClientTickEvents.START_WORLD_TICK.register(WorldTickStartEvent::onWorldTickStart);
         ClientTickEvents.START_WORLD_TICK.register(WorldTickEndEvent::onWorldTickEnd);
-
-        // TODO: Doesn't fix kick
-        //NbtList.TYPE = new BetterNbtListReader();
     }
 
     public void subscribeEvents(final Object object) {
