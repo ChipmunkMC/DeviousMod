@@ -19,7 +19,7 @@ public final class DisableParticlesModule extends DModule {
 
     @Override
     public String getDescription() {
-        return "Disable the Partikle, ,. , ";
+        return "Cancels particle packets.";
     }
 
     @Subscribe
