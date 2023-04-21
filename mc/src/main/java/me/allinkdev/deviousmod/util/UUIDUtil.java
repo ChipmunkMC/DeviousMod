@@ -1,6 +1,6 @@
 package me.allinkdev.deviousmod.util;
 
-import net.minecraft.client.MinecraftClient;
+import me.allinkdev.deviousmod.DeviousMod;
 import net.minecraft.client.network.ClientPlayNetworkHandler;
 import net.minecraft.client.util.Session;
 import net.minecraft.network.ClientConnection;
@@ -11,8 +11,7 @@ import java.util.UUID;
 
 public final class UUIDUtil extends NoConstructor {
     public static UUID getSelfUUID() {
-        final MinecraftClient client = MinecraftClient.getInstance();
-        final ClientPlayNetworkHandler clientPlayNetworkHandler = client.getNetworkHandler();
+        final ClientPlayNetworkHandler clientPlayNetworkHandler = DeviousMod.CLIENT.getNetworkHandler();
 
         if (clientPlayNetworkHandler == null) {
             return Util.NIL_UUID;
@@ -20,7 +19,7 @@ public final class UUIDUtil extends NoConstructor {
 
         final ClientConnection connection = clientPlayNetworkHandler.getConnection();
         final boolean encrypted = connection.isEncrypted();
-        final Session session = client.getSession();
+        final Session session = DeviousMod.CLIENT.getSession();
         final String nickname = session.getUsername();
         final UUID onlineUUID = session.getUuidOrNull();
 

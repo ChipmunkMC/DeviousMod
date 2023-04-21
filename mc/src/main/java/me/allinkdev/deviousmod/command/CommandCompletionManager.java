@@ -1,6 +1,7 @@
 package me.allinkdev.deviousmod.command;
 
 import com.mojang.brigadier.suggestion.Suggestions;
+import me.allinkdev.deviousmod.DeviousMod;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.network.ClientPlayNetworkHandler;
 import net.minecraft.network.packet.c2s.play.RequestCommandCompletionsC2SPacket;
@@ -31,8 +32,7 @@ public final class CommandCompletionManager {
         final int id = completionId.decrementAndGet();
         futureMap.put(id, future);
 
-        final MinecraftClient client = MinecraftClient.getInstance();
-        final ClientPlayNetworkHandler networkHandler = client.getNetworkHandler();
+        final ClientPlayNetworkHandler networkHandler = DeviousMod.CLIENT.getNetworkHandler();
 
         if (networkHandler == null) {
             throw new IllegalStateException("Completion requested in invalid state!");

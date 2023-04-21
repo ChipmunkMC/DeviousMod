@@ -15,7 +15,7 @@ import net.minecraft.command.CommandRegistryAccess;
 import net.minecraft.text.Text;
 
 public abstract class DCommand {
-    protected final MinecraftClient client = MinecraftClient.getInstance();
+    protected final MinecraftClient client = DeviousMod.CLIENT;
     protected final DeviousMod deviousMod;
     protected final ModuleManager moduleManager;
 

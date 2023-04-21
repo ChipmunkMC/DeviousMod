@@ -5,7 +5,7 @@ import com.github.steveice10.opennbt.tag.builtin.IntTag;
 import com.github.steveice10.opennbt.tag.builtin.StringTag;
 import lombok.Builder;
 import lombok.Data;
-import net.minecraft.client.MinecraftClient;
+import me.allinkdev.deviousmod.DeviousMod;
 import net.minecraft.client.util.Session;
 
 import java.nio.charset.Charset;
@@ -92,10 +92,9 @@ public final class BotKey {
     }
 
     public Optional<String> encode(final String command) {
-        final MinecraftClient client = MinecraftClient.getInstance();
         final long timestamp = System.currentTimeMillis();
         final long forgivenTimestamp = timestamp / Math.max((timestampForgiveness * 1000L), 1L);
-        final Session session = client.getSession();
+        final Session session = DeviousMod.CLIENT.getSession();
         final String username = session.getUsername();
         final String uuid = session.getUuid();
 
