@@ -14,7 +14,7 @@ import java.nio.file.Path;
 import java.util.*;
 
 public abstract class DModule {
-    protected final Logger logger = LoggerFactory.getLogger(this.getClass());
+    protected final Logger logger = LoggerFactory.getLogger("Devious Mod/" + this.getClass().getSimpleName());
     protected final DeviousMod deviousMod;
     protected final MinecraftClient client = MinecraftClient.getInstance();
     protected final DataCompound settings;
