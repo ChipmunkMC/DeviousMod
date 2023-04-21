@@ -16,7 +16,7 @@ import java.util.stream.Collectors;
 
 import static me.allinkdev.deviousmod.DeviousMod.LOGGER;
 
-public class ModuleManager {
+public final class ModuleManager {
     private static final Set<DModule> modules = new HashSet<>();
     @Getter
     private final Path moduleConfigPath = Config.getConfigDirectory();
