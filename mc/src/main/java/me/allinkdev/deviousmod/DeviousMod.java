@@ -26,7 +26,7 @@ import java.lang.management.ManagementFactory;
 import java.lang.management.RuntimeMXBean;
 import java.util.List;
 
-public class DeviousMod implements ModInitializer {
+public final class DeviousMod implements ModInitializer {
     public static final Logger LOGGER = LoggerFactory.getLogger("Devious Mod");
     public static final MinecraftClient CLIENT = MinecraftClient.getInstance();
     private static final Component MESSAGE_PREFIX = Component.text("[", NamedTextColor.YELLOW)
