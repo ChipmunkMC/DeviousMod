@@ -19,7 +19,6 @@ import java.util.concurrent.LinkedBlockingQueue;
 import java.util.stream.Collectors;
 
 public final class CommandPlaceholdersModule extends DModule {
-    private static final long BASE_DELAY = 70L;
     private final Queue<String> commandQueue = new LinkedBlockingQueue<>();
     private long tickCount = 0;
 
@@ -178,7 +177,7 @@ public final class CommandPlaceholdersModule extends DModule {
             return;
         }
 
-        final long commandDelay = TimeUtil.calculateCommandDelay(networkHandler);
+        final long commandDelay = 90L;
         final long commandDelayInTicks = TimeUtil.getInTicks(commandDelay);
 
         if (tickCount % commandDelayInTicks != 0) {

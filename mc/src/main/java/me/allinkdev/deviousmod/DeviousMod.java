@@ -68,8 +68,6 @@ public class DeviousMod implements ModInitializer {
         ClientTickEvents.START_WORLD_TICK.register(WorldTickStartEvent::onWorldTickStart);
         ClientTickEvents.START_WORLD_TICK.register(WorldTickEndEvent::onWorldTickEnd);
 
-        TimeUtil.init(this);
-
         // TODO: Doesn't fix kick
         //NbtList.TYPE = new BetterNbtListReader();
     }
