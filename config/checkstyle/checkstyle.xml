@@ -5,6 +5,7 @@
 
 <module name="Checker">
     <module name="TreeWalker">
+        <module name="UnusedImports"/>
         <module name="FinalLocalVariable">
             <property name="validateEnhancedForLoopVariable" value="true"/>
         </module>
