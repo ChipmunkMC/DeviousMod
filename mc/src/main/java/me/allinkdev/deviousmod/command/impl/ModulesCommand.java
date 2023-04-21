@@ -5,6 +5,7 @@ import com.mojang.brigadier.builder.LiteralArgumentBuilder;
 import com.mojang.brigadier.context.CommandContext;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import com.mojang.brigadier.exceptions.SimpleCommandExceptionType;
+import com.mojang.brigadier.tree.LiteralCommandNode;
 import me.allinkdev.deviousmod.DeviousMod;
 import me.allinkdev.deviousmod.command.DCommand;
 import me.allinkdev.deviousmod.command.args.ModuleArgumentType;
@@ -127,6 +128,29 @@ public final class ModulesCommand extends DCommand {
         return 1;
     }
 
+    public int executeList(final CommandContext<FabricClientCommandSource> context) {
+        final Set<DModule> modules = moduleManager.getModules();
+
+        Component component = Component.text("Available modules:")
+                .append(Component.newline());
+
+        for (final DModule module : moduleManager.getModules()) {
+            final String name =  module.getModuleName();
+            component = component.append(Component.text(" - ")
+                    .append(Component.text(name)))
+                    .append(Component.newline());
+        }
+
+        component = component
+                .append(Component.newline())
+                .append(Component.text("In total, there are "))
+                .append(Component.text(modules.size()))
+                .append(Component.text(" available modules."));
+
+        sendFeedback(context, component);
+        return 1;
+    }
+
     public int executeDisable(final CommandContext<FabricClientCommandSource> context) throws CommandSyntaxException {
         final DModule module = genericExecute(context);
         updateModuleStatus(context, module, false);
@@ -165,7 +189,9 @@ public final class ModulesCommand extends DCommand {
                 .then(ClientCommandManager.literal("status")
                         .executes(this::executeStatusNoArgs)
                         .then(ClientCommandManager.argument(MODULE_ARGUMENT_NAME, type)
-                                .executes(this::executeStatus)));
+                                .executes(this::executeStatus)))
+                .then(ClientCommandManager.literal("list")
+                        .executes(this::executeList));
     }
 
     @Override
