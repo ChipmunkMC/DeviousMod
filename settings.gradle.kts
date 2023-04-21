@@ -7,5 +7,3 @@ pluginManagement {
 }
 
 rootProject.name = "DeviousMod"
-
-include("mc")
