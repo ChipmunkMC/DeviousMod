@@ -1,10 +1,6 @@
 package me.allinkdev.deviousmod.util;
 
-public final class ThrowableUtil {
-    ThrowableUtil() {
-        throw new UnsupportedOperationException("ThrowableUtil is not to be instantiated!");
-    }
-
+public final class ThrowableUtil extends NoConstructor {
     public static void appendStackTrace(final StackTraceElement[] traceElements, final StringBuilder builder) {
         for (final StackTraceElement traceElement : traceElements) {
             builder.append("\tat ").append(traceElement).append("\n");

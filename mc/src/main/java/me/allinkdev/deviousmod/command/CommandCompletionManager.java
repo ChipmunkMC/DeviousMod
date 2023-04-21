@@ -2,6 +2,7 @@ package me.allinkdev.deviousmod.command;
 
 import com.mojang.brigadier.suggestion.Suggestions;
 import me.allinkdev.deviousmod.DeviousMod;
+import me.allinkdev.deviousmod.util.NoConstructor;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.network.ClientPlayNetworkHandler;
 import net.minecraft.network.packet.c2s.play.RequestCommandCompletionsC2SPacket;
@@ -11,7 +12,7 @@ import java.util.Map;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.atomic.AtomicInteger;
 
-public final class CommandCompletionManager {
+public final class CommandCompletionManager extends NoConstructor {
     private static final AtomicInteger completionId = new AtomicInteger();
     private static final Map<Integer, CompletableFuture<Suggestions>> futureMap = new HashMap<>();
 

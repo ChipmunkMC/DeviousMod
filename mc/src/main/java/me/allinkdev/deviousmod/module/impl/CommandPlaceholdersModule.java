@@ -159,11 +159,11 @@ public final class CommandPlaceholdersModule extends DModule {
             return;
         }
 
-        commandQueue.add(command);
+        this.commandQueue.add(command);
     }
 
     private void queueCommands(final List<String> command) {
-        commandQueue.addAll(command);
+        this.commandQueue.addAll(command);
     }
 
     @Subscribe
