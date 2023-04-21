@@ -11,7 +11,7 @@ import me.allinkdev.deviousmod.keying.BotKeyProvider;
 import me.allinkdev.deviousmod.module.ModuleManager;
 import me.allinkdev.deviousmod.thread.DeviousPuppy;
 import me.allinkdev.deviousmod.util.TimeUtil;
-import net.fabricmc.api.ModInitializer;
+import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.fabric.api.client.command.v2.ClientCommandRegistrationCallback;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.kyori.adventure.audience.Audience;
@@ -26,7 +26,7 @@ import java.lang.management.ManagementFactory;
 import java.lang.management.RuntimeMXBean;
 import java.util.List;
 
-public final class DeviousMod implements ModInitializer {
+public final class DeviousMod implements ClientModInitializer {
     public static final Logger LOGGER = LoggerFactory.getLogger("Devious Mod");
     public static final MinecraftClient CLIENT = MinecraftClient.getInstance();
     private static final Component MESSAGE_PREFIX = Component.text("[", NamedTextColor.YELLOW)
@@ -57,7 +57,7 @@ public final class DeviousMod implements ModInitializer {
     }
 
     @Override
-    public void onInitialize() {
+    public void onInitializeClient() {
         INSTANCE = this;
 
         ClientCommandRegistrationCallback.EVENT.register(commandManager::register);

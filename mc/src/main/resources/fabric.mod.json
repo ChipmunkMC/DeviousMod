@@ -12,7 +12,7 @@
   "icon": "assets/deviousmod/icon.png",
   "accessWidener": "deviousmod.accesswidener",
   "entrypoints": {
-    "main": [
+    "client": [
       "me.allinkdev.deviousmod.DeviousMod"
     ]
   },
