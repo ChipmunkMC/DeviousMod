@@ -15,8 +15,6 @@ import net.minecraft.client.sound.SoundManager;
 import net.minecraft.client.util.Window;
 import net.minecraft.client.world.ClientWorld;
 import org.jetbrains.annotations.Nullable;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -26,7 +24,6 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(MinecraftClient.class)
 public abstract class ScreenOverrider {
-    private final Logger logger = LoggerFactory.getLogger("DeviousMod/ScreenOverrider");
     @Shadow
     @Nullable
     public Screen currentScreen;
@@ -65,8 +62,6 @@ public abstract class ScreenOverrider {
         }
 
         final Class<? extends Screen> clazz = providedScreen == null ? Screen.class : providedScreen.getClass();
-        final String name = clazz.getTypeName();
-        logger.info("Processing setScreen {}...", name);
 
         customSetScreen(overriddenScreen);
         ci.cancel();
