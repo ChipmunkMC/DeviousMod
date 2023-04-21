@@ -64,7 +64,7 @@ public final class CommandPlaceholdersModule extends DModule {
         }
 
         if (partIndex == -1) {
-            // Probably log something here in the future
+            logger.warn("Part index is -1!");
             return;
         }
 
