@@ -59,7 +59,7 @@ public final class TimeUtil {
 
         final PlayerListEntry playerListEntry = playerListEntryOptional.get();
 
-        final long delay = (long) MathHelper.clamp(BASELINE_COMMAND_DELAY + playerListEntry.getLatency(), BASELINE_COMMAND_DELAY, 200);
+        final long delay = (long) MathHelper.clamp(BASELINE_COMMAND_DELAY + (float) playerListEntry.getLatency(), BASELINE_COMMAND_DELAY, 200);
 
         currentCommandDelay = Pair.of(now, delay);
 
