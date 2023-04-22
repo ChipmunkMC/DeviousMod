@@ -3,16 +3,12 @@ package me.allinkdev.deviousmod.keying;
 import com.github.steveice10.opennbt.tag.builtin.CompoundTag;
 import com.github.steveice10.opennbt.tag.builtin.IntTag;
 import com.github.steveice10.opennbt.tag.builtin.StringTag;
-import lombok.Builder;
-import lombok.Data;
 import me.allinkdev.deviousmod.DeviousMod;
 import net.minecraft.client.util.Session;
 
 import java.nio.charset.Charset;
 import java.util.Optional;
 
-@Data
-@Builder
 public final class BotKey {
     private final String identifier;
     private final String key;
@@ -21,6 +17,44 @@ public final class BotKey {
     private final int hashLen;
     private final int timestampForgiveness;
     private final Charset charset;
+
+    BotKey(String identifier, String key, String algorithm, String template, int hashLen, int timestampForgiveness, Charset charset) {
+        this.identifier = identifier;
+        this.key = key;
+        this.algorithm = algorithm;
+        this.template = template;
+        this.hashLen = hashLen;
+        this.timestampForgiveness = timestampForgiveness;
+        this.charset = charset;
+    }
+
+    public String getIdentifier() {
+        return this.identifier;
+    }
+
+    public String getKey() {
+        return this.key;
+    }
+
+    public String getAlgorithm() {
+        return this.algorithm;
+    }
+
+    public String getTemplate() {
+        return this.template;
+    }
+
+    public int getHashLen() {
+        return this.hashLen;
+    }
+
+    public int getTimestampForgiveness() {
+        return this.timestampForgiveness;
+    }
+
+    public Charset getCharset() {
+        return this.charset;
+    }
 
     public static BotKey loadFromTag(final CompoundTag tag) throws IllegalArgumentException {
         final StringTag identifierTag = tag.get("Identifier");
@@ -136,5 +170,66 @@ public final class BotKey {
         tag.put(charsetTag);
 
         return tag;
+    }
+
+    public static final class Builder {
+        private String identifier;
+        private String key;
+        private String algorithm;
+        private String template;
+        private int hashLen;
+        private int timestampForgiveness;
+        private Charset charset;
+
+        public Builder identifier(String identifier) {
+            this.identifier = identifier;
+            return this;
+        }
+
+        public Builder key(String key) {
+            this.key = key;
+            return this;
+        }
+
+        public Builder algorithm(String algorithm) {
+            this.algorithm = algorithm;
+            return this;
+        }
+
+        public Builder template(String template) {
+            this.template = template;
+            return this;
+        }
+
+        public Builder hashLen(int hashLen) {
+            this.hashLen = hashLen;
+            return this;
+        }
+
+        public Builder timestampForgiveness(int timestampForgiveness) {
+            this.timestampForgiveness = timestampForgiveness;
+            return this;
+        }
+
+        public Builder charset(Charset charset) {
+            this.charset = charset;
+            return this;
+        }
+
+        public BotKey build() {
+            return new BotKey(
+                    this.identifier,
+                    this.key,
+                    this.algorithm,
+                    this.template,
+                    this.hashLen,
+                    this.timestampForgiveness,
+                    this.charset
+            );
+        }
+    }
+
+    public static Builder builder() {
+        return new Builder();
     }
 }

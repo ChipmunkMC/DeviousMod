@@ -2,7 +2,6 @@ plugins {
     id("java")
     id("checkstyle")
     id("fabric-loom") version "1.0-SNAPSHOT"
-    id("io.freefair.lombok") version "6.6.1"
 }
 
 java.sourceCompatibility = JavaVersion.VERSION_17

@@ -3,7 +3,6 @@ package me.allinkdev.deviousmod.module;
 import com.github.allinkdev.reflector.Reflector;
 import com.github.steveice10.opennbt.tag.builtin.ByteTag;
 import com.github.steveice10.opennbt.tag.builtin.CompoundTag;
-import lombok.Getter;
 import me.allinkdev.deviousmod.DeviousMod;
 import me.allinkdev.deviousmod.data.Config;
 import me.allinkdev.deviousmod.data.DataCompound;
@@ -18,12 +17,9 @@ import static me.allinkdev.deviousmod.DeviousMod.LOGGER;
 
 public final class ModuleManager {
     private static final Set<DModule> modules = new HashSet<>();
-    @Getter
     private final Path moduleConfigPath = Config.getConfigDirectory();
-    @Getter
     private final DataCompound settings = new DataCompound("modules", moduleConfigPath, Path.of("modules"));
     private final Map<DModule, Set<Transformer>> transformers = new HashMap<>();
-    @Getter
     private final DeviousMod deviousMod;
 
     public ModuleManager(final DeviousMod deviousMod) {
@@ -129,5 +125,17 @@ public final class ModuleManager {
         return (List<T>) allTransformers.stream()
                 .filter(t -> Arrays.stream(t.getClass().getInterfaces()).toList().contains(type))
                 .toList();
+    }
+
+    public DeviousMod getDeviousMod() {
+        return this.deviousMod;
+    }
+
+    public DataCompound getSettings() {
+        return this.settings;
+    }
+
+    public Path getModuleConfigPath() {
+        return this.moduleConfigPath;
     }
 }

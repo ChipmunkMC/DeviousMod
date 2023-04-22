@@ -2,7 +2,6 @@ package me.allinkdev.deviousmod.data;
 
 import com.github.steveice10.opennbt.NBTIO;
 import com.github.steveice10.opennbt.tag.builtin.CompoundTag;
-import lombok.Getter;
 import me.allinkdev.deviousmod.data.exception.DataLoadException;
 import me.allinkdev.deviousmod.data.exception.DataSaveException;
 
@@ -10,7 +9,6 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Path;
 
-@Getter
 public final class DataCompound {
     private final CompoundTag compoundTag;
     private final String compoundName;
@@ -40,5 +38,21 @@ public final class DataCompound {
         } catch (IOException e) {
             throw new DataSaveException(this.file, e);
         }
+    }
+
+    public CompoundTag getCompoundTag() {
+        return this.compoundTag;
+    }
+
+    public String getCompoundName() {
+        return this.compoundName;
+    }
+
+    public Path getLocation() {
+        return this.location;
+    }
+
+    public File getFile() {
+        return this.file;
     }
 }

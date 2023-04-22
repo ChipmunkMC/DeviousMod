@@ -1,7 +1,6 @@
 package me.allinkdev.deviousmod;
 
 import com.google.common.eventbus.EventBus;
-import lombok.Getter;
 import me.allinkdev.deviousmod.command.CommandManager;
 import me.allinkdev.deviousmod.event.tick.impl.ClientTickEndEvent;
 import me.allinkdev.deviousmod.event.tick.impl.ClientTickStartEvent;
@@ -34,13 +33,9 @@ public final class DeviousMod implements ClientModInitializer {
     private static final Audience CLIENT_AUDIENCE = FabricClientAudiences.of()
             .audience();
     private static DeviousMod INSTANCE;
-    @Getter
     private final EventBus eventBus = new EventBus();
-    @Getter
     private final ModuleManager moduleManager = new ModuleManager(this);
-    @Getter
     private final CommandManager commandManager = new CommandManager(this);
-    @Getter
     private final BotKeyProvider botKeyProvider = new BotKeyProvider();
 
     public static DeviousMod getInstance() {
@@ -52,6 +47,22 @@ public final class DeviousMod implements ClientModInitializer {
         final List<String> inputArguments = bean.getInputArguments();
 
         return inputArguments.stream().anyMatch(s -> s.startsWith("-agentlib:jdwp"));
+    }
+
+    public ModuleManager getModuleManager() {
+        return this.moduleManager;
+    }
+
+    public CommandManager getCommandManager() {
+        return this.commandManager;
+    }
+
+    public BotKeyProvider getBotKeyProvider() {
+        return this.botKeyProvider;
+    }
+
+    public EventBus getEventBus() {
+        return this.eventBus;
     }
 
     @Override

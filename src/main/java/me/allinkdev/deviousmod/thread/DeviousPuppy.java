@@ -1,6 +1,5 @@
 package me.allinkdev.deviousmod.thread;
 
-import lombok.Getter;
 import me.allinkdev.deviousmod.util.ThrowableUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -93,7 +92,6 @@ public final class DeviousPuppy {
         private static final Logger LOGGER = LoggerFactory.getLogger("Watchdog Thread Monitor");
         private static final String KILL_MESSAGE = "That is all. Good night.";
         private final Object lastContactTimestampLock = new Object();
-        @Getter
         private final Thread monitoredThread;
         private long violationCount = 0;
         private long lastContactTimestamp = System.currentTimeMillis();
@@ -167,6 +165,10 @@ public final class DeviousPuppy {
             synchronized (this.lastContactTimestampLock) {
                 this.lastContactTimestamp = System.currentTimeMillis();
             }
+        }
+
+        public Thread getMonitoredThread() {
+            return this.monitoredThread;
         }
     }
 
