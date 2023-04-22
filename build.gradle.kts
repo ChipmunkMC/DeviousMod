@@ -22,28 +22,19 @@ repositories {
 }
 
 dependencies {
-    minecraft("com.mojang:minecraft:${project.property("minecraft_version")}")
-    mappings("net.fabricmc:yarn:${project.property("yarn_mappings")}:v2")
-    modImplementation("net.fabricmc:fabric-loader:${project.property("loader_version")}")
-    modImplementation("net.fabricmc.fabric-api:fabric-api:${project.property("fabric_version")}")
+    minecraft(libs.minecraft)
+    mappings(libs.yarn.mappings)
+    modImplementation(libs.fabric.loader)
+    modImplementation(libs.fabric.api)
 
-    testImplementation("org.junit.jupiter:junit-jupiter:5.7.1")
-
-    /** include() shades the dependency in the mod jar.
-     * NOTE: You must include EVERY dependency or else it won't launch!
-     **/
-    implementation("com.github.steveice10:opennbt:1.5-SNAPSHOT")?.let { include(it) }
-    implementation("com.github.allinkdev:Reflector:1.1.1")?.let { include(it) }
-    modImplementation("net.kyori:adventure-platform-fabric:5.8.0")?.let { include(it) }
+    implementation(libs.opennbt)?.let { include(it) }
+    implementation(libs.reflector)?.let { include(it) }
+    modImplementation(libs.adventure.platform.fabric)?.let { include(it) }
 }
 
 tasks {
     assemble {
         dependsOn(checkstyleMain)
-    }
-
-    test {
-        useJUnitPlatform()
     }
 
     compileJava {
