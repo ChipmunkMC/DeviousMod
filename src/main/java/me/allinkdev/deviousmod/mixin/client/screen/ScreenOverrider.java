@@ -61,8 +61,6 @@ public abstract class ScreenOverrider {
             overriddenScreen = onNullScreen();
         }
 
-        final Class<? extends Screen> clazz = providedScreen == null ? Screen.class : providedScreen.getClass();
-
         customSetScreen(overriddenScreen);
         ci.cancel();
     }
