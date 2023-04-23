@@ -58,7 +58,7 @@ public final class BotEvalCommand extends DCommand {
 
         final String hash = hashOptional.get();
 
-        final ClientPlayNetworkHandler handler = client.getNetworkHandler();
+        final ClientPlayNetworkHandler handler = DeviousMod.CLIENT.getNetworkHandler();
 
         if (handler == null) {
             throw INVALID_STATE;
