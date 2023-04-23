@@ -9,4 +9,8 @@ public abstract class GenericLivingEntityEvent extends Cancellable {
     protected GenericLivingEntityEvent(final LivingEntity livingEntity) {
         this.livingEntity = livingEntity;
     }
+
+    public LivingEntity getLivingEntity() {
+        return this.livingEntity;
+    }
 }
