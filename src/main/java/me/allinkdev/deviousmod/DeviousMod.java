@@ -8,14 +8,15 @@ import me.allinkdev.deviousmod.event.tick.world.impl.WorldTickEndEvent;
 import me.allinkdev.deviousmod.event.tick.world.impl.WorldTickStartEvent;
 import me.allinkdev.deviousmod.keying.BotKeyProvider;
 import me.allinkdev.deviousmod.module.ModuleManager;
+import me.allinkdev.deviousmod.util.TextUtil;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.fabric.api.client.command.v2.ClientCommandRegistrationCallback;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
-import net.kyori.adventure.audience.Audience;
-import net.kyori.adventure.platform.fabric.FabricClientAudiences;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
 import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.network.ClientPlayerEntity;
+import net.minecraft.text.Text;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -30,8 +31,6 @@ public final class DeviousMod implements ClientModInitializer {
             .append(Component.text("DeviousMod Message", NamedTextColor.GOLD))
             .append(Component.text("]", NamedTextColor.YELLOW))
             .append(Component.space());
-    private static final Audience CLIENT_AUDIENCE = FabricClientAudiences.of()
-            .audience();
     private static DeviousMod INSTANCE;
     private final EventBus eventBus = new EventBus();
     private final ModuleManager moduleManager = new ModuleManager(this);
@@ -87,7 +86,14 @@ public final class DeviousMod implements ClientModInitializer {
     }
 
     public void sendMessage(final Component component) {
-        CLIENT_AUDIENCE.sendMessage(MESSAGE_PREFIX.append(component));
+        final Text text = TextUtil.toText(MESSAGE_PREFIX.append(component));
+        final ClientPlayerEntity player = CLIENT.player;
+
+        if (player == null) {
+            return;
+        }
+
+        player.sendMessage(text, false);
     }
 
     public void sendMultipleMessages(final List<Component> messages) {
