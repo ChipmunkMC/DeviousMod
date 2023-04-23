@@ -25,7 +25,6 @@ import java.util.Set;
 
 public final class ClientsideInventoryModule extends DModule {
     private final Set<Packet<?>> sendNextTick = new HashSet<>();
-    private final Set<Packet<?>> removeNextTick = new HashSet<>();
     private int sendingSlot = -1;
 
     public ClientsideInventoryModule(final ModuleManager moduleManager) {
