@@ -18,7 +18,7 @@ public final class BotKey {
     private final int timestampForgiveness;
     private final Charset charset;
 
-    BotKey(String identifier, String key, String algorithm, String template, int hashLen, int timestampForgiveness, Charset charset) {
+    BotKey(final String identifier, final String key, final String algorithm, final String template, final int hashLen, final int timestampForgiveness, final Charset charset) {
         this.identifier = identifier;
         this.key = key;
         this.algorithm = algorithm;
@@ -26,34 +26,6 @@ public final class BotKey {
         this.hashLen = hashLen;
         this.timestampForgiveness = timestampForgiveness;
         this.charset = charset;
-    }
-
-    public String getIdentifier() {
-        return this.identifier;
-    }
-
-    public String getKey() {
-        return this.key;
-    }
-
-    public String getAlgorithm() {
-        return this.algorithm;
-    }
-
-    public String getTemplate() {
-        return this.template;
-    }
-
-    public int getHashLen() {
-        return this.hashLen;
-    }
-
-    public int getTimestampForgiveness() {
-        return this.timestampForgiveness;
-    }
-
-    public Charset getCharset() {
-        return this.charset;
     }
 
     public static BotKey loadFromTag(final CompoundTag tag) throws IllegalArgumentException {
@@ -125,6 +97,38 @@ public final class BotKey {
                 .build();
     }
 
+    public static Builder builder() {
+        return new Builder();
+    }
+
+    public String getIdentifier() {
+        return this.identifier;
+    }
+
+    public String getKey() {
+        return this.key;
+    }
+
+    public String getAlgorithm() {
+        return this.algorithm;
+    }
+
+    public String getTemplate() {
+        return this.template;
+    }
+
+    public int getHashLen() {
+        return this.hashLen;
+    }
+
+    public int getTimestampForgiveness() {
+        return this.timestampForgiveness;
+    }
+
+    public Charset getCharset() {
+        return this.charset;
+    }
+
     public Optional<String> encode(final String command) {
         final long timestamp = System.currentTimeMillis();
         final long forgivenTimestamp = timestamp / Math.max((timestampForgiveness * 1000L), 1L);
@@ -181,37 +185,37 @@ public final class BotKey {
         private int timestampForgiveness;
         private Charset charset;
 
-        public Builder identifier(String identifier) {
+        public Builder identifier(final String identifier) {
             this.identifier = identifier;
             return this;
         }
 
-        public Builder key(String key) {
+        public Builder key(final String key) {
             this.key = key;
             return this;
         }
 
-        public Builder algorithm(String algorithm) {
+        public Builder algorithm(final String algorithm) {
             this.algorithm = algorithm;
             return this;
         }
 
-        public Builder template(String template) {
+        public Builder template(final String template) {
             this.template = template;
             return this;
         }
 
-        public Builder hashLen(int hashLen) {
+        public Builder hashLen(final int hashLen) {
             this.hashLen = hashLen;
             return this;
         }
 
-        public Builder timestampForgiveness(int timestampForgiveness) {
+        public Builder timestampForgiveness(final int timestampForgiveness) {
             this.timestampForgiveness = timestampForgiveness;
             return this;
         }
 
-        public Builder charset(Charset charset) {
+        public Builder charset(final Charset charset) {
             this.charset = charset;
             return this;
         }
@@ -227,9 +231,5 @@ public final class BotKey {
                     this.charset
             );
         }
-    }
-
-    public static Builder builder() {
-        return new Builder();
     }
 }
