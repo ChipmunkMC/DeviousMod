@@ -6,19 +6,25 @@ plugins {
 
 java.sourceCompatibility = JavaVersion.VERSION_17
 
-project.version = project.property("mod_version")!!
-project.group = project.property("maven_group")!!
+project.version = project.mod_version
+project.group = project.maven_group
 
 loom {
-    accessWidenerPath.set(file("src/main/resources/deviousmod.accesswidener"))
+    accessWidenerPath = file("src/main/resources/deviousmod.accesswidener")
 }
 
 repositories {
     mavenCentral()
 
-    maven("https://maven.gegy.dev/")
-    maven("https://repo.opencollab.dev/maven-snapshots/")
-    maven("https://jitpack.io/")
+    maven {
+        name = "OpenCollab"
+        url = "https://repo.opencollab.dev/maven-snapshots/"
+    }
+
+    maven {
+        name = "Jitpack"
+        url = "https://jitpack.io/"
+    }
 }
 
 dependencies {
@@ -27,9 +33,9 @@ dependencies {
     modImplementation(libs.fabric.loader)
     modImplementation(libs.fabric.api)
 
-    implementation(libs.opennbt)?.let { include(it) }
-    implementation(libs.reflector)?.let { include(it) }
-    modImplementation(libs.adventure.platform.fabric)?.let { include(it) }
+    implementation(libs.opennbt)
+    implementation(libs.reflector)
+    modImplementation(libs.adventure.platform.fabric)
 }
 
 tasks {
