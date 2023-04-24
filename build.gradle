@@ -27,14 +27,20 @@ repositories {
     }
 }
 
+configurations {
+    implementation.extendsFrom require
+    api.extendsFrom require
+}
+
 dependencies {
     minecraft(libs.minecraft)
     mappings(libs.yarn.mappings)
     modImplementation(libs.fabric.loader)
     modImplementation(libs.fabric.api)
 
-    implementation(libs.opennbt)
-    implementation(libs.reflector)
+    require(libs.opennbt)
+    require(libs.reflector)
+
     modImplementation(libs.adventure.platform.fabric)
 }
 
@@ -56,6 +62,14 @@ tasks {
     }
 
     jar {
+        dependsOn configurations.require
+        from {
+            duplicatesStrategy = DuplicatesStrategy.EXCLUDE
+            configurations.require.collect {
+                zipTree(it)
+            }
+        }
+
         from("LICENSE") {
             rename { "LICENSE_${archiveBaseName.get()}" }
         }
