@@ -54,7 +54,7 @@ public final class MonitorModule extends DModule {
         }
 
         if (packet instanceof final PlayerRemoveS2CPacket playerRemovePacket) {
-            for (final UUID uuid : playerRemovePacket.comp_1105()) {
+            for (final UUID uuid : playerRemovePacket.profileIds()) {
                 playerListInformationPairMap.remove(uuid);
             }
 
@@ -70,7 +70,7 @@ public final class MonitorModule extends DModule {
                 .stream()
                 .anyMatch(a -> a.equals(PlayerListS2CPacket.Action.ADD_PLAYER) || a.equals(PlayerListS2CPacket.Action.UPDATE_DISPLAY_NAME))) {
             for (final PlayerListS2CPacket.Entry entry : playerListPacket.getEntries()) {
-                final UUID profileId = entry.comp_1106();
+                final UUID profileId = entry.profileId();
                 final GameMode gameMode = entry.gameMode();
 
                 if (entry.displayName() == null) {
@@ -101,7 +101,7 @@ public final class MonitorModule extends DModule {
         final List<Component> componentList = new ArrayList<>();
 
         for (final PlayerListS2CPacket.Entry entry : playerListPacket.getEntries()) {
-            final UUID profileId = entry.comp_1106();
+            final UUID profileId = entry.profileId();
             final boolean exists = playerListInformationPairMap.containsKey(profileId);
             Pair<Component, GameMode> existingPair = null;
 
