@@ -11,6 +11,11 @@ public final class ConnectionErrorCancellerModule extends DModule {
     }
 
     @Override
+    public String getCategory() {
+        return "Network";
+    }
+
+    @Override
     public String getModuleName() {
         return "ConnectionErrorCanceller";
     }

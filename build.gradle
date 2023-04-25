@@ -41,6 +41,17 @@ dependencies {
     require("com.github.steveice10:OpenNBT:${project.opennbt_version}")
     require("com.github.allinkdev:Reflector:${project.reflector_version}")
 
+    require("io.github.spair:imgui-java-binding:${project.imgui_version}")
+    require("io.github.spair:imgui-java-lwjgl3:${project.imgui_version}") {
+        exclude module: 'lwjgl'
+        exclude module: 'lwjgl-glfw'
+        exclude module: 'lwjgl-opengl'
+    }
+
+    require("io.github.spair:imgui-java-natives-linux:${project.imgui_version}")
+    require("io.github.spair:imgui-java-natives-windows:${project.imgui_version}")
+    require("io.github.spair:imgui-java-natives-macos:${project.imgui_version}")
+
     modImplementation include("net.kyori:adventure-platform-fabric:${project.adventure_version}")
 }
 

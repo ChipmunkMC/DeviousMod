@@ -13,6 +13,9 @@
     "client.screen.HudTransformer",
     "client.screen.InfiniChat",
     "client.screen.ScreenOverrider",
+    "imgui.MinecraftClientMixin",
+    "imgui.MouseMixin",
+    "imgui.WindowMixin",
     "monitor.MinecraftClientMonitor",
     "patches.text.ParticleCrashFix"
   ],

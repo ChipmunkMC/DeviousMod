@@ -13,6 +13,11 @@ public final class DisableParticlesModule extends DModule {
     }
 
     @Override
+    public String getCategory() {
+        return "Render";
+    }
+
+    @Override
     public String getModuleName() {
         return "DisableParticles";
     }

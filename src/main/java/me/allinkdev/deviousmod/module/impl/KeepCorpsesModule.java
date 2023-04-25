@@ -13,6 +13,11 @@ public final class KeepCorpsesModule extends DModule {
     }
 
     @Override
+    public String getCategory() {
+        return "Miscellaneous";
+    }
+
+    @Override
     public String getModuleName() {
         return "KeepCorpses";
     }

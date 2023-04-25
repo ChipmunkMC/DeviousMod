@@ -29,6 +29,8 @@ public abstract class DModule {
         this.settings = new DataCompound(moduleName, moduleManager.getModuleConfigPath(), Path.of(moduleName));
     }
 
+    public abstract String getCategory();
+
     /***
      * Called on world initialization and module enable
      */

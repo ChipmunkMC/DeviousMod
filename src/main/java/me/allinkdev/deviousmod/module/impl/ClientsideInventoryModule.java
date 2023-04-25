@@ -32,6 +32,11 @@ public final class ClientsideInventoryModule extends DModule {
     }
 
     @Override
+    public String getCategory() {
+        return "Network";
+    }
+
+    @Override
     public String getModuleName() {
         return "ClientsideInventory";
     }

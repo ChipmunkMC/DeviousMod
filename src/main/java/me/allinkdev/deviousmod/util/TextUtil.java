@@ -7,6 +7,7 @@ import net.minecraft.text.MutableText;
 import net.minecraft.text.Text;
 
 public final class TextUtil extends NoConstructor {
+    public static final MutableText EMPTY_TEXT = Text.empty();
     public static final MutableText INVALID_JSON = MutableText.of(new LiteralTextContent("Invalid JSON!"));
     private static final FabricClientAudiences AUDIENCE = FabricClientAudiences.of();
 

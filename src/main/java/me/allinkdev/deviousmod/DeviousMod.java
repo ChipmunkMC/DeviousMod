@@ -6,6 +6,7 @@ import me.allinkdev.deviousmod.event.tick.impl.ClientTickEndEvent;
 import me.allinkdev.deviousmod.event.tick.impl.ClientTickStartEvent;
 import me.allinkdev.deviousmod.event.tick.world.impl.WorldTickEndEvent;
 import me.allinkdev.deviousmod.event.tick.world.impl.WorldTickStartEvent;
+import me.allinkdev.deviousmod.keybind.KeyBindManager;
 import me.allinkdev.deviousmod.keying.BotKeyProvider;
 import me.allinkdev.deviousmod.module.ModuleManager;
 import me.allinkdev.deviousmod.util.TextUtil;
@@ -33,6 +34,7 @@ public final class DeviousMod implements ClientModInitializer {
             .append(Component.space());
     private static DeviousMod INSTANCE;
     private final EventBus eventBus = new EventBus();
+    private final KeyBindManager keyBindManager = new KeyBindManager(this);
     private final ModuleManager moduleManager = new ModuleManager(this);
     private final CommandManager commandManager = new CommandManager(this);
     private final BotKeyProvider botKeyProvider = new BotKeyProvider();

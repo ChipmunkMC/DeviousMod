@@ -28,6 +28,11 @@ public final class CommandPlaceholdersModule extends DModule {
     }
 
     @Override
+    public String getCategory() {
+        return "Miscellaneous";
+    }
+
+    @Override
     public String getModuleName() {
         return "CommandPlaceholders";
     }

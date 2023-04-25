@@ -19,6 +19,11 @@ public final class TestModule extends DModule {
     }
 
     @Override
+    public String getCategory() {
+        return "Debugging";
+    }
+
+    @Override
     public String getModuleName() {
         return "Test";
     }

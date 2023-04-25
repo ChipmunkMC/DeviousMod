@@ -22,6 +22,11 @@ public final class LogosModule extends DModule implements InGameUITransformer {
     }
 
     @Override
+    public String getCategory() {
+        return "Render";
+    }
+
+    @Override
     public String getModuleName() {
         return "Logos";
     }

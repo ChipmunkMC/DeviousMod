@@ -36,6 +36,11 @@ public final class MonitorModule extends DModule {
     }
 
     @Override
+    public String getCategory() {
+        return "Debugging";
+    }
+
+    @Override
     public String getModuleName() {
         return "Monitor";
     }
