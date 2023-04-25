@@ -41,7 +41,7 @@ dependencies {
     require("com.github.steveice10:OpenNBT:${project.opennbt_version}")
     require("com.github.allinkdev:Reflector:${project.reflector_version}")
 
-    modImplementation("net.kyori:adventure-platform-fabric:${project.adventure_version}")
+    modImplementation include("net.kyori:adventure-platform-fabric:${project.adventure_version}")
 }
 
 tasks {
