@@ -19,24 +19,28 @@ import java.util.concurrent.CompletableFuture;
 import java.util.stream.Collectors;
 
 public final class BotKeyArgumentType implements ArgumentType<BotKey> {
-    private static final DeviousMod DEVIOUS_MOD = DeviousMod.getInstance();
-
     public static <S> BotKey getBotKey(final CommandContext<S> context, final String name) {
         return context.getArgument(name, BotKey.class);
     }
 
     @Override
     public BotKey parse(final StringReader reader) throws CommandSyntaxException {
-        final BotKeyProvider botKeyProvider = DEVIOUS_MOD.getBotKeyProvider();
+        final BotKeyProvider botKeyProvider = this.getBotKeyProvider();
         final String name = reader.readUnquotedString();
         final Optional<BotKey> botKeyOptional = botKeyProvider.findKey(name);
 
         return botKeyOptional.orElse(null);
     }
 
+    private BotKeyProvider getBotKeyProvider() {
+        final DeviousMod deviousMod = DeviousMod.getInstance();
+
+        return deviousMod.getBotKeyProvider();
+    }
+
     @Override
     public <S> CompletableFuture<Suggestions> listSuggestions(final CommandContext<S> context, final SuggestionsBuilder builder) {
-        final BotKeyProvider botKeyProvider = DEVIOUS_MOD.getBotKeyProvider();
+        final BotKeyProvider botKeyProvider = this.getBotKeyProvider();
         final Set<String> suggestions = botKeyProvider.getLoadedKeys()
                 .stream()
                 .map(BotKey::getIdentifier)
