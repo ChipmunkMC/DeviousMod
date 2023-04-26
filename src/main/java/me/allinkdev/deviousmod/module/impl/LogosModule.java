@@ -54,6 +54,11 @@ public final class LogosModule extends DModule implements ImGuiLayer {
         client.inGameHud.setCanShowChatDisabledScreen(true);
 
         ImGui.begin("internal_logos", ImGuiWindowFlags.NoMove | ImGuiWindowFlags.NoResize | ImGuiWindowFlags.NoBackground | ImGuiWindowFlags.NoTitleBar | ImGuiWindowFlags.AlwaysAutoResize);
+        ImGui.setWindowPos(4, 4);
+        ImGui.textColored(0, 0, 0, 255, TEXT);
+        ImGui.end();
+
+        ImGui.begin("internal_logos_shadow", ImGuiWindowFlags.NoMove | ImGuiWindowFlags.NoResize | ImGuiWindowFlags.NoBackground | ImGuiWindowFlags.NoTitleBar | ImGuiWindowFlags.AlwaysAutoResize);
         ImGui.setWindowPos(2, 2);
         ImGui.text(TEXT);
         ImGui.end();
