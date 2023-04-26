@@ -6,9 +6,9 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-public abstract class AbstractImGuiLayer {
+public abstract class AbstractImGuiLayer implements ImGuiLayer {
     protected final DeviousMod deviousMod;
-    private final List<AbstractImGuiLayer> children = Collections.synchronizedList(new ArrayList<>());
+    private final List<ImGuiLayer> children = Collections.synchronizedList(new ArrayList<>());
 
     protected AbstractImGuiLayer() {
         this.deviousMod = null;
@@ -18,25 +18,11 @@ public abstract class AbstractImGuiLayer {
         this.deviousMod = deviousMod;
     }
 
-    protected void addChild(final AbstractImGuiLayer imGuiLayer) {
+    protected void addChild(final ImGuiLayer imGuiLayer) {
         this.children.add(imGuiLayer);
     }
 
-    public List<AbstractImGuiLayer> getChildren() {
+    public List<ImGuiLayer> getChildren() {
         return Collections.unmodifiableList(children);
-    }
-
-    public void preProcess() {
-
-    }
-
-    public void init() {
-        
-    }
-
-    public abstract void process();
-
-    public void postProcess() {
-
     }
 }

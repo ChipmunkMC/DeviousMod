@@ -1,21 +1,16 @@
 package me.allinkdev.deviousmod.module.impl;
 
-import com.google.common.util.concurrent.AtomicDouble;
-import me.allinkdev.deviousmod.event.transformer.impl.InGameUITransformer;
+import imgui.ImGui;
+import imgui.flag.ImGuiWindowFlags;
+import me.allinkdev.deviousmod.gui.ImGuiHolder;
+import me.allinkdev.deviousmod.gui.ImGuiLayer;
 import me.allinkdev.deviousmod.module.DModule;
 import me.allinkdev.deviousmod.module.ModuleManager;
 import net.minecraft.SharedConstants;
-import net.minecraft.client.font.TextRenderer;
-import net.minecraft.client.util.math.MatrixStack;
-import net.minecraft.util.math.ColorHelper;
-import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
-public final class LogosModule extends DModule implements InGameUITransformer {
+public final class LogosModule extends DModule implements ImGuiLayer {
     private static final String GAME_VERSION = SharedConstants.getGameVersion().getName();
     private static final String TEXT = "DeviousMod " + GAME_VERSION;
-    private static final AtomicDouble at = new AtomicDouble(0);
-    private static final int WHITE = ColorHelper.Argb.getArgb(255, 255, 255, 255);
-    private static final int BLACK = ColorHelper.Argb.getArgb(255, 0, 0, 0);
 
     public LogosModule(final ModuleManager moduleManager) {
         super(moduleManager);
@@ -37,27 +32,30 @@ public final class LogosModule extends DModule implements InGameUITransformer {
     }
 
     @Override
-    public void init() {
-        addTransformer(this);
+    public void onEnable() {
+        ImGuiHolder.addLayer(this);
     }
 
     @Override
-    public void render(final MatrixStack matrices, final float tickDelta, final CallbackInfo ci) {
+    public void onDisable() {
+        ImGuiHolder.removeLayer(this);
+    }
+
+    @Override
+    public void process() {
         if (client.options.debugEnabled) {
+            return;
+        }
+
+        if (client.world == null) {
             return;
         }
 
         client.inGameHud.setCanShowChatDisabledScreen(true);
 
-        final double w = at.addAndGet(.05);
-        final double x = Math.sin(w) * 1.1;
-        final double y = Math.cos(w) * 1.1;
-
-        final TextRenderer textRenderer = client.textRenderer;
-        final MatrixStack shadowStack = new MatrixStack();
-        shadowStack.translate(x, y, 0);
-
-        textRenderer.draw(shadowStack, TEXT, 4, 4, BLACK);
-        textRenderer.draw(matrices, TEXT, 4, 4, WHITE);
+        ImGui.begin("internal_logos", ImGuiWindowFlags.NoMove | ImGuiWindowFlags.NoResize | ImGuiWindowFlags.NoBackground | ImGuiWindowFlags.NoTitleBar | ImGuiWindowFlags.AlwaysAutoResize);
+        ImGui.setWindowPos(2, 2);
+        ImGui.text(TEXT);
+        ImGui.end();
     }
 }

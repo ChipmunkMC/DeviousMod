@@ -9,7 +9,7 @@ import java.util.Collections;
 import java.util.List;
 
 public final class ImGuiHolder extends NoConstructor {
-    private static final List<AbstractImGuiLayer> LAYERS = Collections.synchronizedList(new ArrayList<>());
+    private static final List<ImGuiLayer> LAYERS = Collections.synchronizedList(new ArrayList<>());
     private static ImGuiImplGl3 imGuiImplGl3;
     private static ImGuiImplGlfw imGuiImplGlfw;
 
@@ -18,8 +18,13 @@ public final class ImGuiHolder extends NoConstructor {
         imGuiImplGl3 = new ImGuiImplGl3();
     }
 
-    private static void process(final AbstractImGuiLayer layer) {
-        final List<AbstractImGuiLayer> children = layer.getChildren();
+    private static void process(final ImGuiLayer layer) {
+        final List<ImGuiLayer> children = new ArrayList<>();
+
+        if (layer instanceof final AbstractImGuiLayer abstractImGuiLayer) {
+            final List<ImGuiLayer> abstractChildren = abstractImGuiLayer.getChildren();
+            children.addAll(abstractChildren);
+        }
 
         layer.preProcess();
         layer.process();
@@ -32,13 +37,13 @@ public final class ImGuiHolder extends NoConstructor {
         LAYERS.forEach(ImGuiHolder::process);
     }
 
-    public static void addLayer(final AbstractImGuiLayer layer) {
+    public static void addLayer(final ImGuiLayer layer) {
         layer.init();
 
         LAYERS.add(layer);
     }
 
-    public static void removeLayer(final AbstractImGuiLayer layer) {
+    public static void removeLayer(final ImGuiLayer layer) {
         LAYERS.remove(layer);
     }
 
