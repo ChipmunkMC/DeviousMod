@@ -17,7 +17,8 @@
     "imgui.MouseMixin",
     "imgui.WindowMixin",
     "monitor.MinecraftClientMonitor",
-    "patches.text.ParticleCrashFix"
+    "patches.text.ParticleCrashFix",
+    "patches.text.TextRendererMixin"
   ],
   "injectors": {
     "defaultRequire": 1
@@ -29,6 +30,7 @@
     "patches.network.LongCommandCompletionsKickFix",
     "patches.tag.BigTagKickFix",
     "patches.text.NullComponentFallback",
+    "patches.text.ObfuscationDisabler",
     "patches.text.PlaceholderLimiter",
     "patches.text.TellKickFix"
   ]
