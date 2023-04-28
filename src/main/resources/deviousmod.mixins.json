@@ -13,6 +13,7 @@
     "client.screen.HudTransformer",
     "client.screen.InfiniChat",
     "client.screen.ScreenOverrider",
+    "client.screen.TooltipTransformer",
     "imgui.MinecraftClientMixin",
     "imgui.MouseMixin",
     "imgui.WindowMixin",
