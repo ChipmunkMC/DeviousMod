@@ -1,8 +1,10 @@
 package me.allinkdev.deviousmod.gui.layer;
 
+import com.google.common.eventbus.Subscribe;
 import imgui.ImGui;
 import imgui.flag.ImGuiCond;
 import me.allinkdev.deviousmod.DeviousMod;
+import me.allinkdev.deviousmod.event.tick.impl.ClientTickEndEvent;
 import me.allinkdev.deviousmod.gui.AbstractImGuiLayer;
 import me.allinkdev.deviousmod.module.DModule;
 import me.allinkdev.deviousmod.module.ModuleManager;
@@ -15,6 +17,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 public final class ClickGuiLayer extends AbstractImGuiLayer {
     private final Map<String, Set<DModule>> categoryModuleMap = new HashMap<>();
+    private final Map<DModule, Boolean> moduleToggleMap = new HashMap<>();
 
     public ClickGuiLayer(final DeviousMod deviousMod) {
         super(deviousMod);
@@ -49,6 +52,8 @@ public final class ClickGuiLayer extends AbstractImGuiLayer {
         final ModuleManager moduleManager = this.deviousMod.getModuleManager();
         final Set<DModule> modules = moduleManager.getModules();
         modules.forEach(this::registerModule);
+
+        this.deviousMod.subscribeEvents(this);
     }
 
     private void renderButton(final DModule module) {
@@ -59,13 +64,13 @@ public final class ClickGuiLayer extends AbstractImGuiLayer {
         final String suffix = isToggled ? " (on)" : " (off)"; // TODO: Replace with a colour or something
 
         final boolean clicked = ImGui.button(moduleName + suffix, buttonWidth - 18, buttonHeight + 3);
-        
+
         if (!clicked) {
             return;
         }
 
         final boolean moduleState = module.getModuleState();
-        module.setModuleState(!moduleState);
+        moduleToggleMap.put(module, !moduleState);
     }
 
     private void renderCategory(final AtomicInteger offsetAtomic, final String name, final Set<DModule> modules) {
@@ -91,5 +96,15 @@ public final class ClickGuiLayer extends AbstractImGuiLayer {
         final AtomicInteger offset = new AtomicInteger(0);
 
         this.categoryModuleMap.forEach((name, modules) -> this.renderCategory(offset, name, modules));
+    }
+
+    @Subscribe
+    public void onTick(final ClientTickEndEvent event) {
+        if (this.moduleToggleMap.isEmpty()) {
+            return;
+        }
+
+        this.moduleToggleMap.forEach(DModule::setModuleState);
+        this.moduleToggleMap.clear();
     }
 }
