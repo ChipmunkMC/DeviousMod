@@ -9,6 +9,7 @@
     "client.entity.EntityStateEvents$EntityRemoval",
     "client.network.CommandCompletionStealer",
     "client.network.CommandInterceptor",
+    "client.network.MapDisplayNamePatch",
     "client.network.PacketSendAndReceive",
     "client.screen.HudTransformer",
     "client.screen.InfiniChat",
@@ -24,11 +25,14 @@
     "defaultRequire": 1
   },
   "mixins": [
+    "accessor.MapStateAccessor",
     "client.network.ClientConnectionMixin",
     "client.network.NetworkStateMixin",
     "patches.entity.AreaEffectCloudParticleLimiter",
+    "patches.item.MapIconCountLimiter",
     "patches.network.LongCommandCompletionsKickFix",
     "patches.tag.BigTagKickFix",
+    "patches.text.MapIconTextSizeLimiter",
     "patches.text.NullComponentFallback",
     "patches.text.ObfuscationDisabler",
     "patches.text.PlaceholderLimiter",

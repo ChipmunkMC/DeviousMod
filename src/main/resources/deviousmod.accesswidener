@@ -4,5 +4,7 @@ accessible method net/minecraft/text/Text$Serializer optimizeArgument (Ljava/lan
 mutable field net/minecraft/nbt/NbtList TYPE Lnet/minecraft/nbt/NbtType;
 accessible method net/minecraft/nbt/NbtList <init> (Ljava/util/List;B)V
 
+accessible class net/minecraft/client/render/MapRenderer$MapTexture
+
 accessible field net/minecraft/network/packet/c2s/play/RequestCommandCompletionsC2SPacket partialCommand Ljava/lang/String;
 mutable field net/minecraft/network/packet/c2s/play/RequestCommandCompletionsC2SPacket partialCommand Ljava/lang/String;
