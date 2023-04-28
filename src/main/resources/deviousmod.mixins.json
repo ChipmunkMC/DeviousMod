@@ -9,7 +9,6 @@
     "client.entity.EntityStateEvents$EntityRemoval",
     "client.network.CommandCompletionStealer",
     "client.network.CommandInterceptor",
-    "client.network.MapDisplayNamePatch",
     "client.network.PacketSendAndReceive",
     "client.screen.HudTransformer",
     "client.screen.InfiniChat",
