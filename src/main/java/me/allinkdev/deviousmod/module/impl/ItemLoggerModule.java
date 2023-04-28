@@ -79,7 +79,7 @@ public final class ItemLoggerModule extends DModule {
 
     @Override
     public String getCategory() {
-        return "Networking";
+        return "Network";
     }
 
     @Override
