@@ -122,10 +122,8 @@ public final class ItemLoggerModule extends DModule {
             final Instant now = Instant.now();
             final long nowMillis = now.toEpochMilli();
             final int nanos = now.getNano();
-            final String name = nowMillis + "." + nanos + ".txt";
 
-            DeviousMod.LOGGER.info("{}", name);
-            return name;
+            return nowMillis + "." + nanos + ".txt";
         }
 
         private Path getPath(final UUID uuid) {
