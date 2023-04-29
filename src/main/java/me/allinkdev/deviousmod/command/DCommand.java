@@ -1,9 +1,9 @@
 package me.allinkdev.deviousmod.command;
 
+import com.mojang.brigadier.Command;
 import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.builder.LiteralArgumentBuilder;
 import com.mojang.brigadier.context.CommandContext;
-import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import me.allinkdev.deviousmod.DeviousMod;
 import me.allinkdev.deviousmod.module.ModuleManager;
 import me.allinkdev.deviousmod.util.TextUtil;
@@ -13,7 +13,7 @@ import net.kyori.adventure.text.Component;
 import net.minecraft.command.CommandRegistryAccess;
 import net.minecraft.text.Text;
 
-public abstract class DCommand {
+public abstract class DCommand implements Command<FabricClientCommandSource> {
     protected final DeviousMod deviousMod;
     protected final ModuleManager moduleManager;
 
@@ -26,7 +26,7 @@ public abstract class DCommand {
 
     public LiteralArgumentBuilder<FabricClientCommandSource> getNode() {
         return ClientCommandManager.literal(this.getCommandName())
-                .executes(this::execute);
+                .executes(this);
     }
 
     public void register(final CommandDispatcher<FabricClientCommandSource> dispatcher, final CommandRegistryAccess ignoredRegistryAccess) {
@@ -39,6 +39,4 @@ public abstract class DCommand {
 
         source.sendFeedback(text);
     }
-
-    public abstract int execute(final CommandContext<FabricClientCommandSource> context) throws CommandSyntaxException;
 }

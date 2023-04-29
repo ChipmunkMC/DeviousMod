@@ -38,11 +38,11 @@ public final class BotEvalCommand extends DCommand {
         return ClientCommandManager.literal("bval")
                 .then(ClientCommandManager.argument("key", new BotKeyArgumentType())
                         .then(ClientCommandManager.argument("command", StringArgumentType.greedyString())
-                                .executes(this::execute)));
+                                .executes(this)));
     }
 
     @Override
-    public int execute(final CommandContext<FabricClientCommandSource> context) throws CommandSyntaxException {
+    public int run(final CommandContext<FabricClientCommandSource> context) throws CommandSyntaxException {
         final BotKey botKey = BotKeyArgumentType.getBotKey(context, "key");
 
         if (botKey == null) {

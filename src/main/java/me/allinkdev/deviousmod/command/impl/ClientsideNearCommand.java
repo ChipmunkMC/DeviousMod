@@ -42,7 +42,7 @@ public final class ClientsideNearCommand extends DCommand {
     }
 
     @Override
-    public int execute(final CommandContext<FabricClientCommandSource> context) throws CommandSyntaxException {
+    public int run(final CommandContext<FabricClientCommandSource> context) throws CommandSyntaxException {
         final MinecraftClient client = DeviousMod.CLIENT;
         final ClientWorld world = client.world;
 

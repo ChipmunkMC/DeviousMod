@@ -20,7 +20,7 @@ public final class TestCommand extends DCommand {
     }
 
     @Override
-    public int execute(final CommandContext<FabricClientCommandSource> context) throws CommandSyntaxException {
+    public int run(final CommandContext<FabricClientCommandSource> context) throws CommandSyntaxException {
         final ClickGuiLayer imGuiTestLayer = new ClickGuiLayer(this.deviousMod);
         final ImGuiScreen imGuiScreen = ImGuiScreen.from(imGuiTestLayer);
         final MinecraftClient client = DeviousMod.CLIENT;

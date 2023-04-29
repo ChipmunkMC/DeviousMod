@@ -97,7 +97,7 @@ public final class KeyringCommand extends DCommand {
     }
 
     @Override
-    public int execute(final CommandContext<FabricClientCommandSource> context) throws CommandSyntaxException {
+    public int run(final CommandContext<FabricClientCommandSource> context) throws CommandSyntaxException {
         return 0;
     }
 }
