@@ -6,6 +6,7 @@ import me.allinkdev.deviousmod.DeviousMod;
 import me.allinkdev.deviousmod.command.DCommand;
 import net.fabricmc.fabric.api.client.command.v2.FabricClientCommandSource;
 import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.JoinConfiguration;
 import net.kyori.adventure.text.format.NamedTextColor;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.network.ClientPlayerEntity;
@@ -45,8 +46,6 @@ public final class GetNBTCommand extends DCommand {
             return 0;
         }
 
-        Component component = Component.empty();
-
         final ItemStack heldItem = playerInventory.getMainHandStack();
         final DefaultedList<ItemStack> offHandItems = playerInventory.offHand;
 
@@ -78,36 +77,33 @@ public final class GetNBTCommand extends DCommand {
             nonEmptyOffHandItems.add(pair);
         }
 
+        final List<Component> components = new ArrayList<>();
 
         if (allEmpty) {
-            component = Component.text("You have no items in your hands!", NamedTextColor.GRAY);
+            components.add(Component.text("You have no items in your hands!", NamedTextColor.GRAY));
         } else {
             if (holdingItemInMain) {
                 final Component nbtComponent = this.getComponent(heldItem);
 
-                component = component.append(Component.text("Main hand: ", NamedTextColor.GRAY))
-                        .append(nbtComponent)
-                        .append(holdingStuffInOffHand ? Component.newline() : Component.empty());
+                components.add(Component.text("Main hand: ", NamedTextColor.GRAY)
+                        .append(nbtComponent));
             }
 
             if (holdingStuffInOffHand) {
-                final int offHandItemCount = nonEmptyOffHandItems.size();
-                final int maximumIndex = offHandItemCount - 1;
-
-                for (int i = 0; i < offHandItemCount; i++) {
-                    final Pair<ItemStack, Integer> nonEmptyOffHandItem = nonEmptyOffHandItems.get(i);
+                for (final Pair<ItemStack, Integer> nonEmptyOffHandItem : nonEmptyOffHandItems) {
                     final ItemStack itemStack = nonEmptyOffHandItem.getLeft();
                     final int index = nonEmptyOffHandItem.getRight();
 
                     final Component nbtComponent = this.getComponent(itemStack);
-                    component = component.append(Component.text("Offhand item #", NamedTextColor.GRAY))
+                    components.add(Component.text("Offhand item #", NamedTextColor.GRAY)
                             .append(Component.text(index, NamedTextColor.GRAY))
                             .append(Component.text(": ", NamedTextColor.GRAY))
-                            .append(nbtComponent)
-                            .append(i == maximumIndex ? Component.empty() : Component.newline());
+                            .append(nbtComponent));
                 }
             }
         }
+
+        final Component component = Component.join(JoinConfiguration.newlines(), components);
 
         this.sendFeedback(context, component);
         return 1;
@@ -117,6 +113,6 @@ public final class GetNBTCommand extends DCommand {
         final NbtCompound compound = itemStack.getOrCreateNbt();
         final Text prettyPrintedNBT = NbtHelper.toPrettyPrintedText(compound);
 
-        return prettyPrintedNBT.asComponent();
+        return prettyPrintedNBT.asComponent().color(NamedTextColor.WHITE);
     }
 }
