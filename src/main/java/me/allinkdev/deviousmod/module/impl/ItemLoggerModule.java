@@ -6,7 +6,7 @@ import me.allinkdev.deviousmod.DeviousMod;
 import me.allinkdev.deviousmod.event.entity.living.impl.LivingEntityEquipmentUpdateEvent;
 import me.allinkdev.deviousmod.module.DModule;
 import me.allinkdev.deviousmod.module.ModuleManager;
-import me.allinkdev.deviousmod.util.IteratorUtil;
+import me.allinkdev.deviousmod.util.IterUtil;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
@@ -69,7 +69,7 @@ public final class ItemLoggerModule extends DModule {
 
         final DirectoryStream<Path> directoryStream = Files.newDirectoryStream(path);
         final Iterator<Path> pathIterator = directoryStream.iterator();
-        final List<Path> paths = IteratorUtil.toList(pathIterator);
+        final List<Path> paths = IterUtil.toList(pathIterator);
         directoryStream.close();
 
         for (final Path childPath : paths) {

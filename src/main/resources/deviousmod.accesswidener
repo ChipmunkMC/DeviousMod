@@ -1,1 +1,12 @@
 accessWidener	v1	named
+
+# For the OurWorldInNBT module
+
+accessible class net/minecraft/client/world/ClientChunkManager$ClientChunkMap
+
+accessible field net/minecraft/entity/decoration/DisplayEntity$TextDisplayEntity TEXT Lnet/minecraft/entity/data/TrackedData;
+accessible field net/minecraft/entity/decoration/DisplayEntity BILLBOARD Lnet/minecraft/entity/data/TrackedData;
+accessible field net/minecraft/entity/decoration/DisplayEntity$TextDisplayEntity LINE_WIDTH Lnet/minecraft/entity/data/TrackedData;
+accessible field net/minecraft/client/world/ClientChunkManager$ClientChunkMap chunks Ljava/util/concurrent/atomic/AtomicReferenceArray;
+
+accessible method net/minecraft/entity/decoration/DisplayEntity$BillboardMode getIndex ()B

@@ -9,6 +9,7 @@ import me.allinkdev.deviousmod.event.tick.world.impl.WorldTickStartEvent;
 import me.allinkdev.deviousmod.keybind.KeyBindManager;
 import me.allinkdev.deviousmod.keying.BotKeyProvider;
 import me.allinkdev.deviousmod.module.ModuleManager;
+import me.allinkdev.deviousmod.query.QueryManager;
 import me.allinkdev.deviousmod.util.TextUtil;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.fabric.api.client.command.v2.ClientCommandRegistrationCallback;
@@ -69,6 +70,8 @@ public final class DeviousMod implements ClientModInitializer {
     @Override
     public void onInitializeClient() {
         INSTANCE = this;
+
+        QueryManager.init(this);
 
         ClientCommandRegistrationCallback.EVENT.register(commandManager::register);
 
