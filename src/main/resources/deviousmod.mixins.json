@@ -26,6 +26,7 @@
   },
   "mixins": [
     "accessor.MapStateAccessor",
+    "client.entity.EntityVisibilityOverrider",
     "client.network.ClientConnectionMixin",
     "client.network.NetworkStateMixin",
     "patches.entity.AreaEffectCloudParticleLimiter",
