@@ -29,10 +29,6 @@ import java.util.List;
 public final class DeviousMod implements ClientModInitializer {
     public static final Logger LOGGER = LoggerFactory.getLogger("Devious Mod");
     public static final MinecraftClient CLIENT = MinecraftClient.getInstance();
-    private static final Component MESSAGE_PREFIX = Component.text("[", NamedTextColor.YELLOW)
-            .append(Component.text("DeviousMod Message", NamedTextColor.GOLD))
-            .append(Component.text("]", NamedTextColor.YELLOW))
-            .append(Component.space());
     private static DeviousMod INSTANCE;
     private final EventBus eventBus = new EventBus();
     private final KeyBindManager keyBindManager = new KeyBindManager(this);
@@ -63,6 +59,10 @@ public final class DeviousMod implements ClientModInitializer {
         return this.botKeyProvider;
     }
 
+    public KeyBindManager getKeyBindManager() {
+        return this.keyBindManager;
+    }
+
     public EventBus getEventBus() {
         return this.eventBus;
     }
@@ -91,7 +91,8 @@ public final class DeviousMod implements ClientModInitializer {
     }
 
     public void sendMessage(final Component component) {
-        final Text text = TextUtil.toText(MESSAGE_PREFIX.append(component));
+        final Component coloredComponent = component.colorIfAbsent(NamedTextColor.GRAY);
+        final Text text = TextUtil.toText(coloredComponent);
         final ClientPlayerEntity player = CLIENT.player;
 
         if (player == null) {

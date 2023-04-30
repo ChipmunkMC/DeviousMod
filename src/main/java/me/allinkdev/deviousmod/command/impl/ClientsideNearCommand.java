@@ -68,7 +68,7 @@ public final class ClientsideNearCommand extends DCommand {
         final Component feedback = Component.text("Nearby players: ", NamedTextColor.GRAY)
                 .append(joinedDistanceComponents);
 
-        this.sendFeedback(context, feedback);
+        this.sendFeedback(feedback);
         return 1;
     }
 }

@@ -61,7 +61,7 @@ public final class KeyringCommand extends DCommand {
         }
 
         botKeyProvider.removeKey(botKey);
-        sendFeedback(context, Component.text("Removed key \"", NamedTextColor.GREEN)
+        sendFeedback(Component.text("Removed key \"", NamedTextColor.GREEN)
                 .append(Component.text(botKey.getIdentifier(), NamedTextColor.GREEN))
                 .append(Component.text("\" from the keyring.", NamedTextColor.GREEN)));
         return 1;
@@ -89,7 +89,7 @@ public final class KeyringCommand extends DCommand {
         final BotKeyProvider botKeyProvider = deviousMod.getBotKeyProvider();
         botKeyProvider.addKey(botKey);
 
-        sendFeedback(context, Component.text("Added key \"", NamedTextColor.GREEN)
+        sendFeedback(Component.text("Added key \"", NamedTextColor.GREEN)
                 .append(Component.text(identifier, NamedTextColor.GREEN))
                 .append(Component.text("\" to the keyring.", NamedTextColor.GREEN)));
 

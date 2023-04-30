@@ -6,6 +6,7 @@ import me.allinkdev.deviousmod.DeviousMod;
 import me.allinkdev.deviousmod.data.DataCompound;
 import me.allinkdev.deviousmod.event.transformer.impl.Transformer;
 import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.format.NamedTextColor;
 import net.minecraft.client.MinecraftClient;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -27,6 +28,10 @@ public abstract class DModule {
 
         final String moduleName = this.getModuleName();
         this.settings = new DataCompound(moduleName, moduleManager.getModuleConfigPath(), Path.of(moduleName));
+    }
+
+    public static Component getStatusComponent(final boolean state) {
+        return state ? Component.text("enabled", NamedTextColor.GREEN) : Component.text("disabled", NamedTextColor.RED);
     }
 
     public abstract String getCategory();
@@ -76,11 +81,24 @@ public abstract class DModule {
         if (newState) {
             this.onEnable();
             moduleManager.load(this);
-            return;
+        } else {
+            this.onDisable();
+            moduleManager.unload(this);
         }
 
-        this.onDisable();
-        moduleManager.unload(this);
+        final String moduleName = this.getModuleName();
+        final Component feedback = Component.text(moduleName)
+                .append(Component.text(" is now "))
+                .append(getStatusComponent(newState))
+                .append(Component.text("."));
+
+        deviousMod.sendMessage(feedback);
+    }
+
+    public void toggle() {
+        final boolean currentState = this.getModuleState();
+
+        this.setModuleState(!currentState);
     }
 
     public void onEnable() {

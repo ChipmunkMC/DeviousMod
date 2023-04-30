@@ -45,7 +45,7 @@ public final class PrettyNBTCommand extends DCommand {
                 .append(Component.text(prettyPrintedJson, NamedTextColor.WHITE)
                         .clickEvent(ClickEvent.copyToClipboard(prettyPrintedJson)));
 
-        this.sendFeedback(context, feedback);
+        this.sendFeedback(feedback);
         return 1;
     }
 }

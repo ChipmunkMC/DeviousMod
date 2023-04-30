@@ -105,7 +105,7 @@ public final class GetNBTCommand extends DCommand {
 
         final Component component = Component.join(JoinConfiguration.newlines(), components);
 
-        this.sendFeedback(context, component);
+        this.sendFeedback(component);
         return 1;
     }
 

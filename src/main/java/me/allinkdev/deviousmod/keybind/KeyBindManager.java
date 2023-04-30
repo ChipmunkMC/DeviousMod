@@ -9,26 +9,33 @@ import me.allinkdev.deviousmod.event.tick.impl.ClientTickEndEvent;
 import net.fabricmc.fabric.api.client.keybinding.v1.KeyBindingHelper;
 import net.minecraft.client.option.KeyBinding;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
 public final class KeyBindManager {
-    private final List<Pair<KeyBinding, KeyBind>> binds;
+    private final List<Pair<KeyBinding, KeyBind>> binds = new ArrayList<>();
 
     public KeyBindManager(final DeviousMod deviousMod) {
         final EventBus eventBus = deviousMod.getEventBus();
         eventBus.register(this);
 
-        this.binds = Reflector.createNew(KeyBind.class)
+        Reflector.createNew(KeyBind.class)
                 .allSubClassesInSubPackage("impl")
                 .map(Reflector::createNew)
                 .map(r -> r.create(deviousMod))
                 .map(Optional::orElseThrow)
-                .map(this::register)
-                .toList();
+                .map(this::createPair)
+                .forEach(this.binds::add);
     }
 
-    private Pair<KeyBinding, KeyBind> register(final KeyBind keyBind) {
+    public void register(final KeyBind keyBind) {
+        final Pair<KeyBinding, KeyBind> pair = this.createPair(keyBind);
+
+        this.binds.add(pair);
+    }
+
+    private Pair<KeyBinding, KeyBind> createPair(final KeyBind keyBind) {
         final int defaultKey = keyBind.getDefaultKey();
         final String name = keyBind.getName();
         final KeyBinding keyBinding = new KeyBinding(name, defaultKey, "DeviousMod");

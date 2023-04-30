@@ -7,6 +7,7 @@ import me.allinkdev.deviousmod.DeviousMod;
 import me.allinkdev.deviousmod.data.Config;
 import me.allinkdev.deviousmod.data.DataCompound;
 import me.allinkdev.deviousmod.event.transformer.impl.Transformer;
+import me.allinkdev.deviousmod.keybind.KeyBindManager;
 import me.allinkdev.deviousmod.module.impl.TestModule;
 
 import java.nio.file.Path;
@@ -38,25 +39,23 @@ public final class ModuleManager {
         modules.addAll(newModules);
 
         LOGGER.info("Loaded {} modules!", modules.size());
+        final KeyBindManager keyBindManager = this.deviousMod.getKeyBindManager();
 
         for (final DModule module : modules) {
             final String moduleName = module.getModuleName();
             final CompoundTag compoundTag = settings.getCompoundTag();
             final ByteTag byteTag = compoundTag.get(moduleName);
 
-            if (byteTag == null) {
-                continue;
-            }
-
-            if (byteTag.getValue() == 0) {
+            if (byteTag == null || byteTag.getValue() == 0) {
                 continue;
             }
 
             LOGGER.info("Enabling {}!", module.getModuleName());
-            initModule(module);
+            initModule(module, keyBindManager);
             module.setModuleState(true);
         }
     }
+
 
     public static Set<String> getModuleNames() {
         return modules.stream()
@@ -70,7 +69,10 @@ public final class ModuleManager {
         }
     }
 
-    public void initModule(final DModule module) {
+    public void initModule(final DModule module, final KeyBindManager keyBindManager) {
+        final GenericModuleKeyBind genericModuleKeyBind = new GenericModuleKeyBind(this.deviousMod, module);
+
+        keyBindManager.register(genericModuleKeyBind);
     }
 
     public void load(final DModule module) {
