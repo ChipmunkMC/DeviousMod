@@ -29,7 +29,16 @@ import java.util.List;
 public final class DeviousMod implements ClientModInitializer {
     public static final Logger LOGGER = LoggerFactory.getLogger("Devious Mod");
     public static final MinecraftClient CLIENT = MinecraftClient.getInstance();
+    private static final boolean IS_DEVELOPMENT;
     private static DeviousMod INSTANCE;
+
+    static {
+        final RuntimeMXBean bean = ManagementFactory.getRuntimeMXBean();
+        final List<String> inputArguments = bean.getInputArguments();
+
+        IS_DEVELOPMENT = inputArguments.stream().anyMatch(s -> s.startsWith("-agentlib:jdwp"));
+    }
+
     private final EventBus eventBus = new EventBus();
     private final KeyBindManager keyBindManager = new KeyBindManager(this);
     private final ModuleManager moduleManager = new ModuleManager(this);
@@ -41,10 +50,7 @@ public final class DeviousMod implements ClientModInitializer {
     }
 
     public static boolean isDevelopment() {
-        final RuntimeMXBean bean = ManagementFactory.getRuntimeMXBean();
-        final List<String> inputArguments = bean.getInputArguments();
-
-        return inputArguments.stream().anyMatch(s -> s.startsWith("-agentlib:jdwp"));
+        return IS_DEVELOPMENT;
     }
 
     public ModuleManager getModuleManager() {
