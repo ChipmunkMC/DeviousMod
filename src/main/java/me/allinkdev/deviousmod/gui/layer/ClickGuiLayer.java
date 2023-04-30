@@ -64,6 +64,16 @@ public final class ClickGuiLayer extends AbstractImGuiLayer {
         final String suffix = isToggled ? " (on)" : " (off)"; // TODO: Replace with a colour or something
 
         final boolean clicked = ImGui.button(moduleName + suffix, buttonWidth - 18, buttonHeight + 3);
+        final boolean hovered = ImGui.isItemHovered();
+
+        if (hovered) {
+            ImGui.beginTooltip();
+
+            final String moduleDescription = module.getDescription();
+            ImGui.text(moduleDescription);
+            
+            ImGui.endTooltip();
+        }
 
         if (!clicked) {
             return;
