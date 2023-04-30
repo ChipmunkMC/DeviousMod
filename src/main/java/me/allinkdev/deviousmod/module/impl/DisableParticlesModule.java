@@ -5,6 +5,7 @@ import me.allinkdev.deviousmod.event.network.packet.impl.PacketS2CEvent;
 import me.allinkdev.deviousmod.module.DModule;
 import me.allinkdev.deviousmod.module.ModuleManager;
 import net.minecraft.network.packet.Packet;
+import net.minecraft.network.packet.s2c.play.ExperienceOrbSpawnS2CPacket;
 import net.minecraft.network.packet.s2c.play.ParticleS2CPacket;
 
 public final class DisableParticlesModule extends DModule {
@@ -31,7 +32,7 @@ public final class DisableParticlesModule extends DModule {
     public void onPacketS2CEvent(final PacketS2CEvent event) {
         final Packet<?> packet = event.getPacket();
 
-        if (packet instanceof ParticleS2CPacket) {
+        if (packet instanceof ParticleS2CPacket || packet instanceof ExperienceOrbSpawnS2CPacket) {
             event.setCancelled(true);
         }
     }
