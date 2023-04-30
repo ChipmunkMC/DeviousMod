@@ -28,7 +28,7 @@ public final class LogosModule extends DModule implements ImGuiLayer {
 
     @Override
     public String getDescription() {
-        return "";
+        return "Displays a DeviousMod watermark in the top left of your screen.";
     }
 
     @Override
