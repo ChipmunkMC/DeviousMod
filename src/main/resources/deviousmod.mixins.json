@@ -8,6 +8,7 @@
     "client.entity.EntityEquipmentOverrider",
     "client.entity.EntityStateEvents",
     "client.entity.EntityStateEvents$EntityRemoval",
+    "client.input.ItemUseCooldownReplacer",
     "client.network.CommandCompletionStealer",
     "client.network.CommandInterceptor",
     "client.network.PacketSendAndReceive",
