@@ -13,6 +13,7 @@ import me.allinkdev.deviousmod.module.DModule;
 import me.allinkdev.deviousmod.module.ModuleManager;
 import me.allinkdev.deviousmod.query.QueryManager;
 import net.minecraft.block.entity.BlockEntity;
+import net.minecraft.client.network.ClientPlayerEntity;
 import net.minecraft.client.world.ClientChunkManager;
 import net.minecraft.client.world.ClientWorld;
 import net.minecraft.entity.EntityType;
@@ -66,30 +67,32 @@ public final class OurWorldInNBTModule extends DModule {
     }
 
     private void putDisplayEntity(final BlockPos blockPos, final BlockEntity blockEntity, final NbtCompound compound) {
-        final World world = blockEntity.getWorld();
-        final DisplayEntity.TextDisplayEntity textDisplayEntity = new DisplayEntity.TextDisplayEntity(EntityType.TEXT_DISPLAY, world);
-        final Vec3d entityPos = blockPos.up().toCenterPos();
-        final double entityX = entityPos.getX();
-        final double entityY = entityPos.getY();
-        final double entityZ = entityPos.getZ();
+        synchronized (this.blockPosToTextDisplay) {
+            final World world = blockEntity.getWorld();
+            final DisplayEntity.TextDisplayEntity textDisplayEntity = new DisplayEntity.TextDisplayEntity(EntityType.TEXT_DISPLAY, world);
+            final Vec3d entityPos = blockPos.up().toCenterPos();
+            final double entityX = entityPos.getX();
+            final double entityY = entityPos.getY();
+            final double entityZ = entityPos.getZ();
 
-        textDisplayEntity.setPos(entityX, entityY, entityZ);
+            textDisplayEntity.setPos(entityX, entityY, entityZ);
 
-        final String stringifiedNbt = compound.asString();
-        final int nbtLength = stringifiedNbt.length();
-        final Text nbtComponent;
+            final String stringifiedNbt = compound.asString();
+            final int nbtLength = stringifiedNbt.length();
+            final Text nbtComponent;
 
-        if (nbtLength >= MAX_LENGTH) {
-            nbtComponent = Text.of(stringifiedNbt.substring(0, MAX_LENGTH) + "...");
-        } else {
-            nbtComponent = NbtHelper.toPrettyPrintedText(compound);
+            if (nbtLength >= MAX_LENGTH) {
+                nbtComponent = Text.of(stringifiedNbt.substring(0, MAX_LENGTH) + "...");
+            } else {
+                nbtComponent = NbtHelper.toPrettyPrintedText(compound);
+            }
+
+            final DataTracker dataTracker = textDisplayEntity.getDataTracker();
+            dataTracker.set(DisplayEntity.TextDisplayEntity.TEXT, nbtComponent);
+            dataTracker.set(DisplayEntity.BILLBOARD, DisplayEntity.BillboardMode.VERTICAL.getIndex());
+            dataTracker.set(DisplayEntity.TextDisplayEntity.LINE_WIDTH, 350);
+            this.blockPosToTextDisplay.put(blockPos, textDisplayEntity);
         }
-
-        final DataTracker dataTracker = textDisplayEntity.getDataTracker();
-        dataTracker.set(DisplayEntity.TextDisplayEntity.TEXT, nbtComponent);
-        dataTracker.set(DisplayEntity.BILLBOARD, DisplayEntity.BillboardMode.VERTICAL.getIndex());
-        dataTracker.set(DisplayEntity.TextDisplayEntity.LINE_WIDTH, 350);
-        this.blockPosToTextDisplay.put(blockPos, textDisplayEntity);
     }
 
     private void updateMeta(final BlockPos blockPos, final BlockEntity blockEntity) {
@@ -184,7 +187,20 @@ public final class OurWorldInNBTModule extends DModule {
 
     @Subscribe
     public void onPreEntitiesRender(final PreEntitiesRenderEvent event) {
-        final Collection<DisplayEntity.TextDisplayEntity> textDisplayEntities = this.blockPosToTextDisplay.values();
-        event.addEntities(textDisplayEntities);
+        final ClientPlayerEntity player = client.player;
+
+        if (player == null) {
+            return;
+        }
+
+        synchronized (this.blockPosToTextDisplay) {
+            final Vec3d position = player.getPos();
+            final Collection<DisplayEntity.TextDisplayEntity> textDisplayEntities = this.blockPosToTextDisplay.values()
+                    .stream()
+                    .filter(e -> e.getPos().squaredDistanceTo(position) <= 45)
+                    .toList();
+
+            event.addEntities(textDisplayEntities);
+        }
     }
 }
