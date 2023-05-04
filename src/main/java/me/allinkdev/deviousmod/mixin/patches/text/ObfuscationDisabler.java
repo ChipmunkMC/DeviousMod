@@ -19,6 +19,6 @@ public final class ObfuscationDisabler {
 
     @Redirect(method = "<init>", at = @At(value = "FIELD", target = "Lnet/minecraft/text/Style;obfuscated:Ljava/lang/Boolean;", opcode = Opcodes.PUTFIELD))
     private void onPutObfuscated(final Style instance, final Boolean value) {
-        this.obfuscated = false;
+        this.obfuscated = value == null ? null : false;
     }
 }
