@@ -14,8 +14,6 @@ import java.nio.file.Path;
 import java.util.*;
 import java.util.stream.Collectors;
 
-import static me.allinkdev.deviousmod.DeviousMod.LOGGER;
-
 public final class ModuleManager {
     private static final Set<DModule> modules = new HashSet<>();
     private final Path moduleConfigPath = Config.getConfigDirectory();
@@ -38,7 +36,7 @@ public final class ModuleManager {
 
         modules.addAll(newModules);
 
-        LOGGER.info("Loaded {} modules!", modules.size());
+        DeviousMod.LOGGER.info("Loaded {} modules!", modules.size());
         final KeyBindManager keyBindManager = this.deviousMod.getKeyBindManager();
 
         for (final DModule module : modules) {
@@ -52,7 +50,7 @@ public final class ModuleManager {
                 continue;
             }
 
-            LOGGER.info("Enabling {}!", moduleName);
+            DeviousMod.LOGGER.info("Enabling {}!", moduleName);
             module.setModuleState(true);
         }
     }
