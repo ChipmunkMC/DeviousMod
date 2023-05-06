@@ -42,6 +42,8 @@ public final class ModuleManager {
         final KeyBindManager keyBindManager = this.deviousMod.getKeyBindManager();
 
         for (final DModule module : modules) {
+            initModule(module, keyBindManager);
+
             final String moduleName = module.getModuleName();
             final CompoundTag compoundTag = settings.getCompoundTag();
             final ByteTag byteTag = compoundTag.get(moduleName);
@@ -50,8 +52,7 @@ public final class ModuleManager {
                 continue;
             }
 
-            LOGGER.info("Enabling {}!", module.getModuleName());
-            initModule(module, keyBindManager);
+            LOGGER.info("Enabling {}!", moduleName);
             module.setModuleState(true);
         }
     }
