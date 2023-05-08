@@ -3,6 +3,11 @@ package com.github.allinkdev.deviousmod.api;
 import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.builder.LiteralArgumentBuilder;
 
+/**
+ * A class that implements {@link com.mojang.brigadier.Command<T>} and stores metadata about the command
+ *
+ * @param <T> the command source
+ */
 public interface Command<T> extends com.mojang.brigadier.Command<T> {
     /**
      * @return the name of the command object

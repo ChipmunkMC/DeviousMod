@@ -5,6 +5,9 @@ import com.github.allinkdev.deviousmod.api.Module;
 import java.util.Optional;
 import java.util.Set;
 
+/**
+ * Class for storing & loading modules
+ */
 public interface ModuleManager {
     /**
      * @return a set containing the names of every {@link Module} object registered with this module manager object.

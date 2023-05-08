@@ -1,5 +1,8 @@
 package com.github.allinkdev.deviousmod.api;
 
+/**
+ * Class containing metadata & state information and logic pertaining to the modification of the game.
+ */
 public interface Module {
     /**
      * @return the name of the module object
