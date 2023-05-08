@@ -13,6 +13,14 @@ java {
     withJavadocJar()
 }
 
+repositories {
+    maven("https://libraries.minecraft.net")
+}
+
+dependencies {
+    compileOnlyApi("com.mojang:brigadier:1.0.18") // This dependency is marked as compile-only as it is expected to be provided in the environment of dependents.
+}
+
 publishing {
     publications {
         create<MavenPublication>("mavenJava") {
