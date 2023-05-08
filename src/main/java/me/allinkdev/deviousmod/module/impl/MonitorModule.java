@@ -9,7 +9,7 @@ import me.allinkdev.deviousmod.event.network.connection.ConnectionStartEvent;
 import me.allinkdev.deviousmod.event.network.packet.impl.PacketS2CEvent;
 import me.allinkdev.deviousmod.event.tick.world.impl.WorldTickEndEvent;
 import me.allinkdev.deviousmod.module.DModule;
-import me.allinkdev.deviousmod.module.ModuleManager;
+import me.allinkdev.deviousmod.module.DModuleManager;
 import me.allinkdev.deviousmod.util.TimeUtil;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
@@ -31,7 +31,7 @@ public final class MonitorModule extends DModule {
     private long lastTimePacket = System.currentTimeMillis();
     private boolean notifiedAboutLag = false;
 
-    public MonitorModule(final ModuleManager moduleManager) {
+    public MonitorModule(final DModuleManager moduleManager) {
         super(moduleManager);
     }
 

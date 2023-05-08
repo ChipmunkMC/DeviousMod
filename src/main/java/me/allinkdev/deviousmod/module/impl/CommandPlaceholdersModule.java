@@ -9,7 +9,7 @@ import me.allinkdev.deviousmod.event.network.connection.ConnectionStartEvent;
 import me.allinkdev.deviousmod.event.self.chat.impl.SelfSendCommandEvent;
 import me.allinkdev.deviousmod.event.tick.impl.ClientTickEndEvent;
 import me.allinkdev.deviousmod.module.DModule;
-import me.allinkdev.deviousmod.module.ModuleManager;
+import me.allinkdev.deviousmod.module.DModuleManager;
 import me.allinkdev.deviousmod.util.TimeUtil;
 import net.minecraft.client.network.ClientPlayNetworkHandler;
 
@@ -23,7 +23,7 @@ public final class CommandPlaceholdersModule extends DModule {
     private final Queue<String> commandQueue = new LinkedBlockingQueue<>();
     private long tickCount = 0;
 
-    public CommandPlaceholdersModule(final ModuleManager moduleManager) {
+    public CommandPlaceholdersModule(final DModuleManager moduleManager) {
         super(moduleManager);
     }
 

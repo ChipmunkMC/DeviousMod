@@ -5,7 +5,7 @@ import com.mojang.brigadier.arguments.ArgumentType;
 import com.mojang.brigadier.context.CommandContext;
 import com.mojang.brigadier.suggestion.Suggestions;
 import com.mojang.brigadier.suggestion.SuggestionsBuilder;
-import me.allinkdev.deviousmod.module.ModuleManager;
+import me.allinkdev.deviousmod.module.DModuleManager;
 import net.minecraft.command.CommandSource;
 
 import java.util.Collection;
@@ -13,7 +13,7 @@ import java.util.Set;
 import java.util.concurrent.CompletableFuture;
 
 public final class ModuleArgumentType implements ArgumentType<String> {
-    private static final Set<String> suggestions = ModuleManager.getModuleNames();
+    private static final Set<String> suggestions = DModuleManager.getModuleNamesStatically();
 
     public static ModuleArgumentType getType() {
         return new ModuleArgumentType();

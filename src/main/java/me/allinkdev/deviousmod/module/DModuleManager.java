@@ -1,12 +1,13 @@
 package me.allinkdev.deviousmod.module;
 
+import com.github.allinkdev.deviousmod.api.Module;
+import com.github.allinkdev.deviousmod.api.managers.ModuleManager;
 import com.github.allinkdev.reflector.Reflector;
 import com.github.steveice10.opennbt.tag.builtin.ByteTag;
 import com.github.steveice10.opennbt.tag.builtin.CompoundTag;
 import me.allinkdev.deviousmod.DeviousMod;
 import me.allinkdev.deviousmod.data.Config;
 import me.allinkdev.deviousmod.data.DataCompound;
-import me.allinkdev.deviousmod.event.transformer.impl.Transformer;
 import me.allinkdev.deviousmod.keybind.KeyBindManager;
 import me.allinkdev.deviousmod.module.impl.TestModule;
 
@@ -14,14 +15,13 @@ import java.nio.file.Path;
 import java.util.*;
 import java.util.stream.Collectors;
 
-public final class ModuleManager {
+public final class DModuleManager implements ModuleManager {
     private static final Set<DModule> modules = new HashSet<>();
     private final Path moduleConfigPath = Config.getConfigDirectory();
     private final DataCompound settings = new DataCompound("modules", moduleConfigPath, Path.of("modules"));
-    private final Map<DModule, Set<Transformer>> transformers = new HashMap<>();
     private final DeviousMod deviousMod;
 
-    public ModuleManager(final DeviousMod deviousMod) {
+    public DModuleManager(final DeviousMod deviousMod) {
         this.deviousMod = deviousMod;
 
         deviousMod.subscribeEvents(this);
@@ -55,8 +55,15 @@ public final class ModuleManager {
         }
     }
 
+    @Deprecated(forRemoval = true)
+    public static Set<String> getModuleNamesStatically() {
+        final DeviousMod deviousMod = DeviousMod.getInstance();
+        final DModuleManager moduleManager = deviousMod.getModuleManager();
 
-    public static Set<String> getModuleNames() {
+        return moduleManager.getModuleNames();
+    }
+
+    public Set<String> getModuleNames() {
         return modules.stream()
                 .map(DModule::getModuleName)
                 .collect(Collectors.toUnmodifiableSet());
@@ -74,58 +81,33 @@ public final class ModuleManager {
         keyBindManager.register(genericModuleKeyBind);
     }
 
-    public void load(final DModule module) {
+    @Override
+    public void load(final Module module) {
         module.init();
-        transformers.put(module, module.getTransformers());
 
         deviousMod.subscribeEvents(module);
     }
 
-    public void unload(final DModule module) {
-        transformers.remove(module);
-
+    @Override
+    public void unload(final Module module) {
         deviousMod.unsubscribeEvents(module);
-        module.clearTransformers();
     }
 
-    /**
-     * Unmodifiable
-     */
-    public Set<DModule> getModules() {
+    @Override
+    public Set<Module> getModules() {
         checkLoaded();
 
         return Collections.unmodifiableSet(modules);
     }
 
-    public Optional<DModule> findModule(final String name) {
+    @Override
+    public Optional<Module> findModule(final CharSequence name) {
         checkLoaded();
 
         return modules.stream()
-                .filter(m -> m.getModuleName().equalsIgnoreCase(name))
+                .filter(m -> m.getModuleName().equalsIgnoreCase((String) name))
+                .map(m -> (Module) m)
                 .findFirst();
-    }
-
-    public List<Transformer> getTransformers() {
-        final List<List<Transformer>> transformerList = transformers.values().stream()
-                .map(List::copyOf)
-                .toList();
-
-        final List<Transformer> flattened = new ArrayList<>();
-
-        for (final List<Transformer> list : transformerList) {
-            flattened.addAll(list);
-        }
-
-        return flattened;
-    }
-
-    @SuppressWarnings("unchecked")
-    public <T extends Transformer> List<T> getTransformers(final Class<T> type) {
-        final List<Transformer> allTransformers = getTransformers();
-
-        return (List<T>) allTransformers.stream()
-                .filter(t -> Arrays.stream(t.getClass().getInterfaces()).toList().contains(type))
-                .toList();
     }
 
     public DeviousMod getDeviousMod() {

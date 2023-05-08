@@ -10,7 +10,7 @@ import me.allinkdev.deviousmod.event.world.chunk.BlockStateUpdateEvent;
 import me.allinkdev.deviousmod.event.world.chunk.ChunkSetEvent;
 import me.allinkdev.deviousmod.mixin.accessor.ClientChunkManagerAccessor;
 import me.allinkdev.deviousmod.module.DModule;
-import me.allinkdev.deviousmod.module.ModuleManager;
+import me.allinkdev.deviousmod.module.DModuleManager;
 import me.allinkdev.deviousmod.query.QueryManager;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.client.network.ClientPlayerEntity;
@@ -37,7 +37,7 @@ public final class OurWorldInNBTModule extends DModule {
     private static final int MAX_LENGTH = 2_000;
     private final Map<BlockPos, DisplayEntity.TextDisplayEntity> blockPosToTextDisplay = new HashMap<>();
 
-    public OurWorldInNBTModule(final ModuleManager moduleManager) {
+    public OurWorldInNBTModule(final DModuleManager moduleManager) {
         super(moduleManager);
     }
 

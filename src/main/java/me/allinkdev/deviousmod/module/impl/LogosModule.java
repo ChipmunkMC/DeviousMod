@@ -5,14 +5,14 @@ import imgui.flag.ImGuiWindowFlags;
 import me.allinkdev.deviousmod.gui.ImGuiHolder;
 import me.allinkdev.deviousmod.gui.ImGuiLayer;
 import me.allinkdev.deviousmod.module.DModule;
-import me.allinkdev.deviousmod.module.ModuleManager;
+import me.allinkdev.deviousmod.module.DModuleManager;
 import net.minecraft.SharedConstants;
 
 public final class LogosModule extends DModule implements ImGuiLayer {
     private static final String GAME_VERSION = SharedConstants.getGameVersion().getName();
     private static final String TEXT = "DeviousMod " + GAME_VERSION;
 
-    public LogosModule(final ModuleManager moduleManager) {
+    public LogosModule(final DModuleManager moduleManager) {
         super(moduleManager);
     }
 

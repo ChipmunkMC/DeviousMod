@@ -3,7 +3,7 @@ package me.allinkdev.deviousmod.module.impl;
 import com.google.common.eventbus.Subscribe;
 import me.allinkdev.deviousmod.event.network.packet.impl.PacketS2CEvent;
 import me.allinkdev.deviousmod.module.DModule;
-import me.allinkdev.deviousmod.module.ModuleManager;
+import me.allinkdev.deviousmod.module.DModuleManager;
 import net.minecraft.network.message.*;
 import net.minecraft.network.packet.c2s.play.ChatMessageC2SPacket;
 import net.minecraft.network.packet.s2c.play.ChatMessageS2CPacket;
@@ -14,7 +14,7 @@ import java.util.BitSet;
 import java.util.UUID;
 
 public final class TestModule extends DModule {
-    public TestModule(final ModuleManager moduleManager) {
+    public TestModule(final DModuleManager moduleManager) {
         super(moduleManager);
     }
 

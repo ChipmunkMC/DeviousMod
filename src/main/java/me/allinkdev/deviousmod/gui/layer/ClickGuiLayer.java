@@ -1,13 +1,13 @@
 package me.allinkdev.deviousmod.gui.layer;
 
+import com.github.allinkdev.deviousmod.api.Module;
 import com.google.common.eventbus.Subscribe;
 import imgui.ImGui;
 import imgui.flag.ImGuiCond;
 import me.allinkdev.deviousmod.DeviousMod;
 import me.allinkdev.deviousmod.event.tick.impl.ClientTickEndEvent;
 import me.allinkdev.deviousmod.gui.AbstractImGuiLayer;
-import me.allinkdev.deviousmod.module.DModule;
-import me.allinkdev.deviousmod.module.ModuleManager;
+import me.allinkdev.deviousmod.module.DModuleManager;
 
 import java.util.HashMap;
 import java.util.HashSet;
@@ -16,17 +16,17 @@ import java.util.Set;
 import java.util.concurrent.atomic.AtomicInteger;
 
 public final class ClickGuiLayer extends AbstractImGuiLayer {
-    private final Map<String, Set<DModule>> categoryModuleMap = new HashMap<>();
-    private final Map<DModule, Boolean> moduleToggleMap = new HashMap<>();
+    private final Map<String, Set<Module>> categoryModuleMap = new HashMap<>();
+    private final Map<Module, Boolean> moduleToggleMap = new HashMap<>();
 
     public ClickGuiLayer(final DeviousMod deviousMod) {
         super(deviousMod);
     }
 
-    private void registerModule(final DModule module) {
+    private void registerModule(final Module module) {
         final String category = module.getCategory();
         final boolean shouldPut;
-        final Set<DModule> moduleSet;
+        final Set<Module> moduleSet;
 
         if (!categoryModuleMap.containsKey(category)) {
             moduleSet = new HashSet<>();
@@ -49,14 +49,14 @@ public final class ClickGuiLayer extends AbstractImGuiLayer {
             throw new IllegalStateException("DeviousMod somehow null!");
         }
 
-        final ModuleManager moduleManager = this.deviousMod.getModuleManager();
-        final Set<DModule> modules = moduleManager.getModules();
+        final DModuleManager moduleManager = this.deviousMod.getModuleManager();
+        final Set<Module> modules = moduleManager.getModules();
         modules.forEach(this::registerModule);
 
         this.deviousMod.subscribeEvents(this);
     }
 
-    private void renderButton(final DModule module) {
+    private void renderButton(final Module module) {
         final String moduleName = module.getModuleName();
         final float buttonWidth = ImGui.getWindowWidth();
         final float buttonHeight = ImGui.getTextLineHeight();
@@ -71,7 +71,7 @@ public final class ClickGuiLayer extends AbstractImGuiLayer {
 
             final String moduleDescription = module.getDescription();
             ImGui.text(moduleDescription);
-            
+
             ImGui.endTooltip();
         }
 
@@ -83,7 +83,7 @@ public final class ClickGuiLayer extends AbstractImGuiLayer {
         moduleToggleMap.put(module, !moduleState);
     }
 
-    private void renderCategory(final AtomicInteger offsetAtomic, final String name, final Set<DModule> modules) {
+    private void renderCategory(final AtomicInteger offsetAtomic, final String name, final Set<Module> modules) {
         ImGui.begin(name);
 
         modules.forEach(this::renderButton);
@@ -114,7 +114,7 @@ public final class ClickGuiLayer extends AbstractImGuiLayer {
             return;
         }
 
-        this.moduleToggleMap.forEach(DModule::setModuleState);
+        this.moduleToggleMap.forEach(Module::setModuleState);
         this.moduleToggleMap.clear();
     }
 }

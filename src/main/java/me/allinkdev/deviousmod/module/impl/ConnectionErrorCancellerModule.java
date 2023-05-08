@@ -3,10 +3,10 @@ package me.allinkdev.deviousmod.module.impl;
 import com.google.common.eventbus.Subscribe;
 import me.allinkdev.deviousmod.event.network.connection.ConnectionErrorEvent;
 import me.allinkdev.deviousmod.module.DModule;
-import me.allinkdev.deviousmod.module.ModuleManager;
+import me.allinkdev.deviousmod.module.DModuleManager;
 
 public final class ConnectionErrorCancellerModule extends DModule {
-    public ConnectionErrorCancellerModule(final ModuleManager moduleManager) {
+    public ConnectionErrorCancellerModule(final DModuleManager moduleManager) {
         super(moduleManager);
     }
 

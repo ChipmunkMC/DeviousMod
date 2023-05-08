@@ -3,10 +3,10 @@ package me.allinkdev.deviousmod.module.impl;
 import com.google.common.eventbus.Subscribe;
 import me.allinkdev.deviousmod.event.entity.impl.EntityVisibilityCheckEvent;
 import me.allinkdev.deviousmod.module.DModule;
-import me.allinkdev.deviousmod.module.ModuleManager;
+import me.allinkdev.deviousmod.module.DModuleManager;
 
 public final class TrueSightModule extends DModule {
-    public TrueSightModule(final ModuleManager moduleManager) {
+    public TrueSightModule(final DModuleManager moduleManager) {
         super(moduleManager);
     }
 

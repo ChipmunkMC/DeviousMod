@@ -52,6 +52,8 @@ dependencies {
     require("io.github.spair:imgui-java-natives-windows:${project.imgui_version}")
     require("io.github.spair:imgui-java-natives-macos:${project.imgui_version}")
 
+    require(project(":api"))
+
     modImplementation include("net.kyori:adventure-platform-fabric:${project.adventure_version}")
 }
 

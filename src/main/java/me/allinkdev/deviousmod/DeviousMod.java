@@ -1,14 +1,15 @@
 package me.allinkdev.deviousmod;
 
+import com.github.allinkdev.deviousmod.api.DeviousModSilhouette;
 import com.google.common.eventbus.EventBus;
-import me.allinkdev.deviousmod.command.CommandManager;
+import me.allinkdev.deviousmod.command.DCommandManager;
 import me.allinkdev.deviousmod.event.tick.impl.ClientTickEndEvent;
 import me.allinkdev.deviousmod.event.tick.impl.ClientTickStartEvent;
 import me.allinkdev.deviousmod.event.tick.world.impl.WorldTickEndEvent;
 import me.allinkdev.deviousmod.event.tick.world.impl.WorldTickStartEvent;
 import me.allinkdev.deviousmod.keybind.KeyBindManager;
 import me.allinkdev.deviousmod.keying.BotKeyProvider;
-import me.allinkdev.deviousmod.module.ModuleManager;
+import me.allinkdev.deviousmod.module.DModuleManager;
 import me.allinkdev.deviousmod.query.QueryManager;
 import me.allinkdev.deviousmod.util.TextUtil;
 import net.fabricmc.api.ClientModInitializer;
@@ -26,7 +27,7 @@ import java.lang.management.ManagementFactory;
 import java.lang.management.RuntimeMXBean;
 import java.util.List;
 
-public final class DeviousMod implements ClientModInitializer {
+public final class DeviousMod implements ClientModInitializer, DeviousModSilhouette {
     public static final Logger LOGGER = LoggerFactory.getLogger("Devious Mod");
     public static final MinecraftClient CLIENT = MinecraftClient.getInstance();
     private static final boolean IS_DEVELOPMENT;
@@ -41,8 +42,8 @@ public final class DeviousMod implements ClientModInitializer {
 
     private final EventBus eventBus = new EventBus();
     private final KeyBindManager keyBindManager = new KeyBindManager(this);
-    private final ModuleManager moduleManager = new ModuleManager(this);
-    private final CommandManager commandManager = new CommandManager(this);
+    private final DModuleManager moduleManager = new DModuleManager(this);
+    private final DCommandManager commandManager = new DCommandManager(this);
     private final BotKeyProvider botKeyProvider = new BotKeyProvider();
 
     public static DeviousMod getInstance() {
@@ -53,11 +54,13 @@ public final class DeviousMod implements ClientModInitializer {
         return IS_DEVELOPMENT;
     }
 
-    public ModuleManager getModuleManager() {
+    @Override
+    public DModuleManager getModuleManager() {
         return this.moduleManager;
     }
 
-    public CommandManager getCommandManager() {
+    @Override
+    public DCommandManager getCommandManager() {
         return this.commandManager;
     }
 

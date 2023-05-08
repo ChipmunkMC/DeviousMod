@@ -31,6 +31,11 @@ public interface Module {
     void setModuleState(final boolean newState);
 
     /**
+     * Initializes the module. Should be called on world initialization & module enable.
+     */
+    void init();
+
+    /**
      * Inverts the module object's toggle state.
      */
     void toggle();

@@ -1,5 +1,6 @@
 package me.allinkdev.deviousmod.command.impl;
 
+import com.github.allinkdev.deviousmod.api.Module;
 import com.mojang.brigadier.arguments.StringArgumentType;
 import com.mojang.brigadier.builder.LiteralArgumentBuilder;
 import com.mojang.brigadier.context.CommandContext;
@@ -35,9 +36,9 @@ public final class ModulesCommand extends DCommand {
         return "modules";
     }
 
-    private DModule genericExecute(final CommandContext<FabricClientCommandSource> context) throws CommandSyntaxException {
+    private Module genericExecute(final CommandContext<FabricClientCommandSource> context) throws CommandSyntaxException {
         final String argument = StringArgumentType.getString(context, MODULE_ARGUMENT_NAME);
-        final Optional<DModule> moduleOptional = moduleManager.findModule(argument);
+        final Optional<Module> moduleOptional = moduleManager.findModule(argument);
 
         if (moduleOptional.isEmpty()) {
             throw moduleNotFound;
@@ -46,7 +47,7 @@ public final class ModulesCommand extends DCommand {
         return moduleOptional.get();
     }
 
-    private void updateModuleStatus(final DModule module, final boolean newState) throws CommandSyntaxException {
+    private void updateModuleStatus(final Module module, final boolean newState) throws CommandSyntaxException {
         final boolean state = module.getModuleState();
 
         if (state && newState) {
@@ -60,7 +61,7 @@ public final class ModulesCommand extends DCommand {
         module.setModuleState(newState);
     }
 
-    private Component constructModuleListStatus(final DModule module) {
+    private Component constructModuleListStatus(final Module module) {
         final String name = module.getModuleName();
         final boolean state = module.getModuleState();
 
@@ -71,13 +72,13 @@ public final class ModulesCommand extends DCommand {
 
     public int executeStatus(final CommandContext<FabricClientCommandSource> context) throws CommandSyntaxException {
         final String moduleName = StringArgumentType.getString(context, MODULE_ARGUMENT_NAME);
-        final Optional<DModule> moduleOptional = moduleManager.findModule(moduleName);
+        final Optional<Module> moduleOptional = moduleManager.findModule(moduleName);
 
         if (moduleOptional.isEmpty()) {
             throw moduleNotFound;
         }
 
-        final DModule module = moduleOptional.get();
+        final Module module = moduleOptional.get();
 
         sendFeedback(constructModuleListStatus(module));
 
@@ -85,12 +86,12 @@ public final class ModulesCommand extends DCommand {
     }
 
     public int executeStatusNoArgs(final CommandContext<FabricClientCommandSource> context) {
-        final Set<DModule> modules = moduleManager.getModules();
+        final Set<Module> modules = moduleManager.getModules();
         int enabled = 0;
         Component component = Component.text("Module states:")
                 .append(Component.newline());
 
-        for (final DModule module : modules) {
+        for (final Module module : modules) {
             final boolean state = module.getModuleState();
             component = component.append(Component.text(" - "))
                     .append(constructModuleListStatus(module))
@@ -116,12 +117,12 @@ public final class ModulesCommand extends DCommand {
     }
 
     public int executeList(final CommandContext<FabricClientCommandSource> context) {
-        final Set<DModule> modules = moduleManager.getModules();
+        final Set<Module> modules = moduleManager.getModules();
 
         Component component = Component.text("Available modules:")
                 .append(Component.newline());
 
-        for (final DModule module : moduleManager.getModules()) {
+        for (final Module module : moduleManager.getModules()) {
             final String name = module.getModuleName();
             component = component.append(Component.text(" - ")
                             .append(Component.text(name)))
@@ -139,23 +140,24 @@ public final class ModulesCommand extends DCommand {
     }
 
     public int executeDisable(final CommandContext<FabricClientCommandSource> context) throws CommandSyntaxException {
-        final DModule module = genericExecute(context);
+        final Module module = genericExecute(context);
         updateModuleStatus(module, false);
 
         return 1;
     }
 
     public int executeEnable(final CommandContext<FabricClientCommandSource> context) throws CommandSyntaxException {
-        final DModule module = genericExecute(context);
+        final Module module = genericExecute(context);
         updateModuleStatus(module, true);
 
         return 1;
     }
 
     public int executeToggle(final CommandContext<FabricClientCommandSource> context) throws CommandSyntaxException {
-        final DModule module = genericExecute(context);
+        final Module module = genericExecute(context);
         final boolean moduleState = module.getModuleState();
         updateModuleStatus(module, !moduleState);
+
         return 1;
     }
 

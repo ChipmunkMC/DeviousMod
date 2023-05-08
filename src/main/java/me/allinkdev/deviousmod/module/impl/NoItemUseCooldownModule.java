@@ -3,10 +3,10 @@ package me.allinkdev.deviousmod.module.impl;
 import com.google.common.eventbus.Subscribe;
 import me.allinkdev.deviousmod.event.input.ItemUseCooldownCheckEvent;
 import me.allinkdev.deviousmod.module.DModule;
-import me.allinkdev.deviousmod.module.ModuleManager;
+import me.allinkdev.deviousmod.module.DModuleManager;
 
 public final class NoItemUseCooldownModule extends DModule {
-    public NoItemUseCooldownModule(final ModuleManager moduleManager) {
+    public NoItemUseCooldownModule(final DModuleManager moduleManager) {
         super(moduleManager);
     }
 

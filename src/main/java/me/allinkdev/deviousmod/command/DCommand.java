@@ -1,18 +1,17 @@
 package me.allinkdev.deviousmod.command;
 
-import com.mojang.brigadier.Command;
+import com.github.allinkdev.deviousmod.api.Command;
 import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.builder.LiteralArgumentBuilder;
 import me.allinkdev.deviousmod.DeviousMod;
-import me.allinkdev.deviousmod.module.ModuleManager;
+import me.allinkdev.deviousmod.module.DModuleManager;
 import net.fabricmc.fabric.api.client.command.v2.ClientCommandManager;
 import net.fabricmc.fabric.api.client.command.v2.FabricClientCommandSource;
 import net.kyori.adventure.text.Component;
-import net.minecraft.command.CommandRegistryAccess;
 
 public abstract class DCommand implements Command<FabricClientCommandSource> {
     protected final DeviousMod deviousMod;
-    protected final ModuleManager moduleManager;
+    protected final DModuleManager moduleManager;
 
     protected DCommand(final DeviousMod deviousMod) {
         this.deviousMod = deviousMod;
@@ -26,8 +25,14 @@ public abstract class DCommand implements Command<FabricClientCommandSource> {
                 .executes(this);
     }
 
-    public void register(final CommandDispatcher<FabricClientCommandSource> dispatcher, final CommandRegistryAccess ignoredRegistryAccess) {
+    @Override
+    public void register(final CommandDispatcher<FabricClientCommandSource> dispatcher) {
         dispatcher.register(this.getNode());
+    }
+
+    @Override
+    public Class<? extends FabricClientCommandSource> getSourceType() {
+        return FabricClientCommandSource.class;
     }
 
     public void sendFeedback(final Component component) {

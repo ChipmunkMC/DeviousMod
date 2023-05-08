@@ -1,5 +1,7 @@
 package me.allinkdev.deviousmod.command;
 
+import com.github.allinkdev.deviousmod.api.Command;
+import com.github.allinkdev.deviousmod.api.managers.CommandManager;
 import com.github.allinkdev.reflector.Reflector;
 import com.mojang.brigadier.CommandDispatcher;
 import me.allinkdev.deviousmod.DeviousMod;
@@ -7,17 +9,12 @@ import me.allinkdev.deviousmod.command.impl.TestCommand;
 import net.fabricmc.fabric.api.client.command.v2.FabricClientCommandSource;
 import net.minecraft.command.CommandRegistryAccess;
 
-import java.util.HashSet;
-import java.util.List;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 
-import static me.allinkdev.deviousmod.DeviousMod.LOGGER;
-
-public final class CommandManager {
+public final class DCommandManager implements CommandManager<FabricClientCommandSource> {
     private final Set<DCommand> commands = new HashSet<>();
 
-    public CommandManager(final DeviousMod deviousMod) {
+    public DCommandManager(final DeviousMod deviousMod) {
         final List<? extends DCommand> newCommands = Reflector.createNew(DCommand.class)
                 .allSubClassesInSubPackage("impl")
                 .map(Reflector::createNew)
@@ -28,12 +25,22 @@ public final class CommandManager {
 
         commands.addAll(newCommands);
 
-        LOGGER.info("Loaded {} commands!", commands.size());
+        DeviousMod.LOGGER.info("Loaded {} commands!", commands.size());
     }
 
     public void register(final CommandDispatcher<FabricClientCommandSource> dispatcher, final CommandRegistryAccess registryAccess) {
+        this.register(dispatcher);
+    }
+
+    @Override
+    public Set<Command<FabricClientCommandSource>> getCommands() {
+        return Collections.unmodifiableSet(this.commands);
+    }
+
+    @Override
+    public void register(final CommandDispatcher<FabricClientCommandSource> dispatcher) {
         for (final DCommand command : this.commands) {
-            command.register(dispatcher, registryAccess);
+            command.register(dispatcher);
         }
     }
 }

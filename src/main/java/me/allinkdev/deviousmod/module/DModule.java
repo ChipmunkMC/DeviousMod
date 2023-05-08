@@ -1,10 +1,10 @@
 package me.allinkdev.deviousmod.module;
 
+import com.github.allinkdev.deviousmod.api.Module;
 import com.github.steveice10.opennbt.tag.builtin.ByteTag;
 import com.github.steveice10.opennbt.tag.builtin.CompoundTag;
 import me.allinkdev.deviousmod.DeviousMod;
 import me.allinkdev.deviousmod.data.DataCompound;
-import me.allinkdev.deviousmod.event.transformer.impl.Transformer;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
 import net.minecraft.client.MinecraftClient;
@@ -12,17 +12,17 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.nio.file.Path;
-import java.util.*;
+import java.util.List;
+import java.util.Optional;
 
-public abstract class DModule {
+public abstract class DModule implements Module {
     protected final Logger logger = LoggerFactory.getLogger("Devious Mod/" + this.getClass().getSimpleName());
     protected final DeviousMod deviousMod;
     protected final MinecraftClient client = DeviousMod.CLIENT;
     protected final DataCompound settings;
-    private final Set<Transformer> transformers = new HashSet<>();
-    private final ModuleManager moduleManager;
+    private final DModuleManager moduleManager;
 
-    protected DModule(final ModuleManager moduleManager) {
+    protected DModule(final DModuleManager moduleManager) {
         this.moduleManager = moduleManager;
         this.deviousMod = moduleManager.getDeviousMod();
 
@@ -34,6 +34,7 @@ public abstract class DModule {
         return state ? Component.text("enabled", NamedTextColor.GREEN) : Component.text("disabled", NamedTextColor.RED);
     }
 
+    @Override
     public abstract String getCategory();
 
     /***
@@ -43,8 +44,10 @@ public abstract class DModule {
 
     }
 
+    @Override
     public abstract String getModuleName();
 
+    @Override
     public abstract String getDescription();
 
     protected Optional<ByteTag> getTag() {
@@ -56,6 +59,7 @@ public abstract class DModule {
         return Optional.ofNullable(moduleStateTag);
     }
 
+    @Override
     public boolean getModuleState() {
         final Optional<ByteTag> optional = getTag();
 
@@ -68,6 +72,7 @@ public abstract class DModule {
         return tag.getValue() == (byte) 1;
     }
 
+    @Override
     public void setModuleState(final boolean newState) {
         final String name = getModuleName();
         final ByteTag newTag = new ByteTag(name, (byte) (newState ? 1 : 0));
@@ -101,24 +106,14 @@ public abstract class DModule {
         this.setModuleState(!currentState);
     }
 
+    @Override
     public void onEnable() {
         //
     }
 
+    @Override
     public void onDisable() {
         //
-    }
-
-    public Set<Transformer> getTransformers() {
-        return Collections.unmodifiableSet(transformers);
-    }
-
-    protected void addTransformer(final Transformer transformer) {
-        this.transformers.add(transformer);
-    }
-
-    protected void clearTransformers() {
-        this.transformers.clear();
     }
 
     protected void sendMessage(final Component component) {

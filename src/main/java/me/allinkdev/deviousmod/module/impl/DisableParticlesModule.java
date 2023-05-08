@@ -3,7 +3,7 @@ package me.allinkdev.deviousmod.module.impl;
 import com.google.common.eventbus.Subscribe;
 import me.allinkdev.deviousmod.event.network.packet.impl.PacketS2CEvent;
 import me.allinkdev.deviousmod.module.DModule;
-import me.allinkdev.deviousmod.module.ModuleManager;
+import me.allinkdev.deviousmod.module.DModuleManager;
 import net.minecraft.network.packet.Packet;
 import net.minecraft.network.packet.s2c.play.ExperienceOrbSpawnS2CPacket;
 import net.minecraft.network.packet.s2c.play.ParticleS2CPacket;
@@ -11,7 +11,7 @@ import net.minecraft.network.packet.s2c.play.WorldEventS2CPacket;
 import net.minecraft.world.WorldEvents;
 
 public final class DisableParticlesModule extends DModule {
-    public DisableParticlesModule(final ModuleManager moduleManager) {
+    public DisableParticlesModule(final DModuleManager moduleManager) {
         super(moduleManager);
     }
 

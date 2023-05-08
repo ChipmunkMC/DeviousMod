@@ -13,7 +13,6 @@
     "client.network.CommandInterceptor",
     "client.network.PacketSendAndReceive",
     "client.render.FakeEntityInjector",
-    "client.screen.HudTransformer",
     "client.screen.InfiniChat",
     "client.screen.ScreenOverrider",
     "client.screen.TooltipTransformer",

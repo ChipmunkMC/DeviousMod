@@ -5,7 +5,7 @@ import com.mojang.authlib.GameProfile;
 import me.allinkdev.deviousmod.DeviousMod;
 import me.allinkdev.deviousmod.event.entity.living.impl.LivingEntityEquipmentUpdateEvent;
 import me.allinkdev.deviousmod.module.DModule;
-import me.allinkdev.deviousmod.module.ModuleManager;
+import me.allinkdev.deviousmod.module.DModuleManager;
 import me.allinkdev.deviousmod.util.IterUtil;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
@@ -46,7 +46,7 @@ public final class ItemLoggerModule extends DModule {
         }
     }
 
-    public ItemLoggerModule(final ModuleManager moduleManager) {
+    public ItemLoggerModule(final DModuleManager moduleManager) {
         super(moduleManager);
     }
 
