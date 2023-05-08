@@ -1,6 +1,7 @@
 package me.allinkdev.deviousmod;
 
 import com.github.allinkdev.deviousmod.api.DeviousModSilhouette;
+import com.github.allinkdev.deviousmod.api.load.LoadManager;
 import com.google.common.eventbus.EventBus;
 import me.allinkdev.deviousmod.command.DCommandManager;
 import me.allinkdev.deviousmod.event.tick.impl.ClientTickEndEvent;
@@ -89,6 +90,8 @@ public final class DeviousMod implements ClientModInitializer, DeviousModSilhoue
 
         ClientTickEvents.START_WORLD_TICK.register(WorldTickStartEvent::onWorldTickStart);
         ClientTickEvents.START_WORLD_TICK.register(WorldTickEndEvent::onWorldTickEnd);
+
+        LoadManager.load(this);
     }
 
     public void subscribeEvents(final Object object) {
