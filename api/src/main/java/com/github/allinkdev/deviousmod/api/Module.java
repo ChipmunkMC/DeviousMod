@@ -1,7 +1,7 @@
 package com.github.allinkdev.deviousmod.api;
 
 /**
- * Class containing metadata & state information and logic pertaining to the modification of the game.
+ * Class containing metadata &amp; state information and logic pertaining to the modification of the game.
  */
 public interface Module {
     /**
@@ -34,7 +34,7 @@ public interface Module {
     void setModuleState(final boolean newState);
 
     /**
-     * Initializes the module. Should be called on world initialization & module enable.
+     * Initializes the module. Should be called on world initialization &amp; module enable.
      */
     void init();
 

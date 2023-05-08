@@ -6,7 +6,7 @@ import java.util.Optional;
 import java.util.Set;
 
 /**
- * Class for storing & loading modules
+ * Class for storing &amp; loading modules
  */
 public interface ModuleManager {
     /**

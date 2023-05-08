@@ -6,7 +6,7 @@ import com.mojang.brigadier.CommandDispatcher;
 import java.util.Set;
 
 /**
- * Class for storing & registering commands with a {@link CommandDispatcher<T>} instance
+ * Class for storing &amp; registering commands with a {@link CommandDispatcher<T>} instance
  *
  * @param <T> the type of command source {@link Command<T>} objects registered with this {@link CommandManager<T>} utilize
  */
