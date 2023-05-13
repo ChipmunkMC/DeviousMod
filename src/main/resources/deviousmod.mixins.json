@@ -5,6 +5,7 @@
   "compatibilityLevel": "JAVA_17",
   "client": [
     "accessor.ClientChunkManagerAccessor",
+    "client.chat.ChatAbnormaliser",
     "client.entity.EntityEquipmentOverrider",
     "client.entity.EntityStateEvents",
     "client.entity.EntityStateEvents$EntityRemoval",
