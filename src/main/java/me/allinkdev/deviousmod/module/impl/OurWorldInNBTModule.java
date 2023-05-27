@@ -35,7 +35,7 @@ import java.util.concurrent.atomic.AtomicReferenceArray;
 
 public final class OurWorldInNBTModule extends DModule {
     private static final int MAX_LENGTH = 2_000;
-    private final Map<BlockPos, DisplayEntity.TextDisplayEntity> blockPosToTextDisplay = new HashMap<>();
+    private final Map<BlockPos, DisplayEntity.TextDisplayEntity> blockPosToTextDisplay = new LinkedHashMap<>();
 
     public OurWorldInNBTModule(final DModuleManager moduleManager) {
         super(moduleManager);
