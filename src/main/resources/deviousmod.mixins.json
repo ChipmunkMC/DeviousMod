@@ -38,6 +38,7 @@
     "patches.item.MapIconCountLimiter",
     "patches.network.LongCommandCompletionsKickFix",
     "patches.tag.BigTagKickFix",
+    "patches.text.DoubleArrayFix",
     "patches.text.MapIconTextSizeLimiter",
     "patches.text.NullComponentFallback",
     "patches.text.ObfuscationDisabler",
