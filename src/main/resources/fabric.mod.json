@@ -24,8 +24,5 @@
     "fabric-api": "*",
     "minecraft": "~1.20-rc1",
     "java": ">=17"
-  },
-  "breaks": {
-    "wnt-supervisor": "*"
   }
 }
