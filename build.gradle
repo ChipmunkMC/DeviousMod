@@ -22,6 +22,11 @@ repositories {
     }
 
     maven {
+        name = "Allink Maven"
+        url = "https://maven.allink.esixtwo.one/snapshots/"
+    }
+
+    maven {
         name = "Jitpack"
         url = "https://jitpack.io/"
     }
@@ -54,7 +59,16 @@ dependencies {
 
     require(project(":api"))
 
-    modImplementation include("net.kyori:adventure-platform-fabric:${project.adventure_version}")
+    // TODO: DELETE ME WHEN ADVENTURE PLATFORM FABRIC OFFICIALLY RELEASES FOR 1.20!!!!!!!!!!!!!!!!!
+    require("net.kyori:adventure-api:${project.adventure_version_TEMP_FOR_MIGRATION}")
+    require("net.kyori:adventure-key:${project.adventure_version_TEMP_FOR_MIGRATION}")
+    require("net.kyori:adventure-platform-api:4.3.0") // what?
+    require("net.kyori:adventure-text-logger-slf4j:${project.adventure_version_TEMP_FOR_MIGRATION}")
+    require("net.kyori:adventure-text-minimessage:${project.adventure_version_TEMP_FOR_MIGRATION}")
+    require("net.kyori:adventure-text-serializer-plain:${project.adventure_version_TEMP_FOR_MIGRATION}")
+    require("net.kyori:adventure-text-serializer-gson:${project.adventure_version_TEMP_FOR_MIGRATION}")
+
+    modImplementation include("net.kyori:adventure-platform-fabric:${project.adventure_platform_version}")
 }
 
 tasks {
