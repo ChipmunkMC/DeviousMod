@@ -36,6 +36,7 @@
     "client.network.NetworkStateMixin",
     "patches.entity.AreaEffectCloudParticleLimiter",
     "patches.item.MapIconCountLimiter",
+    "patches.network.BootstrapImprover",
     "patches.network.LongCommandCompletionsKickFix",
     "patches.tag.BigTagKickFix",
     "patches.text.DoubleArrayFix",
