@@ -21,9 +21,7 @@ public final class BootstrapImprover {
 
     @Inject(method = "initChannel", at = @At("HEAD"))
     private void onInitChannel(final Channel channel, final CallbackInfo ci) {
-        setConfigOptionIgnoringExceptions(channel, ChannelOption.TCP_FASTOPEN_CONNECT, true); // More complete FastOpen.
         setConfigOptionIgnoringExceptions(channel, ChannelOption.IP_TOS, 0x28); // This tells your routing device to give the packets you send "critical" priority. https://netnix.org/qos.html
         setConfigOptionIgnoringExceptions(channel, ChannelOption.SO_KEEPALIVE, false); // Minecraft already has a keep-alive system. This is unnecessary.
-        setConfigOptionIgnoringExceptions(channel, ChannelOption.MAX_MESSAGES_PER_WRITE, Integer.MAX_VALUE); // Let me flood the server with packets!
     }
 }
