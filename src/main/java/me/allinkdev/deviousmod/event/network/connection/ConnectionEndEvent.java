@@ -1,6 +1,6 @@
 package me.allinkdev.deviousmod.event.network.connection;
 
-import me.allinkdev.deviousmod.event.Event;
+import com.github.allinkdev.deviousmod.api.event.Event;
 
-public final class ConnectionEndEvent extends Event {
+public final class ConnectionEndEvent implements Event {
 }

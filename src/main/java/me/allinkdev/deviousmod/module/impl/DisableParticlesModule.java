@@ -35,7 +35,7 @@ public final class DisableParticlesModule extends DModule {
         final Packet<?> packet = event.getPacket();
 
         if (packet instanceof ParticleS2CPacket || packet instanceof ExperienceOrbSpawnS2CPacket) {
-            event.setCancelled(true);
+            event.cancel();
             return;
         }
 
@@ -43,7 +43,7 @@ public final class DisableParticlesModule extends DModule {
             final int eventId = worldEventPacket.getEventId();
 
             if (eventId == WorldEvents.SPLASH_POTION_SPLASHED || eventId == WorldEvents.INSTANT_SPLASH_POTION_SPLASHED) {
-                event.setCancelled(true);
+                event.cancel();
             }
         }
     }

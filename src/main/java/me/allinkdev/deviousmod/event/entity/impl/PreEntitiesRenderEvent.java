@@ -1,12 +1,12 @@
 package me.allinkdev.deviousmod.event.entity.impl;
 
-import me.allinkdev.deviousmod.event.Event;
+import com.github.allinkdev.deviousmod.api.event.Event;
 import net.minecraft.entity.Entity;
 
 import java.util.Collection;
 import java.util.List;
 
-public final class PreEntitiesRenderEvent extends Event {
+public final class PreEntitiesRenderEvent implements Event {
     private final List<Entity> entities;
 
     public PreEntitiesRenderEvent(final List<Entity> entities) {

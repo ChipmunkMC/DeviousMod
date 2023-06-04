@@ -7,4 +7,4 @@ pluginManagement {
 }
 
 rootProject.name = "DeviousMod"
-include("api")
+include("deviousmod-api")

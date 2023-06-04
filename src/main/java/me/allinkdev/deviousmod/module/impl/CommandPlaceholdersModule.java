@@ -50,7 +50,7 @@ public final class CommandPlaceholdersModule extends DModule {
             return;
         }
 
-        event.setCancelled(true);
+        event.cancel();
         final String trimmed = command.trim();
         final String[] parts = trimmed.split(" ");
         int partIndex = -1;

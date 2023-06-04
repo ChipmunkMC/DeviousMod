@@ -1,6 +1,6 @@
 package me.allinkdev.deviousmod.event.self.chat;
 
-import me.allinkdev.deviousmod.event.Cancellable;
+import com.github.allinkdev.deviousmod.api.event.Cancellable;
 
 public class GenericSelfChatEvent extends Cancellable {
     private final String message;

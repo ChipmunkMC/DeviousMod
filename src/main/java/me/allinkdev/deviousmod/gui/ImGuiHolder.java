@@ -38,7 +38,7 @@ public final class ImGuiHolder extends NoConstructor {
     }
 
     public static void addLayer(final ImGuiLayer layer) {
-        layer.init();
+        layer.layerInit();
 
         LAYERS.add(layer);
     }

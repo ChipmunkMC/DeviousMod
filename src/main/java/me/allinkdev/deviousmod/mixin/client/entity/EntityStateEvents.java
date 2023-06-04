@@ -1,7 +1,7 @@
 package me.allinkdev.deviousmod.mixin.client.entity;
 
 import com.google.common.eventbus.EventBus;
-import me.allinkdev.deviousmod.event.Event;
+import me.allinkdev.deviousmod.DeviousMod;
 import me.allinkdev.deviousmod.event.entity.impl.EntityAddEvent;
 import me.allinkdev.deviousmod.event.entity.impl.EntityRemoveEvent;
 import net.minecraft.client.world.ClientEntityManager;
@@ -24,7 +24,8 @@ public final class EntityStateEvents {
         }
 
         final EntityAddEvent event = new EntityAddEvent(entity);
-        final EventBus eventBus = Event.getEventBus();
+        final DeviousMod deviousMod = DeviousMod.getInstance();
+        final EventBus eventBus = deviousMod.getEventBus();
         eventBus.post(event);
 
         if (!event.isCancelled()) {
@@ -45,7 +46,8 @@ public final class EntityStateEvents {
             }
 
             final EntityRemoveEvent event = new EntityRemoveEvent(entity);
-            final EventBus eventBus = Event.getEventBus();
+            final DeviousMod deviousMod = DeviousMod.getInstance();
+            final EventBus eventBus = deviousMod.getEventBus();
             eventBus.post(event);
 
             if (!event.isCancelled()) {

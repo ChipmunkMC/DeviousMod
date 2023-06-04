@@ -1,12 +1,12 @@
 package me.allinkdev.deviousmod.event.tooltip;
 
-import me.allinkdev.deviousmod.event.Cancellable;
+import com.github.allinkdev.deviousmod.api.event.Event;
 import net.minecraft.item.ItemStack;
 import net.minecraft.text.Text;
 
 import java.util.List;
 
-public final class TooltipRenderEvent extends Cancellable {
+public final class TooltipRenderEvent implements Event {
     private final List<Text> texts;
     private final ItemStack itemStack;
 

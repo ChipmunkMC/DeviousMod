@@ -1,6 +1,6 @@
 package me.allinkdev.deviousmod.event.network.packet;
 
-import me.allinkdev.deviousmod.event.Cancellable;
+import com.github.allinkdev.deviousmod.api.event.Cancellable;
 import net.minecraft.network.packet.Packet;
 
 public class GenericPacketEvent extends Cancellable {

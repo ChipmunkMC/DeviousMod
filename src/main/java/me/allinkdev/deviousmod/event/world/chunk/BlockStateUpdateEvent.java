@@ -1,10 +1,10 @@
 package me.allinkdev.deviousmod.event.world.chunk;
 
-import me.allinkdev.deviousmod.event.Event;
+import com.github.allinkdev.deviousmod.api.event.Event;
 import net.minecraft.block.BlockState;
 import net.minecraft.util.math.BlockPos;
 
-public final class BlockStateUpdateEvent extends Event {
+public final class BlockStateUpdateEvent implements Event {
     private final BlockPos pos;
     private final BlockState oldState;
     private final BlockState newState;

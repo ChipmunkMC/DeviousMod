@@ -1,6 +1,6 @@
 package me.allinkdev.deviousmod.command.impl;
 
-import com.github.allinkdev.deviousmod.api.Module;
+import com.github.allinkdev.deviousmod.api.module.Module;
 import com.mojang.brigadier.arguments.StringArgumentType;
 import com.mojang.brigadier.builder.LiteralArgumentBuilder;
 import com.mojang.brigadier.context.CommandContext;

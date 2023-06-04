@@ -1,6 +1,6 @@
 package me.allinkdev.deviousmod.gui.layer;
 
-import com.github.allinkdev.deviousmod.api.Module;
+import com.github.allinkdev.deviousmod.api.module.Module;
 import com.google.common.eventbus.Subscribe;
 import imgui.ImGui;
 import imgui.flag.ImGuiCond;
@@ -44,7 +44,7 @@ public final class ClickGuiLayer extends AbstractImGuiLayer {
     }
 
     @Override
-    public void init() {
+    public void layerInit() {
         if (this.deviousMod == null) {
             throw new IllegalStateException("DeviousMod somehow null!");
         }

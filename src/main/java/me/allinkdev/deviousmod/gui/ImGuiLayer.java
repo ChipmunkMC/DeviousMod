@@ -5,7 +5,7 @@ public interface ImGuiLayer {
 
     }
 
-    default void init() {
+    default void layerInit() {
 
     }
 

@@ -32,9 +32,8 @@ public final class EntityVisibilityOverrider {
         final EntityVisibilityCheckEvent event = new EntityVisibilityCheckEvent(entity, originalReturnValue);
         final DeviousMod deviousMod = DeviousMod.getInstance();
         final EventBus eventBus = deviousMod.getEventBus();
-
         eventBus.post(event);
-        
+
         final boolean newReturnValue = event.isVisible();
         cir.setReturnValue(newReturnValue);
     }

@@ -1,9 +1,9 @@
 package me.allinkdev.deviousmod.event.world.chunk;
 
-import me.allinkdev.deviousmod.event.Event;
+import com.github.allinkdev.deviousmod.api.event.Event;
 import net.minecraft.world.chunk.WorldChunk;
 
-public final class ChunkSetEvent extends Event {
+public final class ChunkSetEvent implements Event {
     private final int index;
     private final WorldChunk chunk;
 

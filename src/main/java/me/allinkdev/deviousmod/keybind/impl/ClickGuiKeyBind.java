@@ -3,10 +3,10 @@ package me.allinkdev.deviousmod.keybind.impl;
 import me.allinkdev.deviousmod.DeviousMod;
 import me.allinkdev.deviousmod.gui.ImGuiScreen;
 import me.allinkdev.deviousmod.gui.layer.ClickGuiLayer;
-import me.allinkdev.deviousmod.keybind.KeyBind;
+import me.allinkdev.deviousmod.keybind.DKeyBind;
 import org.lwjgl.glfw.GLFW;
 
-public final class ClickGuiKeyBind extends KeyBind {
+public final class ClickGuiKeyBind extends DKeyBind {
     public ClickGuiKeyBind(final DeviousMod deviousMod) {
         super(deviousMod);
     }
@@ -28,5 +28,7 @@ public final class ClickGuiKeyBind extends KeyBind {
         final ImGuiScreen imGuiScreen = new ImGuiScreen(clickGuiLayer);
 
         DeviousMod.CLIENT.setScreen(imGuiScreen);
+
+        super.onPress();
     }
 }

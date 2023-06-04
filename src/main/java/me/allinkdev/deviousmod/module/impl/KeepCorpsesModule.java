@@ -39,6 +39,6 @@ public final class KeepCorpsesModule extends DModule {
             return;
         }
 
-        event.setCancelled(true);
+        event.cancel();
     }
 }
