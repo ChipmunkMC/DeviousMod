@@ -9,6 +9,7 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Path;
 
+@Deprecated(forRemoval = true)
 public final class DataCompound {
     private final CompoundTag compoundTag;
     private final String compoundName;
