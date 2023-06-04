@@ -27,7 +27,7 @@ public final class ConnectionErrorCancellerModule extends DModule {
 
     @Subscribe
     public void onConnectionError(final ConnectionErrorEvent event) {
-        event.setCancelled(true);
+        event.cancel();
 
         /*final Throwable throwable = event.getThrowable();
         deviousMod.sendMessage(Component.text("Cancelled connection error: ", NamedTextColor.RED)

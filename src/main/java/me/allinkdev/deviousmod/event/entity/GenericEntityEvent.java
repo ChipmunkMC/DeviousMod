@@ -1,6 +1,6 @@
 package me.allinkdev.deviousmod.event.entity;
 
-import me.allinkdev.deviousmod.event.Cancellable;
+import com.github.allinkdev.deviousmod.api.event.Cancellable;
 import net.minecraft.entity.Entity;
 
 public abstract class GenericEntityEvent extends Cancellable {

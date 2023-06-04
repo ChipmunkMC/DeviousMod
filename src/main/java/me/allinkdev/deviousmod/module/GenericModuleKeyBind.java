@@ -1,9 +1,9 @@
 package me.allinkdev.deviousmod.module;
 
 import me.allinkdev.deviousmod.DeviousMod;
-import me.allinkdev.deviousmod.keybind.KeyBind;
+import me.allinkdev.deviousmod.keybind.DKeyBind;
 
-public final class GenericModuleKeyBind extends KeyBind {
+public final class GenericModuleKeyBind extends DKeyBind {
     private final DModule module;
 
     public GenericModuleKeyBind(final DeviousMod deviousMod, final DModule module) {
@@ -20,5 +20,7 @@ public final class GenericModuleKeyBind extends KeyBind {
     @Override
     public void onPress() {
         module.toggle();
+
+        super.onPress();
     }
 }

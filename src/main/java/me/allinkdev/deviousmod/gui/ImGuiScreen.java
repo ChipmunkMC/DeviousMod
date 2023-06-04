@@ -10,7 +10,7 @@ public class ImGuiScreen extends Screen {
     public ImGuiScreen(final Text text, final AbstractImGuiLayer imGuiLayer) {
         super(text);
         this.imGuiLayer = imGuiLayer;
-        this.imGuiLayer.init();
+        this.imGuiLayer.layerInit();
         ImGuiHolder.addLayer(this.imGuiLayer);
     }
 

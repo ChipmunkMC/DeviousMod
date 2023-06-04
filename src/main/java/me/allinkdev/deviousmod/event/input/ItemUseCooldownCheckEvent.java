@@ -1,8 +1,8 @@
 package me.allinkdev.deviousmod.event.input;
 
-import me.allinkdev.deviousmod.event.Event;
+import com.github.allinkdev.deviousmod.api.event.Event;
 
-public final class ItemUseCooldownCheckEvent extends Event {
+public final class ItemUseCooldownCheckEvent implements Event {
     private int value;
 
     public ItemUseCooldownCheckEvent(final int value) {

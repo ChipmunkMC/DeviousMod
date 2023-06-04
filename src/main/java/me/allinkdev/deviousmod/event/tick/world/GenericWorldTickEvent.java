@@ -1,11 +1,11 @@
 package me.allinkdev.deviousmod.event.tick.world;
 
-import me.allinkdev.deviousmod.event.Event;
+import com.github.allinkdev.deviousmod.api.event.Event;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.network.ClientPlayerEntity;
 import net.minecraft.client.world.ClientWorld;
 
-public class GenericWorldTickEvent extends Event {
+public class GenericWorldTickEvent implements Event {
     private final MinecraftClient client;
     private final ClientPlayerEntity player;
     private final ClientWorld world;

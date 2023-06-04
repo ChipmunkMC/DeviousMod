@@ -73,7 +73,7 @@ public final class ClientsideInventoryModule extends DModule {
             return;
         }
 
-        event.setCancelled(true);
+        event.cancel();
         inventory.setStack(slot, stack);
     }
 
@@ -110,7 +110,7 @@ public final class ClientsideInventoryModule extends DModule {
         final Packet<?> packet = event.getPacket();
 
         if (packet instanceof InventoryS2CPacket || packet instanceof ScreenHandlerSlotUpdateS2CPacket || packet instanceof UpdateSelectedSlotS2CPacket) {
-            event.setCancelled(true);
+            event.cancel();
         }
     }
 

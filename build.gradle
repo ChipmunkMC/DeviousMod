@@ -57,7 +57,7 @@ dependencies {
     require("io.github.spair:imgui-java-natives-windows:${project.imgui_version}")
     require("io.github.spair:imgui-java-natives-macos:${project.imgui_version}")
 
-    require(project(":api"))
+    require(project(":deviousmod-api"))
 
     // TODO: DELETE ME WHEN ADVENTURE PLATFORM FABRIC OFFICIALLY RELEASES FOR 1.20!!!!!!!!!!!!!!!!!
     require("net.kyori:adventure-api:${project.adventure_version_TEMP_FOR_MIGRATION}")

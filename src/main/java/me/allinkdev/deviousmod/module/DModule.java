@@ -1,8 +1,12 @@
 package me.allinkdev.deviousmod.module;
 
-import com.github.allinkdev.deviousmod.api.Module;
+import com.github.allinkdev.deviousmod.api.lifecycle.GenericLifecycleTracker;
+import com.github.allinkdev.deviousmod.api.managers.EventManager;
+import com.github.allinkdev.deviousmod.api.module.Module;
+import com.github.allinkdev.deviousmod.api.module.ModuleLifecycle;
 import com.github.steveice10.opennbt.tag.builtin.ByteTag;
 import com.github.steveice10.opennbt.tag.builtin.CompoundTag;
+import com.google.common.eventbus.EventBus;
 import me.allinkdev.deviousmod.DeviousMod;
 import me.allinkdev.deviousmod.data.DataCompound;
 import net.kyori.adventure.text.Component;
@@ -15,16 +19,19 @@ import java.nio.file.Path;
 import java.util.List;
 import java.util.Optional;
 
-public abstract class DModule implements Module {
+public abstract class DModule extends GenericLifecycleTracker<ModuleLifecycle> implements Module {
     protected final Logger logger = LoggerFactory.getLogger("Devious Mod/" + this.getClass().getSimpleName());
     protected final DeviousMod deviousMod;
     protected final MinecraftClient client = DeviousMod.CLIENT;
     protected final DataCompound settings;
     private final DModuleManager moduleManager;
+    private final EventManager<EventBus> eventManager;
 
     protected DModule(final DModuleManager moduleManager) {
+        super(ModuleLifecycle.NONE);
         this.moduleManager = moduleManager;
         this.deviousMod = moduleManager.getDeviousMod();
+        this.eventManager = this.deviousMod.getEventManager();
 
         final String moduleName = this.getModuleName();
         this.settings = new DataCompound(moduleName, moduleManager.getModuleConfigPath(), Path.of(moduleName));
@@ -34,21 +41,9 @@ public abstract class DModule implements Module {
         return state ? Component.text("enabled", NamedTextColor.GREEN) : Component.text("disabled", NamedTextColor.RED);
     }
 
-    @Override
-    public abstract String getCategory();
-
-    /***
-     * Called on world initialization and module enable
-     */
     public void init() {
-
+        DModuleManager.postLifecycleUpdate(this.eventManager, ModuleLifecycle.INITIALIZED, this);
     }
-
-    @Override
-    public abstract String getModuleName();
-
-    @Override
-    public abstract String getDescription();
 
     protected Optional<ByteTag> getTag() {
         final String moduleName = getModuleName();
@@ -86,9 +81,11 @@ public abstract class DModule implements Module {
         if (newState) {
             this.onEnable();
             moduleManager.load(this);
+            DModuleManager.postLifecycleUpdate(this.eventManager, ModuleLifecycle.ENABLED, this);
         } else {
             this.onDisable();
             moduleManager.unload(this);
+            DModuleManager.postLifecycleUpdate(this.eventManager, ModuleLifecycle.DISABLED, this);
         }
 
         final String moduleName = this.getModuleName();
@@ -104,16 +101,6 @@ public abstract class DModule implements Module {
         final boolean currentState = this.getModuleState();
 
         this.setModuleState(!currentState);
-    }
-
-    @Override
-    public void onEnable() {
-        //
-    }
-
-    @Override
-    public void onDisable() {
-        //
     }
 
     protected void sendMessage(final Component component) {

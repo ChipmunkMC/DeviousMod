@@ -1,25 +1,33 @@
 package me.allinkdev.deviousmod;
 
 import com.github.allinkdev.deviousmod.api.DeviousModSilhouette;
-import com.github.allinkdev.deviousmod.api.load.LoadManager;
+import com.github.allinkdev.deviousmod.api.load.DeviousModEntrypoint;
+import com.github.allinkdev.deviousmod.api.managers.CommandManager;
+import com.github.allinkdev.deviousmod.api.managers.EventManager;
+import com.github.allinkdev.deviousmod.api.managers.KeyBindManager;
 import com.google.common.eventbus.EventBus;
 import me.allinkdev.deviousmod.command.DCommandManager;
+import me.allinkdev.deviousmod.event.DEventManager;
 import me.allinkdev.deviousmod.event.tick.impl.ClientTickEndEvent;
 import me.allinkdev.deviousmod.event.tick.impl.ClientTickStartEvent;
 import me.allinkdev.deviousmod.event.tick.world.impl.WorldTickEndEvent;
 import me.allinkdev.deviousmod.event.tick.world.impl.WorldTickStartEvent;
-import me.allinkdev.deviousmod.keybind.KeyBindManager;
+import me.allinkdev.deviousmod.keybind.DKeyBindManager;
 import me.allinkdev.deviousmod.keying.BotKeyProvider;
 import me.allinkdev.deviousmod.module.DModuleManager;
 import me.allinkdev.deviousmod.query.QueryManager;
 import me.allinkdev.deviousmod.util.TextUtil;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.fabric.api.client.command.v2.ClientCommandRegistrationCallback;
+import net.fabricmc.fabric.api.client.command.v2.FabricClientCommandSource;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
+import net.fabricmc.loader.api.FabricLoader;
+import net.fabricmc.loader.api.entrypoint.EntrypointContainer;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.network.ClientPlayerEntity;
+import net.minecraft.client.option.KeyBinding;
 import net.minecraft.text.Text;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -28,7 +36,7 @@ import java.lang.management.ManagementFactory;
 import java.lang.management.RuntimeMXBean;
 import java.util.List;
 
-public final class DeviousMod implements ClientModInitializer, DeviousModSilhouette {
+public final class DeviousMod implements ClientModInitializer, DeviousModSilhouette<FabricClientCommandSource, KeyBinding, EventBus> {
     public static final Logger LOGGER = LoggerFactory.getLogger("Devious Mod");
     public static final MinecraftClient CLIENT = MinecraftClient.getInstance();
     private static final boolean IS_DEVELOPMENT;
@@ -41,11 +49,11 @@ public final class DeviousMod implements ClientModInitializer, DeviousModSilhoue
         IS_DEVELOPMENT = inputArguments.stream().anyMatch(s -> s.startsWith("-agentlib:jdwp"));
     }
 
-    private final EventBus eventBus = new EventBus();
-    private final KeyBindManager keyBindManager = new KeyBindManager(this);
-    private final DModuleManager moduleManager = new DModuleManager(this);
-    private final DCommandManager commandManager = new DCommandManager(this);
-    private final BotKeyProvider botKeyProvider = new BotKeyProvider();
+    private EventManager<EventBus> eventManager;
+    private BotKeyProvider botKeyProvider;
+    private DKeyBindManager keyBindManager;
+    private DModuleManager moduleManager;
+    private DCommandManager commandManager;
 
     public static DeviousMod getInstance() {
         return INSTANCE;
@@ -61,7 +69,7 @@ public final class DeviousMod implements ClientModInitializer, DeviousModSilhoue
     }
 
     @Override
-    public DCommandManager getCommandManager() {
+    public CommandManager<FabricClientCommandSource> getCommandManager() {
         return this.commandManager;
     }
 
@@ -69,17 +77,34 @@ public final class DeviousMod implements ClientModInitializer, DeviousModSilhoue
         return this.botKeyProvider;
     }
 
-    public KeyBindManager getKeyBindManager() {
+    @Override
+    public KeyBindManager<KeyBinding> getKeyBindManager() {
         return this.keyBindManager;
     }
 
-    public EventBus getEventBus() {
-        return this.eventBus;
+    @Override
+    public EventManager<EventBus> getEventManager() {
+        return this.eventManager;
     }
 
     @Override
     public void onInitializeClient() {
         INSTANCE = this;
+        DeviousModSilhouette.setInstance(this);
+        final FabricLoader fabricLoader = FabricLoader.getInstance();
+        final List<DeviousModEntrypoint> entrypoints = fabricLoader.getEntrypointContainers("deviousmod", DeviousModEntrypoint.class)
+                .stream()
+                .map(EntrypointContainer::getEntrypoint)
+                .toList();
+
+        this.eventManager = new DEventManager();
+
+        entrypoints.forEach(e -> e.onPreLoad(this));
+
+        this.botKeyProvider = new BotKeyProvider();
+        this.keyBindManager = new DKeyBindManager(this);
+        this.moduleManager = new DModuleManager(this);
+        this.commandManager = new DCommandManager(this);
 
         QueryManager.init(this);
 
@@ -90,16 +115,21 @@ public final class DeviousMod implements ClientModInitializer, DeviousModSilhoue
 
         ClientTickEvents.START_WORLD_TICK.register(WorldTickStartEvent::onWorldTickStart);
         ClientTickEvents.START_WORLD_TICK.register(WorldTickEndEvent::onWorldTickEnd);
-
-        LoadManager.load(this);
+        entrypoints.forEach(e -> e.onLoad(this));
     }
 
+    public EventBus getEventBus() {
+        return this.eventManager.getInternalEventSystem();
+    }
+
+    @Deprecated(forRemoval = true)
     public void subscribeEvents(final Object object) {
-        eventBus.register(object);
+        this.eventManager.registerListener(object);
     }
 
+    @Deprecated(forRemoval = true)
     public void unsubscribeEvents(final Object object) {
-        eventBus.unregister(object);
+        this.eventManager.unregisterListener(object);
     }
 
     public void sendMessage(final Component component) {

@@ -2,7 +2,7 @@ package me.allinkdev.deviousmod.mixin.client.entity;
 
 import com.google.common.eventbus.EventBus;
 import com.mojang.datafixers.util.Pair;
-import me.allinkdev.deviousmod.event.Event;
+import me.allinkdev.deviousmod.DeviousMod;
 import me.allinkdev.deviousmod.event.entity.living.impl.LivingEntityEquipmentUpdateEvent;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.network.ClientPlayNetworkHandler;
@@ -45,12 +45,14 @@ public class EntityEquipmentOverrider {
             return;
         }
 
+        final DeviousMod deviousMod = DeviousMod.getInstance();
+        final EventBus eventBus = deviousMod.getEventBus();
+
         for (final Pair<EquipmentSlot, ItemStack> pair : packet.getEquipmentList()) {
             final EquipmentSlot slot = pair.getFirst();
             final ItemStack oldStack = livingEntity.getEquippedStack(slot);
             final ItemStack newStack = pair.getSecond();
             final LivingEntityEquipmentUpdateEvent event = new LivingEntityEquipmentUpdateEvent(livingEntity, newStack, oldStack);
-            final EventBus eventBus = Event.getEventBus();
             eventBus.post(event);
 
             if (event.isCancelled()) {
