@@ -1,7 +1,7 @@
 package me.allinkdev.deviousmod.gui;
 
+import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.screen.Screen;
-import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.text.Text;
 
 public class ImGuiScreen extends Screen {
@@ -23,8 +23,8 @@ public class ImGuiScreen extends Screen {
     }
 
     @Override
-    public void render(final MatrixStack matrixStack, final int mouseX, final int mouseY, final float tickDelta) {
-        this.renderBackground(matrixStack);
+    public void render(final DrawContext drawContext, final int mouseX, final int mouseY, final float tickDelta) {
+        this.renderBackground(drawContext);
     }
 
     @Override

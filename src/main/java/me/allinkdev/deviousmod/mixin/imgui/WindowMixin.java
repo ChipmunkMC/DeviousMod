@@ -64,13 +64,4 @@ public final class WindowMixin {
         imGuiImplGlfw.init(handle, true);
         imGuiImplGl3.init();
     }
-
-    @Inject(method = "close", at = @At(value = "INVOKE", target = "Lorg/lwjgl/glfw/GLFW;glfwDestroyWindow(J)V"))
-    private void onClose(final CallbackInfo ci) {
-        final ImGuiImplGlfw imGuiImplGlfw = ImGuiHolder.getImGuiImplGlfw();
-        final ImGuiImplGl3 imGuiImplGl3 = ImGuiHolder.getImGuiImplGl3();
-
-        imGuiImplGlfw.dispose();
-        imGuiImplGl3.dispose();
-    }
 }
