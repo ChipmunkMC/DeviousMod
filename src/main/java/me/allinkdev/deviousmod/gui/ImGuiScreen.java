@@ -2,6 +2,7 @@ package me.allinkdev.deviousmod.gui;
 
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.screen.Screen;
+import net.minecraft.screen.ScreenTexts;
 import net.minecraft.text.Text;
 
 public class ImGuiScreen extends Screen {
@@ -15,7 +16,7 @@ public class ImGuiScreen extends Screen {
     }
 
     public ImGuiScreen(final AbstractImGuiLayer imGuiLayer) {
-        this(Text.of("fart"), imGuiLayer);
+        this(ScreenTexts.EMPTY, imGuiLayer);
     }
 
     public static ImGuiScreen from(final AbstractImGuiLayer abstractImGuiLayer) {
