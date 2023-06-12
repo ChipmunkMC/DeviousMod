@@ -122,46 +122,10 @@ public final class ModuleSettings extends AbstractDataStore {
             return new Pair<>(defaultValue, clazz);
         }
 
-        private Builder addField(final @NotNull String name, final @NotNull Object defaultValue) {
+        public Builder addField(final @NotNull String name, final @NotNull Object defaultValue) {
             this.throwIfExists(name);
             this.objectMap.put(name, this.getAsPair(defaultValue, defaultValue.getClass()));
             return this;
-        }
-
-        public Builder addInt(final @NotNull String name, final int defaultValue) {
-            return this.addField(name, defaultValue);
-        }
-
-        public Builder addLong(final @NotNull String name, final long defaultValue) {
-            return this.addField(name, defaultValue);
-        }
-
-        public Builder addDouble(final @NotNull String name, final double defaultValue) {
-            return this.addField(name, defaultValue);
-        }
-
-        public Builder addFloat(final @NotNull String name, final float defaultValue) {
-            return this.addField(name, defaultValue);
-        }
-
-        public Builder addShort(final @NotNull String name, final short defaultValue) {
-            return this.addField(name, defaultValue);
-        }
-
-        public Builder addByte(final @NotNull String name, final byte defaultValue) {
-            return this.addField(name, defaultValue);
-        }
-
-        public Builder addString(final @NotNull String name, final @NotNull String defaultValue) {
-            return this.addField(name, defaultValue);
-        }
-
-        public Builder addObject(final @NotNull String name, final @NotNull Object defaultValue) {
-            return this.addField(name, defaultValue);
-        }
-
-        public Builder addBool(final @NotNull String name, final boolean defaultValue) {
-            return this.addField(name, defaultValue);
         }
 
         public Builder setPath(final @NotNull Path path) {

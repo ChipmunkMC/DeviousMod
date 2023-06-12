@@ -65,7 +65,7 @@ public abstract class DModule extends GenericLifecycleTracker<ModuleLifecycle> i
     protected ModuleSettings.Builder getSettingsBuilder() {
         return new ModuleSettings.Builder()
                 .setPath(Path.of("modules", this.getModuleName().toLowerCase() + ".json"))
-                .addBool("enabled", false);
+                .addField("enabled", false);
     }
 
     @Override
