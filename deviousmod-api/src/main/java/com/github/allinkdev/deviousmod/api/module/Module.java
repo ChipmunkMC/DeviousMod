@@ -1,6 +1,7 @@
 package com.github.allinkdev.deviousmod.api.module;
 
 import com.github.allinkdev.deviousmod.api.lifecycle.LifecycleTracker;
+import com.github.allinkdev.deviousmod.api.module.settings.ModuleSettings;
 
 /**
  * Class containing metadata &amp; state information and logic pertaining to the modification of the game.
@@ -22,6 +23,11 @@ public interface Module extends LifecycleTracker<ModuleLifecycle> {
      * @return the category of the module object
      */
     String getCategory();
+
+    /**
+     * @return the settings for this module
+     */
+    ModuleSettings getSettings();
 
     /**
      * @return the toggle state of the module object (enabled: true, disabled: false)

@@ -4,6 +4,7 @@ import com.github.allinkdev.deviousmod.api.lifecycle.GenericLifecycleTracker;
 import com.github.allinkdev.deviousmod.api.managers.EventManager;
 import com.github.allinkdev.deviousmod.api.module.Module;
 import com.github.allinkdev.deviousmod.api.module.ModuleLifecycle;
+import com.github.allinkdev.deviousmod.api.module.settings.ModuleSettings;
 import com.google.common.eventbus.EventBus;
 import me.allinkdev.deviousmod.DeviousMod;
 import net.kyori.adventure.text.Component;
@@ -23,7 +24,7 @@ public abstract class DModule extends GenericLifecycleTracker<ModuleLifecycle> i
     protected final MinecraftClient client = DeviousMod.CLIENT;
     private final DModuleManager moduleManager;
     private final EventManager<EventBus> eventManager;
-    protected volatile ModuleSettings settings;
+    protected volatile DModuleSettings settings;
 
     protected DModule(final DModuleManager moduleManager) {
         super(ModuleLifecycle.NONE);
@@ -62,10 +63,15 @@ public abstract class DModule extends GenericLifecycleTracker<ModuleLifecycle> i
         DModuleManager.postLifecycleUpdate(this.eventManager, ModuleLifecycle.INITIALIZED, this);
     }
 
-    protected ModuleSettings.Builder getSettingsBuilder() {
-        return new ModuleSettings.Builder()
+    protected DModuleSettings.Builder getSettingsBuilder() {
+        return new DModuleSettings.Builder()
                 .setPath(Path.of("modules", this.getModuleName().toLowerCase() + ".json"))
                 .addField("enabled", false);
+    }
+
+    @Override
+    public ModuleSettings getSettings() {
+        return this.settings;
     }
 
     @Override

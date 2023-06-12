@@ -1,5 +1,6 @@
 package me.allinkdev.deviousmod.module;
 
+import com.github.allinkdev.deviousmod.api.module.settings.ModuleSettings;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import it.unimi.dsi.fastutil.objects.Object2ObjectArrayMap;
@@ -12,12 +13,14 @@ import org.jetbrains.annotations.Nullable;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.Collections;
 import java.util.Map;
+import java.util.Set;
 
-public final class ModuleSettings extends AbstractDataStore {
+public final class DModuleSettings extends AbstractDataStore implements ModuleSettings {
     private final Map<String, Pair<Object, Class<?>>> settings;
 
-    ModuleSettings(final @NotNull Path path, final Map<String, Pair<Object, Class<?>>> settings) {
+    DModuleSettings(final @NotNull Path path, final Map<String, Pair<Object, Class<?>>> settings) {
         super(path);
 
         this.settings = settings;
@@ -69,9 +72,10 @@ public final class ModuleSettings extends AbstractDataStore {
     }
 
     public void load() throws IOException {
-        load(ModuleSettings.class);
+        load(DModuleSettings.class);
     }
 
+    @Override
     @SuppressWarnings("unchecked")
     public <T> T readValue(final String name, final Class<T> clazz) {
         final Pair<Object, Class<?>> data = this.settings.get(name);
@@ -89,6 +93,7 @@ public final class ModuleSettings extends AbstractDataStore {
         return (T) data.getLeft();
     }
 
+    @Override
     public <T> void writeValue(final String name, final T object, final Class<T> clazz) throws IOException {
         final Pair<Object, Class<?>> data = this.settings.get(name);
 
@@ -104,6 +109,11 @@ public final class ModuleSettings extends AbstractDataStore {
 
         this.settings.put(name, new Pair<>(object, actualClass));
         this.save();
+    }
+
+    @Override
+    public Set<String> getKeys() {
+        return Collections.unmodifiableSet(this.settings.keySet());
     }
 
     public static final class Builder {
@@ -133,12 +143,12 @@ public final class ModuleSettings extends AbstractDataStore {
             return this;
         }
 
-        public ModuleSettings build() {
+        public DModuleSettings build() {
             if (this.path == null) {
                 throw new IllegalArgumentException("Tried to construct a module settings instance without first setting a path!");
             }
 
-            return new ModuleSettings(this.path, this.objectMap);
+            return new DModuleSettings(this.path, this.objectMap);
         }
     }
 }
