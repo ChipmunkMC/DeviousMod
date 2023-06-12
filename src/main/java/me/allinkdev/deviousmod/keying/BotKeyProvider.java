@@ -1,50 +1,42 @@
 package me.allinkdev.deviousmod.keying;
 
-import com.github.steveice10.opennbt.tag.builtin.CompoundTag;
-import com.github.steveice10.opennbt.tag.builtin.ListTag;
-import com.github.steveice10.opennbt.tag.builtin.Tag;
-import me.allinkdev.deviousmod.data.Config;
-import me.allinkdev.deviousmod.data.DataCompound;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.IOException;
+import java.io.UncheckedIOException;
+import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.Optional;
 import java.util.Set;
+import java.util.stream.Stream;
 
 public final class BotKeyProvider {
+    public static final Path KEY_PATH = Path.of("config", "deviousmod", "settings", "keys").toAbsolutePath();
     private static final Logger LOGGER = LoggerFactory.getLogger("Bot Key Provider");
-
-    private final DataCompound compound;
-    private final CompoundTag compoundTag;
-    private final ListTag listTag;
     private final Set<BotKey> loadedKeys = new HashSet<>();
 
     public BotKeyProvider() {
-        this.compound = new DataCompound("Keys", Config.getConfigDirectory(), Path.of("botKeys"));
-
-        this.compoundTag = compound.getCompoundTag();
-
-        ListTag listTag = this.compoundTag.get("keys");
-
-        if (listTag == null) {
-            listTag = new ListTag("keys");
+        if (!Files.exists(KEY_PATH)) {
+            return;
         }
 
-        this.compoundTag.put(listTag);
-        this.compound.save();
+        try (final Stream<Path> pathStream = Files.list(KEY_PATH)) {
+            pathStream.forEach(p -> {
+                final BotKey botKey = new BotKey(p);
 
-        this.listTag = listTag;
+                try {
+                    botKey.load();
+                } catch (IOException e) {
+                    throw new UncheckedIOException("Failed to load bot key from path", e);
+                }
 
-        for (final Tag tag : listTag) {
-            if (!(tag instanceof final CompoundTag compoundTag)) {
-                throw new IllegalArgumentException("Invalid data in keys list!");
-            }
-
-            final BotKey botKey = BotKey.loadFromTag(compoundTag);
-            loadedKeys.add(botKey);
+                loadedKeys.add(botKey);
+            });
+        } catch (IOException e) {
+            throw new UncheckedIOException("Failed to list key directory", e);
         }
 
         final int size = this.loadedKeys.size();
@@ -57,22 +49,32 @@ public final class BotKeyProvider {
     }
 
     public void addKey(final BotKey key) {
+        for (final BotKey loadedKey : this.loadedKeys) {
+            if (!loadedKey.getIdentifier().equals(key.getIdentifier())) {
+                continue;
+            }
+
+            throw new IllegalStateException("There is already a key with this identifier!");
+        }
+
         loadedKeys.add(key);
 
-        final CompoundTag compoundTag = key.getAsTag();
-        listTag.add(compoundTag);
-
-        this.compound.save();
+        try {
+            key.save();
+        } catch (IOException e) {
+            throw new UncheckedIOException("Failed to save key", e);
+        }
     }
 
     public void removeKey(final BotKey key) {
         LOGGER.info("Removing key {}!", key);
         loadedKeys.remove(key);
 
-        final CompoundTag compoundTag = key.getAsTag();
-        listTag.remove(compoundTag);
-
-        this.compound.save();
+        try {
+            key.delete();
+        } catch (IOException e) {
+            throw new UncheckedIOException("Failed to delete key", e);
+        }
     }
 
     public Optional<BotKey> findKey(final String name) {

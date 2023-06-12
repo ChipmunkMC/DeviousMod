@@ -5,25 +5,18 @@ import com.github.allinkdev.deviousmod.api.managers.ModuleManager;
 import com.github.allinkdev.deviousmod.api.module.Module;
 import com.github.allinkdev.deviousmod.api.module.ModuleLifecycle;
 import com.github.allinkdev.reflector.Reflector;
-import com.github.steveice10.opennbt.tag.builtin.ByteTag;
-import com.github.steveice10.opennbt.tag.builtin.CompoundTag;
 import com.google.common.eventbus.EventBus;
 import me.allinkdev.deviousmod.DeviousMod;
-import me.allinkdev.deviousmod.data.Config;
-import me.allinkdev.deviousmod.data.DataCompound;
 import me.allinkdev.deviousmod.event.api.factory.module.ModuleLifecycleTransitionEventFactory;
 import me.allinkdev.deviousmod.keybind.DKeyBindManager;
 import me.allinkdev.deviousmod.module.impl.TestModule;
 
-import java.nio.file.Path;
 import java.util.*;
 import java.util.stream.Collectors;
 
 public final class DModuleManager implements ModuleManager {
     private static final Set<DModule> modules = new HashSet<>();
     private static final ModuleLifecycleTransitionEventFactory TRANSITION_EVENT_FACTORY = new ModuleLifecycleTransitionEventFactory();
-    private final Path moduleConfigPath = Config.getConfigDirectory();
-    private final DataCompound settings = new DataCompound("modules", moduleConfigPath, Path.of("modules"));
     private final DeviousMod deviousMod;
     private final EventManager<EventBus> eventManager;
 
@@ -49,16 +42,7 @@ public final class DModuleManager implements ModuleManager {
         for (final DModule module : modules) {
             initModule(module, keyBindManager);
 
-            final String moduleName = module.getModuleName();
-            final CompoundTag compoundTag = settings.getCompoundTag();
-            final ByteTag byteTag = compoundTag.get(moduleName);
-
-            if (byteTag == null || byteTag.getValue() == 0) {
-                continue;
-            }
-
-            DeviousMod.LOGGER.info("Enabling {}!", moduleName);
-            module.setModuleState(true);
+            module.notifyModuleStateUpdate(false);
         }
     }
 
@@ -132,13 +116,5 @@ public final class DModuleManager implements ModuleManager {
 
     public DeviousMod getDeviousMod() {
         return this.deviousMod;
-    }
-
-    public DataCompound getSettings() {
-        return this.settings;
-    }
-
-    public Path getModuleConfigPath() {
-        return this.moduleConfigPath;
     }
 }

@@ -43,7 +43,6 @@ dependencies {
     modImplementation("net.fabricmc:fabric-loader:${project.loader_version}")
     modImplementation("net.fabricmc.fabric-api:fabric-api:${project.fabric_version}")
 
-    require("com.github.steveice10:OpenNBT:${project.opennbt_version}")
     require("com.github.allinkdev:Reflector:${project.reflector_version}")
 
     require("io.github.spair:imgui-java-binding:${project.imgui_version}")

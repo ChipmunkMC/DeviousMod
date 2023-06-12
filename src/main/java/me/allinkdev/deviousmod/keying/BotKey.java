@@ -1,24 +1,35 @@
 package me.allinkdev.deviousmod.keying;
 
-import com.github.steveice10.opennbt.tag.builtin.CompoundTag;
-import com.github.steveice10.opennbt.tag.builtin.IntTag;
-import com.github.steveice10.opennbt.tag.builtin.StringTag;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonPrimitive;
 import me.allinkdev.deviousmod.DeviousMod;
+import me.allinkdev.deviousmod.settings.AbstractDataStore;
 import net.minecraft.client.util.Session;
 
+import java.io.IOException;
 import java.nio.charset.Charset;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.Optional;
+import java.util.UUID;
 
-public final class BotKey {
-    private final String identifier;
-    private final String key;
-    private final String algorithm;
-    private final String template;
-    private final int hashLen;
-    private final int timestampForgiveness;
-    private final Charset charset;
+public final class BotKey extends AbstractDataStore {
+    private String identifier;
+    private String key;
+    private String algorithm;
+    private String template;
+    private int hashLen;
+    private int timestampForgiveness;
+    private Charset charset;
 
-    BotKey(final String identifier, final String key, final String algorithm, final String template, final int hashLen, final int timestampForgiveness, final Charset charset) {
+    public BotKey(final Path path) {
+        super(path);
+    }
+
+    BotKey(final UUID uuid, final String identifier, final String key, final String algorithm, final String template, final int hashLen, final int timestampForgiveness, final Charset charset) {
+        super(BotKeyProvider.KEY_PATH.resolve(uuid.toString() + ".json"));
+
         this.identifier = identifier;
         this.key = key;
         this.algorithm = algorithm;
@@ -28,77 +39,12 @@ public final class BotKey {
         this.charset = charset;
     }
 
-    public static BotKey loadFromTag(final CompoundTag tag) throws IllegalArgumentException {
-        final StringTag identifierTag = tag.get("Identifier");
-
-        if (identifierTag == null) {
-            throw new IllegalArgumentException("Identifier tag not found!");
-        }
-
-        final String identifier = identifierTag.getValue();
-
-        final StringTag keyTag = tag.get("Key");
-
-        if (keyTag == null) {
-            throw new IllegalArgumentException("Key tag not found!");
-        }
-
-        final String key = keyTag.getValue();
-
-        final StringTag algorithmTag = tag.get("Algorithm");
-
-        if (algorithmTag == null) {
-            throw new IllegalArgumentException("Algorithm tag not found!");
-        }
-
-        final String algorithm = algorithmTag.getValue();
-
-        final StringTag templateTag = tag.get("Template");
-
-        if (templateTag == null) {
-            throw new IllegalArgumentException("Template tag not found!");
-        }
-
-        final String template = templateTag.getValue();
-
-        final IntTag hashLenTag = tag.get("HashLen");
-
-        if (hashLenTag == null) {
-            throw new IllegalArgumentException("Hash len tag not found!");
-        }
-
-        final int hashLen = hashLenTag.getValue();
-
-        final IntTag timestampForgivenessTag = tag.get("TimestampForgiveness");
-
-        if (timestampForgivenessTag == null) {
-            throw new IllegalArgumentException("Timestamp forgiveness tag not found!");
-        }
-
-        final int timestampForgiveness = timestampForgivenessTag.getValue();
-
-        final StringTag charsetTag = tag.get("InputCharset");
-
-        if (charsetTag == null) {
-            throw new IllegalArgumentException("Input charset tag not found!");
-        }
-
-        final String charsetName = charsetTag.getValue();
-        final Charset charset = Charset.forName(charsetName);
-
-        return BotKey.builder()
-                .identifier(identifier)
-                .key(key)
-                .algorithm(algorithm)
-                .template(template)
-                .hashLen(hashLen)
-                .timestampForgiveness(timestampForgiveness)
-                .charset(charset)
-                .build();
-    }
-
     public static Builder builder() {
         return new Builder();
+    }
+
+    public void load() throws IOException {
+        load(BotKey.class);
     }
 
     public String getIdentifier() {
@@ -155,25 +101,69 @@ public final class BotKey {
         return Optional.of(hash);
     }
 
-    public CompoundTag getAsTag() {
-        final CompoundTag tag = new CompoundTag("");
-        final StringTag identifierTag = new StringTag("Identifier", identifier);
-        final StringTag keyTag = new StringTag("Key", key);
-        final StringTag algorithmTag = new StringTag("Algorithm", algorithm);
-        final StringTag templateTag = new StringTag("Template", template);
-        final IntTag hashLenTag = new IntTag("HashLen", hashLen);
-        final IntTag timestampForgivenessTag = new IntTag("TimestampForgiveness", timestampForgiveness);
-        final StringTag charsetTag = new StringTag("InputCharset", charset.name());
+    @Override
+    public void save() throws IOException {
+        final JsonObject jsonObject = new JsonObject();
 
-        tag.put(identifierTag);
-        tag.put(keyTag);
-        tag.put(algorithmTag);
-        tag.put(templateTag);
-        tag.put(hashLenTag);
-        tag.put(timestampForgivenessTag);
-        tag.put(charsetTag);
+        jsonObject.addProperty("identifier", this.identifier);
+        jsonObject.addProperty("key", this.key);
+        jsonObject.addProperty("algorithm", this.algorithm);
+        jsonObject.addProperty("template", this.template);
+        jsonObject.addProperty("hashLen", this.hashLen);
+        jsonObject.addProperty("timestampForgiveness", this.timestampForgiveness);
+        jsonObject.addProperty("charset", this.charset.name());
 
-        return tag;
+        Files.writeString(this.path, GSON.toJson(jsonObject));
+    }
+
+    private JsonElement getElementWithThrowIfNull(final JsonObject jsonObject, final String name) {
+        final JsonElement jsonElement = jsonObject.get(name);
+
+        if (jsonElement == null) {
+            throw new NullPointerException("Bot key JSON object does not contain the field \" " + name + "\".");
+        }
+
+        return jsonElement;
+    }
+
+    private JsonPrimitive getAsPrimitiveWithThrow(final JsonElement jsonElement) {
+        if (!jsonElement.isJsonPrimitive()) {
+            throw new IllegalStateException("Element isn't a primitive!");
+        }
+
+        return jsonElement.getAsJsonPrimitive();
+    }
+
+    private String getAsStringWithThrow(final JsonPrimitive jsonPrimitive) {
+        if (!jsonPrimitive.isString()) {
+            throw new IllegalStateException("Element isn't a string!");
+        }
+
+        return jsonPrimitive.getAsString();
+    }
+
+    private int getAsIntWithThrow(final JsonPrimitive jsonPrimitive) {
+        if (!jsonPrimitive.isNumber()) {
+            throw new IllegalStateException("Element isn't an integer!");
+        }
+
+        return jsonPrimitive.getAsInt();
+    }
+
+    @Override
+    protected void load(final JsonElement jsonElement) throws IOException {
+        if (!jsonElement.isJsonObject()) {
+            throw new IllegalArgumentException("Found unexpected non-JSON object in bot key!");
+        }
+
+        final JsonObject jsonObject = jsonElement.getAsJsonObject();
+        this.identifier = this.getAsStringWithThrow(this.getAsPrimitiveWithThrow(this.getElementWithThrowIfNull(jsonObject, "identifier")));
+        this.key = this.getAsStringWithThrow(this.getAsPrimitiveWithThrow(this.getElementWithThrowIfNull(jsonObject, "key")));
+        this.template = this.getAsStringWithThrow(this.getAsPrimitiveWithThrow(this.getElementWithThrowIfNull(jsonObject, "template")));
+        this.algorithm = this.getAsStringWithThrow(this.getAsPrimitiveWithThrow(this.getElementWithThrowIfNull(jsonObject, "algorithm")));
+        this.hashLen = this.getAsIntWithThrow(this.getAsPrimitiveWithThrow(this.getElementWithThrowIfNull(jsonObject, "hashLen")));
+        this.timestampForgiveness = this.getAsIntWithThrow(this.getAsPrimitiveWithThrow(this.getElementWithThrowIfNull(jsonObject, "timestampForgiveness")));
+        this.charset = Charset.forName(this.getAsStringWithThrow(this.getAsPrimitiveWithThrow(this.getElementWithThrowIfNull(jsonObject, "charset"))));
     }
 
     public static final class Builder {
@@ -222,6 +212,7 @@ public final class BotKey {
 
         public BotKey build() {
             return new BotKey(
+                    UUID.randomUUID(),
                     this.identifier,
                     this.key,
                     this.algorithm,
