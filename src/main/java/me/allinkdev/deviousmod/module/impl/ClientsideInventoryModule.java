@@ -33,7 +33,7 @@ public final class ClientsideInventoryModule extends DModule {
 
     @Override
     public String getCategory() {
-        return "Network";
+        return "Inventory";
     }
 
     @Override
