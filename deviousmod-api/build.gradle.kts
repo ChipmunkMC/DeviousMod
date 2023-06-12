@@ -4,7 +4,7 @@ plugins {
 }
 
 group = "com.github.allinkdev"
-version = "1.0.0"
+version = "1.1.0"
 description = "Minecraft-independent Java 8+ API exposing silhouettes of DeviousMod classes"
 java.sourceCompatibility = JavaVersion.VERSION_1_8
 
