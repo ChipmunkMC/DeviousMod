@@ -4,37 +4,54 @@ import com.github.allinkdev.deviousmod.api.lifecycle.GenericLifecycleTracker;
 import com.github.allinkdev.deviousmod.api.managers.EventManager;
 import com.github.allinkdev.deviousmod.api.module.Module;
 import com.github.allinkdev.deviousmod.api.module.ModuleLifecycle;
-import com.github.steveice10.opennbt.tag.builtin.ByteTag;
-import com.github.steveice10.opennbt.tag.builtin.CompoundTag;
 import com.google.common.eventbus.EventBus;
 import me.allinkdev.deviousmod.DeviousMod;
-import me.allinkdev.deviousmod.data.DataCompound;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
 import net.minecraft.client.MinecraftClient;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.IOException;
+import java.io.UncheckedIOException;
 import java.nio.file.Path;
 import java.util.List;
-import java.util.Optional;
 
 public abstract class DModule extends GenericLifecycleTracker<ModuleLifecycle> implements Module {
     protected final Logger logger = LoggerFactory.getLogger("Devious Mod/" + this.getClass().getSimpleName());
     protected final DeviousMod deviousMod;
     protected final MinecraftClient client = DeviousMod.CLIENT;
-    protected final DataCompound settings;
     private final DModuleManager moduleManager;
     private final EventManager<EventBus> eventManager;
+    protected volatile ModuleSettings settings;
 
     protected DModule(final DModuleManager moduleManager) {
         super(ModuleLifecycle.NONE);
         this.moduleManager = moduleManager;
         this.deviousMod = moduleManager.getDeviousMod();
         this.eventManager = this.deviousMod.getEventManager();
+        this.settings = this.getSettingsBuilder().build();
 
-        final String moduleName = this.getModuleName();
-        this.settings = new DataCompound(moduleName, moduleManager.getModuleConfigPath(), Path.of(moduleName));
+        if (!this.settings.doesPathExist()) {
+            try {
+                this.settings.createDirectories();
+            } catch (IOException e) {
+                throw new UncheckedIOException("Exception while creating directories for module settings", e);
+            }
+
+            try {
+                this.settings.save();
+            } catch (IOException e) {
+                throw new UncheckedIOException("Exception while saving defaults to module settings path", e);
+            }
+            return;
+        }
+
+        try {
+            this.settings.load();
+        } catch (IOException e) {
+            throw new UncheckedIOException("Failure while loading module settings from filesystem", e);
+        }
     }
 
     public static Component getStatusComponent(final boolean state) {
@@ -45,40 +62,32 @@ public abstract class DModule extends GenericLifecycleTracker<ModuleLifecycle> i
         DModuleManager.postLifecycleUpdate(this.eventManager, ModuleLifecycle.INITIALIZED, this);
     }
 
-    protected Optional<ByteTag> getTag() {
-        final String moduleName = getModuleName();
-        final DataCompound moduleSettings = moduleManager.getSettings();
-        final CompoundTag tag = moduleSettings.getCompoundTag();
-        final ByteTag moduleStateTag = tag.get(moduleName);
-
-        return Optional.ofNullable(moduleStateTag);
+    protected ModuleSettings.Builder getSettingsBuilder() {
+        return new ModuleSettings.Builder()
+                .setPath(Path.of("modules", this.getModuleName().toLowerCase() + ".json"))
+                .addBool("enabled", false);
     }
 
     @Override
     public boolean getModuleState() {
-        final Optional<ByteTag> optional = getTag();
-
-        if (optional.isEmpty()) {
-            return false;
-        }
-
-        final ByteTag tag = optional.get();
-
-        return tag.getValue() == (byte) 1;
+        return this.settings.readValue("enabled", Boolean.class);
     }
 
     @Override
     public void setModuleState(final boolean newState) {
-        final String name = getModuleName();
-        final ByteTag newTag = new ByteTag(name, (byte) (newState ? 1 : 0));
+        try {
+            this.settings.writeValue("enabled", newState, Boolean.class);
+        } catch (IOException e) {
+            throw new UncheckedIOException("Failed to write module enabled state", e);
+        }
 
-        final DataCompound moduleSettings = moduleManager.getSettings();
-        final CompoundTag compoundTag = moduleSettings.getCompoundTag();
+        this.notifyModuleStateUpdate(true);
+    }
 
-        compoundTag.put(newTag);
-        moduleSettings.save();
+    public void notifyModuleStateUpdate(final boolean shouldBroadcast) {
+        final boolean state = this.getModuleState();
 
-        if (newState) {
+        if (state) {
             this.onEnable();
             moduleManager.load(this);
             DModuleManager.postLifecycleUpdate(this.eventManager, ModuleLifecycle.ENABLED, this);
@@ -88,13 +97,18 @@ public abstract class DModule extends GenericLifecycleTracker<ModuleLifecycle> i
             DModuleManager.postLifecycleUpdate(this.eventManager, ModuleLifecycle.DISABLED, this);
         }
 
+        if (!shouldBroadcast) {
+            return;
+        }
+
         final String moduleName = this.getModuleName();
         final Component feedback = Component.text(moduleName)
                 .append(Component.text(" is now "))
-                .append(getStatusComponent(newState))
+                .append(getStatusComponent(state))
                 .append(Component.text("."));
 
         deviousMod.sendMessage(feedback);
+
     }
 
     public void toggle() {
