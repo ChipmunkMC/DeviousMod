@@ -4,9 +4,12 @@ import com.github.allinkdev.deviousmod.api.module.Module;
 import com.google.common.eventbus.Subscribe;
 import imgui.ImGui;
 import imgui.flag.ImGuiCond;
+import imgui.flag.ImGuiTreeNodeFlags;
+import it.unimi.dsi.fastutil.objects.ObjectArraySet;
 import me.allinkdev.deviousmod.DeviousMod;
 import me.allinkdev.deviousmod.event.tick.impl.ClientTickEndEvent;
 import me.allinkdev.deviousmod.gui.AbstractImGuiLayer;
+import me.allinkdev.deviousmod.gui.widget.SettingsWidget;
 import me.allinkdev.deviousmod.module.DModuleManager;
 
 import java.util.HashMap;
@@ -16,8 +19,11 @@ import java.util.Set;
 import java.util.concurrent.atomic.AtomicInteger;
 
 public final class ClickGuiLayer extends AbstractImGuiLayer {
+    // TODO: Less maps, please
     private final Map<String, Set<Module>> categoryModuleMap = new HashMap<>();
     private final Map<Module, Boolean> moduleToggleMap = new HashMap<>();
+    private final Map<Module, SettingsWidget> settingsWidgetMap = new HashMap<>();
+    private final Set<Module> openSettings = new ObjectArraySet<>();
 
     public ClickGuiLayer(final DeviousMod deviousMod) {
         super(deviousMod);
@@ -41,6 +47,14 @@ public final class ClickGuiLayer extends AbstractImGuiLayer {
         if (shouldPut) {
             categoryModuleMap.put(category, moduleSet);
         }
+
+        final boolean hasSettings = module.getSettings().getKeys().size() > 1;
+
+        if (!hasSettings) {
+            return;
+        }
+
+        this.settingsWidgetMap.put(module, new SettingsWidget(module));
     }
 
     @Override
@@ -56,23 +70,50 @@ public final class ClickGuiLayer extends AbstractImGuiLayer {
         this.deviousMod.subscribeEvents(this);
     }
 
-    private void renderButton(final Module module) {
+    private void renderModule(final Module module) {
         final String moduleName = module.getModuleName();
-        final float buttonWidth = ImGui.getWindowWidth();
-        final float buttonHeight = ImGui.getTextLineHeight();
         final boolean isToggled = module.getModuleState();
         final String suffix = isToggled ? " (on)" : " (off)"; // TODO: Replace with a colour or something
 
-        final boolean clicked = ImGui.button(moduleName + suffix, buttonWidth - 18, buttonHeight + 3);
+        final SettingsWidget settingsWidget = this.settingsWidgetMap.get(module);
+        final boolean hasSettings = settingsWidget != null;
+        int flags = ImGuiTreeNodeFlags.Framed | ImGuiTreeNodeFlags.FramePadding | ImGuiTreeNodeFlags.OpenOnArrow;
+
+        if (!hasSettings) {
+            flags = flags | ImGuiTreeNodeFlags.Leaf;
+        }
+
+        final boolean isOpen = ImGui.treeNodeEx(moduleName + suffix, flags);
+        final boolean clicked;
+
+        if (!hasSettings) {
+            clicked = ImGui.isItemClicked();
+        } else {
+            final boolean wasOpen = this.openSettings.contains(module);
+            clicked = ImGui.isItemClicked() && !isOpen && !wasOpen;
+
+            if (wasOpen && !isOpen) {
+                this.openSettings.remove(module);
+            } else if (isOpen) {
+                this.openSettings.add(module);
+            }
+        }
+
         final boolean hovered = ImGui.isItemHovered();
 
         if (hovered) {
             ImGui.beginTooltip();
-
             final String moduleDescription = module.getDescription();
             ImGui.text(moduleDescription);
-
             ImGui.endTooltip();
+        }
+
+        if (isOpen) {
+            if (hasSettings) {
+                this.renderSettings(settingsWidget);
+            }
+
+            ImGui.treePop();
         }
 
         if (!clicked) {
@@ -83,10 +124,16 @@ public final class ClickGuiLayer extends AbstractImGuiLayer {
         moduleToggleMap.put(module, !moduleState);
     }
 
+    private void renderSettings(final SettingsWidget settingsWidget) {
+        settingsWidget.preProcess();
+        settingsWidget.process();
+        settingsWidget.postProcess();
+    }
+
     private void renderCategory(final AtomicInteger offsetAtomic, final String name, final Set<Module> modules) {
         ImGui.begin(name);
 
-        modules.forEach(this::renderButton);
+        modules.forEach(this::renderModule);
 
         final int windowWidth = (int) ImGui.getWindowWidth();
         final int windowHeight = (int) ImGui.getWindowHeight();
@@ -96,6 +143,7 @@ public final class ClickGuiLayer extends AbstractImGuiLayer {
         final float newWindowHeight = windowHeight * 4.5F;
 
         ImGui.setWindowSize(newWindowWidth, newWindowHeight, ImGuiCond.FirstUseEver);
+
         offsetAtomic.set(offset + (int) newWindowWidth);
 
         ImGui.end();

@@ -8,17 +8,17 @@ import java.util.Set;
  */
 public interface ModuleSettings {
     /**
-     * Reads the value represented by the setting key
+     * Reads a setting
      *
      * @param name  the name of the value
      * @param clazz the class of the value
      * @param <T>   the value type
      * @return the read value
      */
-    <T> T readValue(final String name, final Class<T> clazz);
+    <T> Setting<T> getSetting(final String name, final Class<T> clazz);
 
     /**
-     * Writes a new value to the setting key
+     * Writes a new value to the setting
      *
      * @param name   the name of the value
      * @param object the new value
@@ -27,6 +27,14 @@ public interface ModuleSettings {
      * @throws IOException if the changes failed to be saved to disk
      */
     <T> void writeValue(final String name, final T object, final Class<T> clazz) throws IOException;
+
+    /**
+     * Gets the class of a value
+     *
+     * @param name the name of the value to query the class of
+     * @return the class of the value
+     */
+    Class<?> getValueClass(final String name);
 
     /**
      * Returns a set of all registered keys

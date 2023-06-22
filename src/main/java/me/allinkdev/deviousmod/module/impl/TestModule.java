@@ -4,6 +4,7 @@ import com.google.common.eventbus.Subscribe;
 import me.allinkdev.deviousmod.event.network.packet.impl.PacketS2CEvent;
 import me.allinkdev.deviousmod.module.DModule;
 import me.allinkdev.deviousmod.module.DModuleManager;
+import me.allinkdev.deviousmod.module.DModuleSettings;
 import net.minecraft.network.message.*;
 import net.minecraft.network.packet.c2s.play.ChatMessageC2SPacket;
 import net.minecraft.network.packet.s2c.play.ChatMessageS2CPacket;
@@ -31,6 +32,12 @@ public final class TestModule extends DModule {
     @Override
     public String getDescription() {
         return "Test 1 2 3 4 5 6 7 8 9 10";
+    }
+
+    @Override
+    protected DModuleSettings.Builder getSettingsBuilder() {
+        return super.getSettingsBuilder()
+                .addField("test_field", "Test Field", "Testy westy :3", true);
     }
 
     @Subscribe
