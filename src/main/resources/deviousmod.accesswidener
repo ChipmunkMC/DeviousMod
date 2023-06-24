@@ -1,5 +1,9 @@
 accessWidener	v1	named
 
+# I Love Session
+accessible field net/minecraft/client/MinecraftClient session Lnet/minecraft/client/util/Session;
+mutable field net/minecraft/client/MinecraftClient session Lnet/minecraft/client/util/Session;
+
 # For the OurWorldInNBT module
 
 accessible class net/minecraft/client/world/ClientChunkManager$ClientChunkMap
