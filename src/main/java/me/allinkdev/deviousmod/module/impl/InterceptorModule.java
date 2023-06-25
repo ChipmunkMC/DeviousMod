@@ -7,6 +7,7 @@ import me.allinkdev.deviousmod.event.network.packet.impl.PrePacketC2SEvent;
 import me.allinkdev.deviousmod.event.network.packet.impl.PrePacketS2CEvent;
 import me.allinkdev.deviousmod.module.DModule;
 import me.allinkdev.deviousmod.module.DModuleManager;
+import me.allinkdev.deviousmod.module.DModuleSettings;
 
 import java.util.Arrays;
 
@@ -23,6 +24,14 @@ public class InterceptorModule extends DModule {
     @Override
     public String getDescription() {
         return "Prints the raw bytes received by/sent to the client in console output.";
+    }
+
+    @Override
+    protected DModuleSettings.Builder getSettingsBuilder() {
+        return super.getSettingsBuilder()
+                .addField("hex", "Hexadecimal View", "Displays the bytes in hexadecimal", true)
+                .addField("clientside", "Show Clientside", "Displays packets that the client sends to the server.", true)
+                .addField("serverside", "Show Serverside", "Displays packets that the server sends to the client.", true);
     }
 
     @Override
@@ -44,11 +53,19 @@ public class InterceptorModule extends DModule {
 
     @Subscribe
     public void onPrePacketReceive(final PrePacketS2CEvent event) {
-        this.logRawPacketData("S->C", true, event);
+        if (!this.settings.getSetting("serverside", Boolean.class).getValue()) {
+            return;
+        }
+
+        this.logRawPacketData("S->C", this.settings.getSetting("hex", Boolean.class).getValue(), event);
     }
 
     @Subscribe
     public void onPrePacketSend(final PrePacketC2SEvent event) {
-        this.logRawPacketData("C->S", true, event);
+        if (!this.settings.getSetting("clientside", Boolean.class).getValue()) {
+            return;
+        }
+
+        this.logRawPacketData("C->S", this.settings.getSetting("hex", Boolean.class).getValue(), event);
     }
 }
