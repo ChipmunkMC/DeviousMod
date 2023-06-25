@@ -1,12 +1,13 @@
 package me.allinkdev.deviousmod.module;
 
 import com.github.allinkdev.deviousmod.api.module.settings.ModuleSettings;
+import com.github.allinkdev.deviousmod.api.module.settings.Setting;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import it.unimi.dsi.fastutil.objects.Object2ObjectArrayMap;
 import me.allinkdev.deviousmod.DeviousMod;
 import me.allinkdev.deviousmod.settings.AbstractDataStore;
-import net.minecraft.util.Pair;
+import me.allinkdev.deviousmod.settings.DSetting;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -18,9 +19,9 @@ import java.util.Map;
 import java.util.Set;
 
 public final class DModuleSettings extends AbstractDataStore implements ModuleSettings {
-    private final Map<String, Pair<Object, Class<?>>> settings;
+    private final Map<String, DSetting<Object>> settings;
 
-    DModuleSettings(final @NotNull Path path, final Map<String, Pair<Object, Class<?>>> settings) {
+    DModuleSettings(final @NotNull Path path, final Map<String, DSetting<Object>> settings) {
         super(path);
 
         this.settings = settings;
@@ -30,8 +31,8 @@ public final class DModuleSettings extends AbstractDataStore implements ModuleSe
         return new Builder();
     }
 
-    private void addToJsonObject(final JsonObject jsonObject, final String key, final Pair<Object, Class<?>> value) {
-        final JsonElement jsonElement = GSON.toJsonTree(value.getLeft());
+    private void addToJsonObject(final JsonObject jsonObject, final String key, final DSetting<?> value) {
+        final JsonElement jsonElement = GSON.toJsonTree(value.getValue());
         jsonObject.add(key, jsonElement);
     }
 
@@ -57,8 +58,8 @@ public final class DModuleSettings extends AbstractDataStore implements ModuleSe
                 continue;
             }
 
-            final Pair<Object, Class<?>> settingData = this.settings.get(key);
-            final Class<?> settingClass = settingData.getRight();
+            final DSetting<Object> settingData = this.settings.get(key);
+            final Class<?> settingClass = settingData.getValueClass();
             final JsonElement element = jsonObject.get(key);
             final Object asObject = GSON.fromJson(element, settingClass);
 
@@ -67,7 +68,7 @@ public final class DModuleSettings extends AbstractDataStore implements ModuleSe
                 continue;
             }
 
-            this.settings.put(key, new Pair<>(asObject, settingClass));
+            settingData.setValue(asObject);
         }
     }
 
@@ -77,38 +78,49 @@ public final class DModuleSettings extends AbstractDataStore implements ModuleSe
 
     @Override
     @SuppressWarnings("unchecked")
-    public <T> T readValue(final String name, final Class<T> clazz) {
-        final Pair<Object, Class<?>> data = this.settings.get(name);
+    public <T> Setting<T> getSetting(final String name, final Class<T> clazz) {
+        final DSetting<?> setting = this.settings.get(name);
 
-        if (data == null) {
+        if (setting == null) {
             throw new NullPointerException("Tried to read a field that didn't exist: " + name);
         }
 
-        final Class<?> actualClass = data.getRight();
+        final Class<?> actualClass = setting.getValueClass();
 
         if (!(actualClass.isAssignableFrom(clazz)) && !(clazz.isAssignableFrom(actualClass))) {
             throw new IllegalArgumentException("Tried to get a field of an invalid type, expected " + clazz.getName() + " when we actually got " + actualClass.getName());
         }
 
-        return (T) data.getLeft();
+        return (Setting<T>) setting;
     }
 
     @Override
     public <T> void writeValue(final String name, final T object, final Class<T> clazz) throws IOException {
-        final Pair<Object, Class<?>> data = this.settings.get(name);
+        final DSetting<Object> setting = this.settings.get(name);
 
-        if (data == null) {
+        if (setting == null) {
             throw new NullPointerException("Tried to set a field that doesn't exist: " + name);
         }
 
-        final Class<?> actualClass = data.getRight();
+        final Class<?> actualClass = setting.getValueClass();
 
         if (!(actualClass.isAssignableFrom(clazz)) && !(clazz.isAssignableFrom(actualClass))) {
             throw new IllegalArgumentException("Tried to set a field of an invalid type, expected " + clazz.getName() + " when we actually got " + actualClass.getName());
         }
 
-        this.settings.put(name, new Pair<>(object, actualClass));
+        setting.setValue(object);
         this.save();
+    }
+
+    @Override
+    public Class<?> getValueClass(final String name) {
+        final DSetting<?> setting = this.settings.get(name);
+
+        if (setting == null) {
+            throw new NullPointerException("Tried to query the class of a field that didn't exist: " + name);
+        }
+
+        return setting.getValueClass();
     }
 
     @Override
@@ -117,7 +129,7 @@ public final class DModuleSettings extends AbstractDataStore implements ModuleSe
     }
 
     public static final class Builder {
-        private final Map<String, Pair<Object, Class<?>>> objectMap = new Object2ObjectArrayMap<>();
+        private final Map<String, DSetting<Object>> objectMap = new Object2ObjectArrayMap<>();
         private @Nullable Path path;
 
         private void throwIfExists(final String name) {
@@ -128,13 +140,13 @@ public final class DModuleSettings extends AbstractDataStore implements ModuleSe
             throw new IllegalArgumentException("Tried to add a field with the same name twice!");
         }
 
-        private Pair<Object, Class<?>> getAsPair(final @NotNull Object defaultValue, final @NotNull Class<?> clazz) {
-            return new Pair<>(defaultValue, clazz);
+        private DSetting<Object> getAsSetting(final @NotNull Object defaultValue, final @NotNull String name, final @NotNull String friendlyName, final @Nullable String description, final @NotNull Class<?> clazz) {
+            return new DSetting<>(name, friendlyName, description, defaultValue);
         }
 
-        public Builder addField(final @NotNull String name, final @NotNull Object defaultValue) {
+        public Builder addField(final @NotNull String name, final @NotNull String friendlyName, final @NotNull String description, final @NotNull Object defaultValue) {
             this.throwIfExists(name);
-            this.objectMap.put(name, this.getAsPair(defaultValue, defaultValue.getClass()));
+            this.objectMap.put(name, this.getAsSetting(defaultValue, name, friendlyName, description, defaultValue.getClass()));
             return this;
         }
 

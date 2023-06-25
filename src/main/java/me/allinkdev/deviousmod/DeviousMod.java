@@ -6,6 +6,7 @@ import com.github.allinkdev.deviousmod.api.managers.CommandManager;
 import com.github.allinkdev.deviousmod.api.managers.EventManager;
 import com.github.allinkdev.deviousmod.api.managers.KeyBindManager;
 import com.google.common.eventbus.EventBus;
+import me.allinkdev.deviousmod.account.AccountManager;
 import me.allinkdev.deviousmod.command.DCommandManager;
 import me.allinkdev.deviousmod.event.DEventManager;
 import me.allinkdev.deviousmod.event.tick.impl.ClientTickEndEvent;
@@ -54,6 +55,7 @@ public final class DeviousMod implements ClientModInitializer, DeviousModSilhoue
     private DKeyBindManager keyBindManager;
     private DModuleManager moduleManager;
     private DCommandManager commandManager;
+    private AccountManager accountManager;
 
     public static DeviousMod getInstance() {
         return INSTANCE;
@@ -87,6 +89,10 @@ public final class DeviousMod implements ClientModInitializer, DeviousModSilhoue
         return this.eventManager;
     }
 
+    public AccountManager getAccountManager() {
+        return this.accountManager;
+    }
+
     @Override
     public void onInitializeClient() {
         INSTANCE = this;
@@ -101,6 +107,7 @@ public final class DeviousMod implements ClientModInitializer, DeviousModSilhoue
 
         entrypoints.forEach(e -> e.onPreLoad(this));
 
+        this.accountManager = new AccountManager(CLIENT, this);
         this.botKeyProvider = new BotKeyProvider();
         this.keyBindManager = new DKeyBindManager(this);
         this.moduleManager = new DModuleManager(this);
