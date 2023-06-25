@@ -5,6 +5,7 @@
   "compatibilityLevel": "JAVA_17",
   "client": [
     "accessor.ClientChunkManagerAccessor",
+    "accessor.ScreenAccessor",
     "client.chat.ChatAbnormaliser",
     "client.entity.EntityEquipmentOverrider",
     "client.entity.EntityStateEvents",
@@ -15,6 +16,7 @@
     "client.network.PacketSendAndReceive",
     "client.render.FakeEntityInjector",
     "client.screen.InfiniChat",
+    "client.screen.InitListener",
     "client.screen.ScreenOverrider",
     "client.screen.TooltipTransformer",
     "client.world.BlockUpdateListener",
