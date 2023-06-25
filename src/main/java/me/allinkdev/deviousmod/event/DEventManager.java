@@ -29,6 +29,7 @@ public final class DEventManager implements EventManager<EventBus> {
         }
 
         this.eventBus.unregister(listener);
+        this.listeners.remove(listener);
     }
 
     @Override
