@@ -11,11 +11,11 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 public final class MinecraftClientMonitor {
     @Inject(method = "run", at = @At(value = "HEAD"))
     private void onRun(final CallbackInfo ci) {
-        DeviousPuppy.INSTANCE.monitorMe();
+        DeviousPuppy.monitorMe();
     }
 
     @Inject(method = "tick", at = @At(value = "TAIL"))
     private void onTick(final CallbackInfo ci) {
-        DeviousPuppy.INSTANCE.contactMyThreadMonitor();
+        DeviousPuppy.contactMyThreadMonitor();
     }
 }
