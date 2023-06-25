@@ -92,8 +92,10 @@ public final class MonitorModule extends DModule {
                 });
             }
 
+            final String username = stub.getProfile().getName();
+
             if (actions.contains(PlayerListS2CPacket.Action.UPDATE_DISPLAY_NAME)) {
-                final Pair<Component, Component> setDisplayName = stub.setDisplayName(Objects.requireNonNull(entry.displayName(), "Display name was null in display name update"));
+                final Pair<Component, Component> setDisplayName = stub.setDisplayName(Objects.requireNonNullElse(entry.displayName(), Text.literal(username)));
                 final Component oldDisplayName = setDisplayName.first();
                 final Component newDisplayName = setDisplayName.second();
 
@@ -118,7 +120,6 @@ public final class MonitorModule extends DModule {
                 continue;
             }
 
-            final String username = stub.getProfile().getName();
             changes.stream().map(c -> c.toComponent(username)).forEach(messages::add);
         }
 
