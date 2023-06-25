@@ -25,20 +25,24 @@ public class ClientsideUsernameCommand extends DCommand {
     @Override
     public LiteralArgumentBuilder<FabricClientCommandSource> getNode() {
         return ClientCommandManager.literal("cusername")
-                .then(ClientCommandManager.argument("username", StringArgumentType.greedyString())
-                        .executes(this));
+                .then(ClientCommandManager.literal("reset").executes(this::reset))
+                .then(ClientCommandManager.literal("set").then(ClientCommandManager.argument("username", StringArgumentType.greedyString()).executes(this::set)));
     }
 
-    @Override
-    public int run(final CommandContext<FabricClientCommandSource> context) throws CommandSyntaxException {
+    private int reset(final CommandContext<FabricClientCommandSource> context) throws CommandSyntaxException {
+        final AccountManager accountManager = this.deviousMod.getAccountManager();
+        final String originalUsername = accountManager.getOriginalUsername();
+        accountManager.restoreSession();
+
+        this.sendFeedback(Component.text("Successfully reverted your session to \"", NamedTextColor.GREEN)
+                .append(Component.text(originalUsername, NamedTextColor.GREEN))
+                .append(Component.text("\"", NamedTextColor.GREEN)));
+        return 1;
+    }
+
+    public int set(final CommandContext<FabricClientCommandSource> context) throws CommandSyntaxException {
         final String username = StringArgumentType.getString(context, "username");
         final AccountManager accountManager = this.deviousMod.getAccountManager();
-
-        if (username.equals(accountManager.getOriginalUsername())) {
-            accountManager.restoreSession();
-            this.sendFeedback(Component.text("Restored your original session.", NamedTextColor.GREEN));
-            return 1;
-        }
 
         accountManager.setUsername(username);
         this.sendFeedback(Component.text("Successfully set your username to ", NamedTextColor.GREEN)
