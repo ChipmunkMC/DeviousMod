@@ -5,7 +5,8 @@
   "name": "Devious Mod",
   "description": "A Minecraft mod for cool people",
   "authors": [
-    "Allink"
+    "Allink",
+    "LunaWasFlaggedAgain"
   ],
   "license": "EVIL",
   "environment": "client",

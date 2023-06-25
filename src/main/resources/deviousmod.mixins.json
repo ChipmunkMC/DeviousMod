@@ -34,6 +34,7 @@
     "client.entity.EntityVisibilityOverrider",
     "client.network.ClientConnectionMixin",
     "client.network.NetworkStateMixin",
+    "patches.block.DecoratedPotCrashFix",
     "patches.entity.AreaEffectCloudParticleLimiter",
     "patches.item.MapIconCountLimiter",
     "patches.network.BootstrapImprover",
