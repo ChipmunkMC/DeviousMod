@@ -1,6 +1,7 @@
 package me.allinkdev.deviousmod.thread;
 
 import me.allinkdev.deviousmod.util.ThrowableUtil;
+import net.minecraft.client.MinecraftClient;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -20,7 +21,7 @@ public final class DeviousPuppy {
     }
 
     private DeviousPuppy() {
-        
+
     }
 
     private static void shutdown() {
@@ -123,6 +124,11 @@ public final class DeviousPuppy {
 
             synchronized (this.lastContactTimestampLock) {
                 diff = now - this.lastContactTimestamp;
+            }
+
+            // #23 - Do not monitor the difference between ping timestamps if the player is not in-game
+            if (MinecraftClient.getInstance().player == null) {
+                return;
             }
 
             if (diff < 3_000) { // 3 seconds
