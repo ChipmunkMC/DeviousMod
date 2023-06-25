@@ -3,6 +3,8 @@ package me.allinkdev.deviousmod.command;
 import com.github.allinkdev.deviousmod.api.Command;
 import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.builder.LiteralArgumentBuilder;
+import com.mojang.brigadier.context.CommandContext;
+import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import me.allinkdev.deviousmod.DeviousMod;
 import me.allinkdev.deviousmod.module.DModuleManager;
 import net.fabricmc.fabric.api.client.command.v2.ClientCommandManager;
@@ -37,5 +39,10 @@ public abstract class DCommand implements Command<FabricClientCommandSource> {
 
     public void sendFeedback(final Component component) {
         deviousMod.sendMessage(component);
+    }
+
+    @Override
+    public int run(final CommandContext<FabricClientCommandSource> context) throws CommandSyntaxException {
+        return 0;
     }
 }
