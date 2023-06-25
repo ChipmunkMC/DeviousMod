@@ -27,9 +27,7 @@ import net.fabricmc.loader.api.entrypoint.EntrypointContainer;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
 import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.network.ClientPlayerEntity;
 import net.minecraft.client.option.KeyBinding;
-import net.minecraft.text.Text;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -140,15 +138,7 @@ public final class DeviousMod implements ClientModInitializer, DeviousModSilhoue
     }
 
     public void sendMessage(final Component component) {
-        final Component coloredComponent = component.colorIfAbsent(NamedTextColor.GRAY);
-        final Text text = TextUtil.toText(coloredComponent);
-        final ClientPlayerEntity player = CLIENT.player;
-
-        if (player == null) {
-            return;
-        }
-
-        player.sendMessage(text, false);
+        TextUtil.sendMessage(component.colorIfAbsent(NamedTextColor.GRAY));
     }
 
     public void sendMultipleMessages(final List<Component> messages) {
