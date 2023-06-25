@@ -59,6 +59,14 @@ public final class BotKeyProvider {
 
         loadedKeys.add(key);
 
+        if (!Files.exists(KEY_PATH)) {
+            try {
+                Files.createDirectories(KEY_PATH);
+            } catch (IOException e) {
+                throw new UncheckedIOException("Failed to create keys directory", e);
+            }
+        }
+
         try {
             key.save();
         } catch (IOException e) {
