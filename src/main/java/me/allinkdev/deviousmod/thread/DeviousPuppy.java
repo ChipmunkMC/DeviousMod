@@ -1,6 +1,7 @@
 package me.allinkdev.deviousmod.thread;
 
 import me.allinkdev.deviousmod.util.ThrowableUtil;
+import net.minecraft.client.MinecraftClient;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -11,46 +12,50 @@ import java.util.concurrent.ConcurrentHashMap;
 
 public final class DeviousPuppy {
     private static final Runtime RUNTIME = Runtime.getRuntime();
-    public static final DeviousPuppy INSTANCE = new DeviousPuppy();
     private static final Logger LOGGER = LoggerFactory.getLogger("deviouspuppy");
-    private final Timer timer = new Timer("Puppy Timer", true);
-    private final Map<Thread, ThreadMonitor> monitorMap = new ConcurrentHashMap<>();
+    private static final Timer TIMER = new Timer("Puppy Timer", true);
+    private static final Map<Thread, ThreadMonitor> MONITOR_MAP = new ConcurrentHashMap<>();
 
-    public DeviousPuppy() {
-        if (INSTANCE != null) {
-            throw new IllegalStateException("DeviousPuppy is a singleton!");
-        }
+    static {
+        RUNTIME.addShutdownHook(new Thread(DeviousPuppy::shutdown));
+    }
 
-        RUNTIME.addShutdownHook(new Thread(this::shutdown));
+    private DeviousPuppy() {
+
+    }
+
+    private static void shutdown() {
+        TIMER.purge();
     }
 
     /**
      * Starts monitoring the provided thread. Please note that the timer will <strong>ONLY</strong> be stopped when the thread is interrupted.
      * Please remember to contact the thread monitor, or you may risk unexpected JVM terminations!
+     *
      * @param thread The thread to monitor
      */
-    public void monitorThread(final Thread thread) {
+    public static void monitorThread(final Thread thread) {
         LOGGER.info("Started monitoring thread {}!", thread.getName());
 
         final ThreadMonitor threadMonitor = new ThreadMonitor(thread);
-        this.addThreadMonitor(threadMonitor);
+        addThreadMonitor(threadMonitor);
     }
 
     /**
      * Shorthand for calling {@link DeviousPuppy#monitorThread(Thread)} with the current thread
      */
-    public void monitorMe() {
+    public static void monitorMe() {
         final Thread currentThread = Thread.currentThread();
 
-        this.monitorThread(currentThread);
+        monitorThread(currentThread);
     }
 
-    public void contactMyThreadMonitor() {
+    public static void contactMyThreadMonitor() {
         final Thread currentThread = Thread.currentThread();
         final ThreadMonitor threadMonitor;
 
-        synchronized (this.monitorMap) {
-            threadMonitor = monitorMap.get(currentThread);
+        synchronized (MONITOR_MAP) {
+            threadMonitor = MONITOR_MAP.get(currentThread);
         }
 
         if (threadMonitor == null) {
@@ -65,24 +70,14 @@ public final class DeviousPuppy {
         }
     }
 
-    private void addThreadMonitor(final ThreadMonitor threadMonitor) {
+    private static void addThreadMonitor(final ThreadMonitor threadMonitor) {
         final Thread monitoredThread = threadMonitor.getMonitoredThread();
 
         LOGGER.info("Adding monitored thread {} to lookup map!", monitoredThread.getName());
 
-        synchronized (this.monitorMap) {
-            this.monitorMap.put(monitoredThread, threadMonitor);
-            this.timer.schedule(threadMonitor, 500, 1_000);
-        }
-    }
-
-    private void dropThreadMonitor(final ThreadMonitor threadMonitor) {
-        threadMonitor.cancel();
-
-        final Thread monitoredThread = threadMonitor.getMonitoredThread();
-
-        synchronized (this.monitorMap) {
-            monitorMap.remove(monitoredThread);
+        synchronized (MONITOR_MAP) {
+            MONITOR_MAP.put(monitoredThread, threadMonitor);
+            TIMER.schedule(threadMonitor, 500, 1_000);
         }
     }
 
@@ -101,11 +96,26 @@ public final class DeviousPuppy {
             this.monitoredThread = monitoredThread;
         }
 
+        private static void killJvm() {
+            LOGGER.error(KILL_MESSAGE);
+            RUNTIME.halt(1337);
+        }
+
+        private static void dropThreadMonitor(final ThreadMonitor threadMonitor) {
+            threadMonitor.cancel();
+
+            final Thread monitoredThread = threadMonitor.getMonitoredThread();
+
+            synchronized (MONITOR_MAP) {
+                MONITOR_MAP.remove(monitoredThread);
+            }
+        }
+
         @Override
         public void run() {
             if (this.monitoredThread.isInterrupted()) {
                 LOGGER.info("{} is interrupted, removing thread monitor!", this.monitoredThread);
-                DeviousPuppy.INSTANCE.dropThreadMonitor(this);
+                dropThreadMonitor(this);
                 return;
             }
 
@@ -114,6 +124,11 @@ public final class DeviousPuppy {
 
             synchronized (this.lastContactTimestampLock) {
                 diff = now - this.lastContactTimestamp;
+            }
+
+            // #23 - Do not monitor the difference between ping timestamps if the player is not in-game
+            if (MinecraftClient.getInstance().player == null) {
+                return;
             }
 
             if (diff < 3_000) { // 3 seconds
@@ -136,7 +151,7 @@ public final class DeviousPuppy {
             final StackTraceElement[] currentThreadTraceElements = currentThread.getStackTrace();
             final String currentThreadTrace = ThrowableUtil.getStackTrace(currentThreadTraceElements);
 
-            final String message = String.format(MESSAGE, this.monitoredThread.getName(), monitoredThreadTrace + TRACE_SEPARATOR +  currentThreadTrace);
+            final String message = String.format(MESSAGE, this.monitoredThread.getName(), monitoredThreadTrace + TRACE_SEPARATOR + currentThreadTrace);
             LOGGER.error(message);
 
             this.lastStackTracePrintTimestamp = now;
@@ -145,11 +160,6 @@ public final class DeviousPuppy {
             if (this.violationCount >= 3) {
                 killJvm();
             }
-        }
-
-        private static void killJvm() {
-            LOGGER.error(KILL_MESSAGE);
-            RUNTIME.halt(1337);
         }
 
         public void contact() throws IllegalAccessException {
@@ -170,9 +180,5 @@ public final class DeviousPuppy {
         public Thread getMonitoredThread() {
             return this.monitoredThread;
         }
-    }
-
-    private void shutdown() {
-        this.timer.purge();
     }
 }
