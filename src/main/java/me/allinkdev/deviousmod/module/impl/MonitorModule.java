@@ -3,13 +3,16 @@ package me.allinkdev.deviousmod.module.impl;
 import com.google.common.eventbus.Subscribe;
 import com.mojang.authlib.GameProfile;
 import it.unimi.dsi.fastutil.Pair;
+import it.unimi.dsi.fastutil.objects.ObjectArrayList;
+import it.unimi.dsi.fastutil.objects.ObjectArraySet;
+import me.allinkdev.deviousmod.DeviousMod;
 import me.allinkdev.deviousmod.event.network.connection.ConnectionEndEvent;
-import me.allinkdev.deviousmod.event.network.connection.ConnectionErrorEvent;
 import me.allinkdev.deviousmod.event.network.connection.ConnectionStartEvent;
 import me.allinkdev.deviousmod.event.network.packet.impl.PacketS2CEvent;
 import me.allinkdev.deviousmod.event.tick.world.impl.WorldTickEndEvent;
 import me.allinkdev.deviousmod.module.DModule;
 import me.allinkdev.deviousmod.module.DModuleManager;
+import me.allinkdev.deviousmod.util.TextUtil;
 import me.allinkdev.deviousmod.util.TimeUtil;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
@@ -21,12 +24,14 @@ import net.minecraft.network.packet.s2c.play.PlayerRemoveS2CPacket;
 import net.minecraft.network.packet.s2c.play.WorldTimeUpdateS2CPacket;
 import net.minecraft.text.Text;
 import net.minecraft.world.GameMode;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
 
 public final class MonitorModule extends DModule {
     private static final long TEN_SECOND_MARK_TICKS = TimeUtil.getInTicks(10_000);
-    private final Map<UUID, Pair<Component, GameMode>> playerListInformationPairMap = new HashMap<>();
+    private final Set<ListEntryStub> entryStubs = new LinkedHashSet<>();
     private long worldTickCount = 0;
     private long lastTimePacket = System.currentTimeMillis();
     private boolean notifiedAboutLag = false;
@@ -55,14 +60,12 @@ public final class MonitorModule extends DModule {
         final Packet<?> packet = event.getPacket();
 
         if (packet instanceof WorldTimeUpdateS2CPacket) {
-            lastTimePacket = System.currentTimeMillis();
+            this.lastTimePacket = System.currentTimeMillis();
+            return;
         }
 
-        if (packet instanceof final PlayerRemoveS2CPacket playerRemovePacket) {
-            for (final UUID uuid : playerRemovePacket.profileIds()) {
-                playerListInformationPairMap.remove(uuid);
-            }
-
+        if (packet instanceof final PlayerRemoveS2CPacket removePacket) {
+            removePacket.profileIds().forEach(u -> this.entryStubs.removeIf(p -> p.getProfile().getId().equals(u)));
             return;
         }
 
@@ -70,162 +73,182 @@ public final class MonitorModule extends DModule {
             return;
         }
 
-        // TODO: Optimise. I don't want to iterate through every entry twice
-        if (playerListPacket.getActions()
-                .stream()
-                .anyMatch(a -> a.equals(PlayerListS2CPacket.Action.ADD_PLAYER) || a.equals(PlayerListS2CPacket.Action.UPDATE_DISPLAY_NAME))) {
-            for (final PlayerListS2CPacket.Entry entry : playerListPacket.getEntries()) {
-                final UUID profileId = entry.profileId();
-                final GameMode gameMode = entry.gameMode();
-
-                if (entry.displayName() == null) {
-                    continue;
-                }
-
-                final Component displayName = entry.displayName()
-                        .asComponent();
-
-                final boolean exists = playerListInformationPairMap.containsKey(profileId);
-                Pair<Component, GameMode> existingPair = null;
-
-                if (exists) {
-                    existingPair = playerListInformationPairMap.get(profileId);
-                }
-
-                final Pair<Component, GameMode> pair = Pair.of(displayName, exists ? existingPair.second() : gameMode);
-                playerListInformationPairMap.put(profileId, pair);
-            }
-        }
-
-        if (playerListPacket.getActions()
-                .stream()
-                .noneMatch(a -> a.equals(PlayerListS2CPacket.Action.UPDATE_GAME_MODE))) {
-            return;
-        }
-
-        final List<Component> componentList = new ArrayList<>();
+        final EnumSet<PlayerListS2CPacket.Action> actions = playerListPacket.getActions();
+        final List<Component> messages = new ObjectArrayList<>();
 
         for (final PlayerListS2CPacket.Entry entry : playerListPacket.getEntries()) {
-            final UUID profileId = entry.profileId();
-            final boolean exists = playerListInformationPairMap.containsKey(profileId);
-            Pair<Component, GameMode> existingPair = null;
+            final Set<RecordableChange> changes = new ObjectArraySet<>();
+            final ListEntryStub stub;
+            final UUID uuid = entry.profileId();
 
-            if (exists) {
-                existingPair = playerListInformationPairMap.get(profileId);
+            if (actions.contains(PlayerListS2CPacket.Action.ADD_PLAYER)) {
+                stub = ListEntryStub.from(entry);
+                this.entryStubs.add(stub);
+            } else {
+                stub = this.entryStubs.stream().filter(s -> s.getProfile().getId().equals(uuid)).findFirst().orElseGet(() -> {
+                    final ListEntryStub newStub = ListEntryStub.from(entry);
+                    this.entryStubs.add(newStub);
+                    return newStub;
+                });
             }
 
-            final Component updateMessage;
-            final GameMode newGameMode = entry.gameMode();
-            final boolean equals = existingPair != null && existingPair.second().equals(newGameMode);
+            if (actions.contains(PlayerListS2CPacket.Action.UPDATE_DISPLAY_NAME)) {
+                final Pair<Component, Component> setDisplayName = stub.setDisplayName(Objects.requireNonNull(entry.displayName(), "Display name was null in display name update"));
+                final Component oldDisplayName = setDisplayName.first();
+                final Component newDisplayName = setDisplayName.second();
 
-            if (equals) {
+                if (!oldDisplayName.equals(newDisplayName)) {
+                    changes.add(new RecordableChange("display name", oldDisplayName, newDisplayName));
+                }
+            }
+
+            if (actions.contains(PlayerListS2CPacket.Action.UPDATE_GAME_MODE)) {
+                final GameMode newGameMode = Objects.requireNonNull(entry.gameMode(), "Gamemode was null in gamemode update");
+                final GameMode oldGameMode = stub.setGameMode(newGameMode);
+
+                if (!(oldGameMode != null && oldGameMode == newGameMode)) {
+                    changes.add(new RecordableChange("game mode",
+                            oldGameMode == null ? Component.text("none") : oldGameMode.getSimpleTranslatableName().asComponent(),
+                            newGameMode.getSimpleTranslatableName().asComponent())
+                    );
+                }
+            }
+
+            if (changes.isEmpty()) {
                 continue;
             }
 
-            if (exists) {
-                updateMessage = Component.text("from")
-                        .append(Component.space())
-                        .append(Component.text(existingPair.second().asString()))
-                        .append(Component.space())
-                        .append(Component.text("to"))
-                        .append(Component.space())
-                        .append(Component.text(newGameMode.asString()));
-
-                final Pair<Component, GameMode> replacementPair = Pair.of(existingPair.first(), newGameMode);
-                playerListInformationPairMap.put(profileId, replacementPair);
-            } else {
-                updateMessage = Component.text("to")
-                        .append(Component.space())
-                        .append(Component.text(newGameMode.asString()));
-            }
-
-            componentList.add((exists ? existingPair.first() : Component.text(profileId.toString()))
-                    .append(Component.space())
-                    .append(Component.text("changed their game mode"))
-                    .append(Component.space())
-                    .append(updateMessage));
+            final String username = stub.getProfile().getName();
+            changes.stream().map(c -> c.toComponent(username)).forEach(messages::add);
         }
 
-        if (componentList.isEmpty()) {
+        if (messages.isEmpty()) {
             return;
         }
 
-        this.sendMultipleMessages(componentList);
+        this.deviousMod.sendMultipleMessages(messages);
+    }
+
+    private void reset(final boolean entries) {
+        if (entries) {
+            this.entryStubs.clear();
+        }
+
+        this.worldTickCount = 0;
+        this.notifiedAboutLag = false;
+        this.lastTimePacket = System.currentTimeMillis();
     }
 
     @Subscribe
     public void onConnectionEnd(final ConnectionEndEvent event) {
-        worldTickCount = 0;
-        this.playerListInformationPairMap.clear();
-        notifiedAboutLag = false;
-        lastTimePacket = System.currentTimeMillis();
+        this.reset(true);
     }
 
     @Subscribe
     public void onConnectionStart(final ConnectionStartEvent event) {
-        worldTickCount = 0;
-        lastTimePacket = System.currentTimeMillis();
-        notifiedAboutLag = false;
-    }
-
-    @Subscribe
-    public void onConnectionError(final ConnectionErrorEvent event) {
-        //final Throwable throwable = event.getThrowable();
-
-        //DeviousMod.LOGGER.error("Packet error: ", throwable);
+        this.reset(false);
     }
 
     @Subscribe
     public void onTick(final WorldTickEndEvent event) {
-        worldTickCount++;
-        final boolean tenSecondMark = worldTickCount % TEN_SECOND_MARK_TICKS == 0;
+        this.worldTickCount++;
+        final boolean tenSecondMark = this.worldTickCount % TEN_SECOND_MARK_TICKS == 0;
 
         if (!tenSecondMark) {
             return;
         }
 
         final long now = System.currentTimeMillis();
-        final boolean lagging = (now - lastTimePacket) >= 5_000;
+        final boolean lagging = (now - this.lastTimePacket) >= 5_000;
 
-        if (!lagging && notifiedAboutLag) {
+        if (!lagging && this.notifiedAboutLag) {
             this.sendMessage(Component.text("Server is no longer lagging!", NamedTextColor.GREEN));
-            notifiedAboutLag = false;
+            this.notifiedAboutLag = false;
             return;
         }
 
         if (lagging && !notifiedAboutLag) {
             this.sendMessage(Component.text("Server is now lagging!", NamedTextColor.RED));
-            notifiedAboutLag = true;
+            this.notifiedAboutLag = true;
         }
     }
 
     @Override
     public void onEnable() {
-        this.playerListInformationPairMap.clear();
-
-        final ClientPlayNetworkHandler networkHandler = client.getNetworkHandler();
+        final ClientPlayNetworkHandler networkHandler = this.client.getNetworkHandler();
 
         if (networkHandler == null) {
+            DeviousMod.LOGGER.warn("Initialized Monitor module outside of game");
             return;
         }
 
-        final Collection<PlayerListEntry> entries = networkHandler.getPlayerList();
-
-        for (final PlayerListEntry entry : entries) {
-            final GameProfile profile = entry.getProfile();
-            final String username = profile.getName();
-            final UUID profileId = profile.getId();
-            final GameMode gameMode = entry.getGameMode();
-            final Text displayName = entry.getDisplayName();
-            final Component name = displayName == null ? Component.text(username) : displayName.asComponent();
-            final Pair<Component, GameMode> pair = Pair.of(name, gameMode);
-
-            this.playerListInformationPairMap.put(profileId, pair);
-        }
+        networkHandler.getPlayerList().stream().map(ListEntryStub::from).forEach(this.entryStubs::add);
     }
 
     @Override
     public void onDisable() {
-        this.playerListInformationPairMap.clear();
+        this.entryStubs.clear();
+    }
+
+    private record RecordableChange(String what, Component from, Component to) {
+        Component toComponent(final String username) {
+            return Component.text(username)
+                    .append(Component.text(" changed their "))
+                    .append(Component.text(this.what))
+                    .append(Component.text(" from "))
+                    .append(this.from)
+                    .append(Component.text(" to "))
+                    .append(this.to);
+        }
+    }
+
+    private static final class ListEntryStub {
+        private final GameProfile profile;
+        private Component displayName;
+        private GameMode gameMode;
+
+        ListEntryStub(final @Nullable Component displayName, final @Nullable GameMode gameMode, final @NotNull GameProfile profile) {
+            this.displayName = Objects.requireNonNullElse(displayName, Component.text(profile.getName()));
+            this.gameMode = gameMode;
+            this.profile = profile;
+        }
+
+        static ListEntryStub from(final @NotNull PlayerListS2CPacket.Entry entry) {
+            return new ListEntryStub(
+                    TextUtil.toAdventureNullable(entry.displayName()),
+                    entry.gameMode(),
+                    entry.profile()
+            );
+        }
+
+        static ListEntryStub from(final @NotNull PlayerListEntry entry) {
+            return new ListEntryStub(
+                    TextUtil.toAdventureNullable(entry.getDisplayName()),
+                    entry.getGameMode(),
+                    entry.getProfile()
+            );
+        }
+
+        public @Nullable GameMode setGameMode(final @NotNull GameMode newGameMode) {
+            final GameMode oldGameMode = this.gameMode;
+            this.gameMode = newGameMode;
+            return oldGameMode;
+        }
+
+        public Pair<Component, Component> setDisplayName(final @NotNull Text text) {
+            final Component asComponent = text.asComponent();
+
+            return Pair.of(setDisplayName(asComponent), asComponent);
+        }
+
+        public Component setDisplayName(final @NotNull Component newDisplayName) {
+            final Component oldDisplayName = this.displayName;
+            this.displayName = newDisplayName;
+            return oldDisplayName;
+        }
+
+        public GameProfile getProfile() {
+            return this.profile;
+        }
     }
 }
