@@ -68,6 +68,6 @@ public final class AntiAnnoyingModule extends DModule {
 
     @Override
     public String getCategory() {
-        return "Miscellaneous";
+        return "Comfort";
     }
 }
