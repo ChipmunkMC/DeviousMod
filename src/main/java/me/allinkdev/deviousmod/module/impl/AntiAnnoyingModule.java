@@ -49,12 +49,16 @@ public final class AntiAnnoyingModule extends DModule {
 
     @Subscribe
     public void onSelfReducedDebugInfo(final SelfReducedDebugInfoEvent e) {
-        e.setReducedDebugInfo(this.settings.getSetting("rdi", Boolean.class).getValue());
+        if (this.settings.getSetting("rdi", Boolean.class).getValue()) {
+            e.setReducedDebugInfo(false);
+        }
     }
 
     @Subscribe
     public void onShowStatusEffectIcon(final ShowStatusEffectIconEvent e) {
-        e.setShowIcon(this.settings.getSetting("status_effect", Boolean.class).getValue());
+        if (this.settings.getSetting("status_effect", Boolean.class).getValue()) {
+            e.setShowIcon(true);
+        }
     }
 
     @Subscribe
