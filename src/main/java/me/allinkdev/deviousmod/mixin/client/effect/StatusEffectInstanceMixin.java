@@ -11,7 +11,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 @Mixin(StatusEffectInstance.class)
 public final class StatusEffectInstanceMixin {
 
-    @Inject(method = "shouldShowIcon", at = @At("HEAD"), cancellable = true)
+    @Inject(method = "shouldShowIcon", at = @At("RETURN"), cancellable = true)
     public void onShowIconIf(final CallbackInfoReturnable<Boolean> cir) {
         final ShowStatusEffectIconEvent event = new ShowStatusEffectIconEvent((StatusEffectInstance) (Object) this, cir.getReturnValue());
         DeviousMod.getInstance().getEventBus().post(event);
