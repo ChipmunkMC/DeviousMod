@@ -7,7 +7,6 @@ import me.allinkdev.deviousmod.event.self.SelfReducedDebugInfoEvent;
 import me.allinkdev.deviousmod.module.DModule;
 import me.allinkdev.deviousmod.module.DModuleManager;
 import me.allinkdev.deviousmod.module.DModuleSettings;
-import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.screen.CreditsScreen;
 import net.minecraft.client.gui.screen.DemoScreen;
 import net.minecraft.client.network.ClientPlayerEntity;
@@ -36,7 +35,7 @@ public final class AntiAnnoyingModule extends DModule {
 
         if (e.getTarget() instanceof CreditsScreen && this.settings.getSetting("end", Boolean.class).getValue()) {
             e.setTarget(null);
-            final ClientPlayerEntity player = MinecraftClient.getInstance().player;
+            final ClientPlayerEntity player = this.client.player;
 
             if (player == null) {
                 return;
