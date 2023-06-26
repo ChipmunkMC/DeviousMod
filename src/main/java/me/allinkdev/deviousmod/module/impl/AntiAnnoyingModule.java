@@ -62,7 +62,7 @@ public final class AntiAnnoyingModule extends DModule {
 
     @Override
     public String getDescription() {
-        return "Prevents the server from annoying you with certain packets";
+        return "Prevents common annoyances.";
     }
 
     @Override
