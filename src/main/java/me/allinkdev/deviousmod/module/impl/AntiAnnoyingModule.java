@@ -15,7 +15,7 @@ import net.minecraft.network.packet.c2s.play.ClientStatusC2SPacket;
 
 public final class AntiAnnoyingModule extends DModule {
 
-    public AntiAnnoyingModule(DModuleManager moduleManager) {
+    public AntiAnnoyingModule(final DModuleManager moduleManager) {
         super(moduleManager);
     }
 
