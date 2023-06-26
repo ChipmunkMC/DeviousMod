@@ -1,13 +1,13 @@
 package me.allinkdev.deviousmod.module.impl;
 
+import com.github.allinkdev.deviousmod.api.experiments.Experimental;
 import com.google.common.eventbus.Subscribe;
 import it.unimi.dsi.fastutil.objects.Object2ObjectArrayMap;
 import me.allinkdev.deviousmod.DeviousMod;
-import com.github.allinkdev.deviousmod.api.experiments.Experimental;
-import me.allinkdev.deviousmod.event.entity.impl.PreEntitiesRenderEvent;
 import me.allinkdev.deviousmod.event.network.connection.ConnectionEndEvent;
 import me.allinkdev.deviousmod.event.network.connection.ConnectionStartEvent;
 import me.allinkdev.deviousmod.event.network.packet.impl.PacketS2CEvent;
+import me.allinkdev.deviousmod.event.render.entity.EntityRenderPipelineEvent;
 import me.allinkdev.deviousmod.event.world.chunk.BlockStateUpdateEvent;
 import me.allinkdev.deviousmod.event.world.chunk.ChunkSetEvent;
 import me.allinkdev.deviousmod.mixin.accessor.ClientChunkManagerAccessor;
@@ -192,7 +192,7 @@ public final class OurWorldInNBTModule extends DModule {
     }
 
     @Subscribe
-    public void onPreEntitiesRender(final PreEntitiesRenderEvent event) {
+    public void onPreEntitiesRender(final EntityRenderPipelineEvent event) {
         final ClientPlayerEntity player = client.player;
 
         if (player == null) {
@@ -206,7 +206,7 @@ public final class OurWorldInNBTModule extends DModule {
                     .filter(e -> e.getPos().squaredDistanceTo(position) <= 45)
                     .toList();
 
-            event.addEntities(textDisplayEntities);
+            event.getEntityList().addAll(textDisplayEntities);
         }
     }
 }
