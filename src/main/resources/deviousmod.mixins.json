@@ -33,7 +33,9 @@
   },
   "mixins": [
     "accessor.MapStateAccessor",
+    "client.effect.StatusEffectInstanceMixin",
     "client.entity.EntityVisibilityOverrider",
+    "client.entity.PlayerEntityMixin",
     "client.network.ClientConnectionMixin",
     "client.network.NetworkStateMixin",
     "patches.block.DecoratedPotCrashFix",
