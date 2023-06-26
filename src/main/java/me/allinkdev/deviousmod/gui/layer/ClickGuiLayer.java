@@ -1,8 +1,10 @@
 package me.allinkdev.deviousmod.gui.layer;
 
+import com.github.allinkdev.deviousmod.api.experiments.Experimentality;
 import com.github.allinkdev.deviousmod.api.module.Module;
 import com.google.common.eventbus.Subscribe;
 import imgui.ImGui;
+import imgui.flag.ImGuiCol;
 import imgui.flag.ImGuiCond;
 import imgui.flag.ImGuiTreeNodeFlags;
 import it.unimi.dsi.fastutil.objects.ObjectArraySet;
@@ -65,7 +67,7 @@ public final class ClickGuiLayer extends AbstractImGuiLayer {
 
         final DModuleManager moduleManager = this.deviousMod.getModuleManager();
         final Set<Module> modules = moduleManager.getModules();
-        modules.forEach(this::registerModule);
+        modules.stream().filter(m -> ((m.getExperimentality() == Experimentality.NONE) || m.getExperimentality() == Experimentality.WARN) || (m.getExperimentality() == Experimentality.HIDE && DeviousMod.IS_EXPERIMENTAL)).forEach(this::registerModule);
 
         this.deviousMod.subscribeEvents(this);
     }
@@ -73,7 +75,8 @@ public final class ClickGuiLayer extends AbstractImGuiLayer {
     private void renderModule(final Module module) {
         final String moduleName = module.getModuleName();
         final boolean isToggled = module.getModuleState();
-        final String suffix = isToggled ? " (on)" : " (off)"; // TODO: Replace with a colour or something
+        final boolean experimental = module.getExperimentality() != Experimentality.NONE;
+        final String suffix = (isToggled ? " (on)" : " (off)") + (experimental ? " (dev)" : ""); // TODO: Replace with a colour or something
 
         final SettingsWidget settingsWidget = this.settingsWidgetMap.get(module);
         final boolean hasSettings = settingsWidget != null;
@@ -83,7 +86,15 @@ public final class ClickGuiLayer extends AbstractImGuiLayer {
             flags = flags | ImGuiTreeNodeFlags.Leaf;
         }
 
+        if (experimental) {
+            ImGui.pushStyleColor(ImGuiCol.Header, 100, 10, 14, 255);
+            ImGui.pushStyleColor(ImGuiCol.HeaderHovered, 255, 22, 48, 255);
+        }
+
         final boolean isOpen = ImGui.treeNodeEx(moduleName + suffix, flags);
+        if (experimental) {
+            ImGui.popStyleColor(2);
+        }
         final boolean clicked;
 
         if (!hasSettings) {
@@ -103,8 +114,13 @@ public final class ClickGuiLayer extends AbstractImGuiLayer {
 
         if (hovered) {
             ImGui.beginTooltip();
-            final String moduleDescription = module.getDescription();
-            ImGui.text(moduleDescription);
+            final StringBuilder tooltip = new StringBuilder(module.getDescription());
+
+            if (experimental) {
+                tooltip.append("\n\n").append("Experiment Description: ").append(module.getExperimentDescription().orElse("None provided."));
+            }
+
+            ImGui.text(tooltip.toString());
             ImGui.endTooltip();
         }
 

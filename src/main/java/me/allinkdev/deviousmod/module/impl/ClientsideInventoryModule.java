@@ -1,6 +1,7 @@
 package me.allinkdev.deviousmod.module.impl;
 
 import com.google.common.eventbus.Subscribe;
+import com.github.allinkdev.deviousmod.api.experiments.Experimental;
 import me.allinkdev.deviousmod.event.network.packet.impl.PacketC2SEvent;
 import me.allinkdev.deviousmod.event.network.packet.impl.PacketS2CEvent;
 import me.allinkdev.deviousmod.event.tick.impl.ClientTickEndEvent;
@@ -23,6 +24,7 @@ import net.minecraft.network.packet.s2c.play.UpdateSelectedSlotS2CPacket;
 import java.util.HashSet;
 import java.util.Set;
 
+@Experimental(value = "Buggy and does not support container transactions.", hide = false)
 public final class ClientsideInventoryModule extends DModule {
     private final Set<Packet<?>> sendNextTick = new HashSet<>();
     private int sendingSlot = -1;

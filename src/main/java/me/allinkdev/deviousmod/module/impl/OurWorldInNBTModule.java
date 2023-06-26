@@ -3,6 +3,7 @@ package me.allinkdev.deviousmod.module.impl;
 import com.google.common.eventbus.Subscribe;
 import it.unimi.dsi.fastutil.objects.Object2ObjectArrayMap;
 import me.allinkdev.deviousmod.DeviousMod;
+import com.github.allinkdev.deviousmod.api.experiments.Experimental;
 import me.allinkdev.deviousmod.event.entity.impl.PreEntitiesRenderEvent;
 import me.allinkdev.deviousmod.event.network.connection.ConnectionEndEvent;
 import me.allinkdev.deviousmod.event.network.connection.ConnectionStartEvent;
@@ -37,6 +38,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicReferenceArray;
 
+@Experimental("Buggy and does not work in the latest version of Minecraft.")
 public final class OurWorldInNBTModule extends DModule {
     private static final int MAX_LENGTH = 2_000;
     private final Map<BlockPos, DisplayEntity.TextDisplayEntity> blockPosToTextDisplay = new Object2ObjectArrayMap<>();

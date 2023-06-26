@@ -1,6 +1,5 @@
 package me.allinkdev.deviousmod.module;
 
-import com.github.allinkdev.deviousmod.api.lifecycle.GenericLifecycleTracker;
 import com.github.allinkdev.deviousmod.api.managers.EventManager;
 import com.github.allinkdev.deviousmod.api.module.Module;
 import com.github.allinkdev.deviousmod.api.module.ModuleLifecycle;
@@ -18,7 +17,7 @@ import java.io.UncheckedIOException;
 import java.nio.file.Path;
 import java.util.List;
 
-public abstract class DModule extends GenericLifecycleTracker<ModuleLifecycle> implements Module {
+public abstract class DModule extends Module {
     protected final Logger logger = LoggerFactory.getLogger("Devious Mod/" + this.getClass().getSimpleName());
     protected final DeviousMod deviousMod;
     protected final MinecraftClient client = DeviousMod.CLIENT;
@@ -27,7 +26,7 @@ public abstract class DModule extends GenericLifecycleTracker<ModuleLifecycle> i
     protected volatile DModuleSettings settings;
 
     protected DModule(final DModuleManager moduleManager) {
-        super(ModuleLifecycle.NONE);
+        super();
         this.moduleManager = moduleManager;
         this.deviousMod = moduleManager.getDeviousMod();
         this.eventManager = this.deviousMod.getEventManager();

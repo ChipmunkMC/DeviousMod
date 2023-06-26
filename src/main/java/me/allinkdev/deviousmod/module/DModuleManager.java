@@ -8,8 +8,8 @@ import com.github.allinkdev.reflector.Reflector;
 import com.google.common.eventbus.EventBus;
 import me.allinkdev.deviousmod.DeviousMod;
 import me.allinkdev.deviousmod.event.api.factory.module.ModuleLifecycleTransitionEventFactory;
+import com.github.allinkdev.deviousmod.api.experiments.Experimentality;
 import me.allinkdev.deviousmod.keybind.DKeyBindManager;
-import me.allinkdev.deviousmod.module.impl.TestModule;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -31,7 +31,7 @@ public final class DModuleManager implements ModuleManager {
                 .map(Reflector::createNew)
                 .map(r -> r.create(this))
                 .map(Optional::orElseThrow)
-                .filter(m -> !(m instanceof TestModule) || DeviousMod.isDevelopment())
+                .filter(m -> m.getExperimentality() != Experimentality.HIDE || (m.getExperimentality() == Experimentality.HIDE && DeviousMod.IS_EXPERIMENTAL))
                 .toList();
 
         modules.addAll(newModules);

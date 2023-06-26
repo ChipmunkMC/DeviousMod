@@ -6,12 +6,13 @@ import com.mojang.brigadier.builder.LiteralArgumentBuilder;
 import com.mojang.brigadier.context.CommandContext;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import me.allinkdev.deviousmod.DeviousMod;
+import com.github.allinkdev.deviousmod.api.experiments.Experimentable;
 import me.allinkdev.deviousmod.module.DModuleManager;
 import net.fabricmc.fabric.api.client.command.v2.ClientCommandManager;
 import net.fabricmc.fabric.api.client.command.v2.FabricClientCommandSource;
 import net.kyori.adventure.text.Component;
 
-public abstract class DCommand implements Command<FabricClientCommandSource> {
+public abstract class DCommand extends Command<FabricClientCommandSource> implements Experimentable {
     protected final DeviousMod deviousMod;
     protected final DModuleManager moduleManager;
 

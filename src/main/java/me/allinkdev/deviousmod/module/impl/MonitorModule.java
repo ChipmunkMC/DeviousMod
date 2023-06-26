@@ -1,5 +1,6 @@
 package me.allinkdev.deviousmod.module.impl;
 
+import com.github.allinkdev.deviousmod.api.experiments.Experimental;
 import com.google.common.eventbus.Subscribe;
 import com.mojang.authlib.GameProfile;
 import it.unimi.dsi.fastutil.Pair;
@@ -29,6 +30,7 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
 
+@Experimental(value = "I'm still figuring out the quirks of the tab list system. If you don't mind a few stacktraces being printed to your console, feel free to use it as it mostly works.", hide = false)
 public final class MonitorModule extends DModule {
     private static final long TEN_SECOND_MARK_TICKS = TimeUtil.getInTicks(10_000);
     private final Set<ListEntryStub> entryStubs = new LinkedHashSet<>();

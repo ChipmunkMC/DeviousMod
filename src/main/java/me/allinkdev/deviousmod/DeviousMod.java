@@ -32,21 +32,13 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.lang.management.ManagementFactory;
-import java.lang.management.RuntimeMXBean;
 import java.util.List;
 
 public final class DeviousMod implements ClientModInitializer, DeviousModSilhouette<FabricClientCommandSource, KeyBinding, EventBus> {
     public static final Logger LOGGER = LoggerFactory.getLogger("Devious Mod");
     public static final MinecraftClient CLIENT = MinecraftClient.getInstance();
-    private static final boolean IS_DEVELOPMENT;
+    public static final boolean IS_EXPERIMENTAL = ManagementFactory.getRuntimeMXBean().getInputArguments().stream().anyMatch(s -> s.startsWith("-agentlib:jdwp")) || Boolean.getBoolean("com.github.allinkdev.deviousmod.experimental");
     private static DeviousMod INSTANCE;
-
-    static {
-        final RuntimeMXBean bean = ManagementFactory.getRuntimeMXBean();
-        final List<String> inputArguments = bean.getInputArguments();
-
-        IS_DEVELOPMENT = inputArguments.stream().anyMatch(s -> s.startsWith("-agentlib:jdwp"));
-    }
 
     private EventManager<EventBus> eventManager;
     private BotKeyProvider botKeyProvider;
@@ -57,10 +49,6 @@ public final class DeviousMod implements ClientModInitializer, DeviousModSilhoue
 
     public static DeviousMod getInstance() {
         return INSTANCE;
-    }
-
-    public static boolean isDevelopment() {
-        return IS_DEVELOPMENT;
     }
 
     @Override

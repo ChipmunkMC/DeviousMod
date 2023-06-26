@@ -1,10 +1,12 @@
 package me.allinkdev.deviousmod.module.impl;
 
 import com.google.common.eventbus.Subscribe;
+import com.github.allinkdev.deviousmod.api.experiments.Experimental;
 import me.allinkdev.deviousmod.event.network.connection.ConnectionErrorEvent;
 import me.allinkdev.deviousmod.module.DModule;
 import me.allinkdev.deviousmod.module.DModuleManager;
 
+@Experimental(value = "Just downright unsafe.", hide = false)
 public final class ConnectionErrorCancellerModule extends DModule {
     public ConnectionErrorCancellerModule(final DModuleManager moduleManager) {
         super(moduleManager);
@@ -22,7 +24,7 @@ public final class ConnectionErrorCancellerModule extends DModule {
 
     @Override
     public String getDescription() {
-        return "Cancels all connection errors. WARNING: Really, really unsafe.";
+        return "Cancels all connection errors.";
     }
 
     @Subscribe

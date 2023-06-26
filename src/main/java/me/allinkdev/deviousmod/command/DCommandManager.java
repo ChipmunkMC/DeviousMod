@@ -4,8 +4,9 @@ import com.github.allinkdev.deviousmod.api.Command;
 import com.github.allinkdev.deviousmod.api.managers.CommandManager;
 import com.github.allinkdev.reflector.Reflector;
 import com.mojang.brigadier.CommandDispatcher;
+import com.mojang.brigadier.builder.LiteralArgumentBuilder;
 import me.allinkdev.deviousmod.DeviousMod;
-import me.allinkdev.deviousmod.command.impl.TestCommand;
+import com.github.allinkdev.deviousmod.api.experiments.Experimentality;
 import net.fabricmc.fabric.api.client.command.v2.FabricClientCommandSource;
 import net.minecraft.command.CommandRegistryAccess;
 
@@ -20,7 +21,7 @@ public final class DCommandManager implements CommandManager<FabricClientCommand
                 .map(Reflector::createNew)
                 .map(r -> r.create(deviousMod))
                 .map(Optional::orElseThrow)
-                .filter(c -> !(c instanceof TestCommand) || DeviousMod.isDevelopment())
+                .filter(c -> c.getExperimentality() == Experimentality.NONE || (c.getExperimentality() == Experimentality.HIDE && DeviousMod.IS_EXPERIMENTAL))
                 .toList();
 
         commands.addAll(newCommands);
@@ -39,8 +40,27 @@ public final class DCommandManager implements CommandManager<FabricClientCommand
 
     @Override
     public void register(final CommandDispatcher<FabricClientCommandSource> dispatcher) {
+        boolean experimentalLoaded = false;
+        final LiteralArgumentBuilder<FabricClientCommandSource> experimentalNode = LiteralArgumentBuilder.literal("experimental");
+
         for (final DCommand command : this.commands) {
+            final Experimentality experimentality = command.getExperimentality();
+
+            if (experimentality == Experimentality.HIDE && !DeviousMod.IS_EXPERIMENTAL) {
+                continue;
+            } else if (command.getExperimentality() != Experimentality.NONE) {
+                experimentalLoaded = true;
+                experimentalNode.then(command.getNode());
+                continue;
+            }
+
             command.register(dispatcher);
         }
+
+        if (!experimentalLoaded) {
+            return;
+        }
+
+        dispatcher.register(experimentalNode);
     }
 }

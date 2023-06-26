@@ -2,6 +2,7 @@ package me.allinkdev.deviousmod.module.impl;
 
 import com.google.common.eventbus.Subscribe;
 import me.allinkdev.deviousmod.DeviousMod;
+import com.github.allinkdev.deviousmod.api.experiments.Experimental;
 import me.allinkdev.deviousmod.event.network.packet.impl.PacketS2CEvent;
 import me.allinkdev.deviousmod.event.screen.impl.InitScreenEvent;
 import me.allinkdev.deviousmod.module.DModule;
@@ -17,6 +18,7 @@ import java.time.Instant;
 import java.util.BitSet;
 import java.util.UUID;
 
+@Experimental
 public final class TestModule extends DModule {
     public TestModule(final DModuleManager moduleManager) {
         super(moduleManager);
