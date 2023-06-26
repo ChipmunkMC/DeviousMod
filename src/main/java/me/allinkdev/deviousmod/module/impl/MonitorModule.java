@@ -13,24 +13,25 @@ import me.allinkdev.deviousmod.event.network.packet.impl.PacketS2CEvent;
 import me.allinkdev.deviousmod.event.tick.world.impl.WorldTickEndEvent;
 import me.allinkdev.deviousmod.module.DModule;
 import me.allinkdev.deviousmod.module.DModuleManager;
-import me.allinkdev.deviousmod.util.TextUtil;
 import me.allinkdev.deviousmod.util.TimeUtil;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
 import net.minecraft.client.network.ClientPlayNetworkHandler;
+import net.minecraft.client.network.ClientPlayerEntity;
 import net.minecraft.client.network.PlayerListEntry;
 import net.minecraft.network.packet.Packet;
 import net.minecraft.network.packet.s2c.play.PlayerListS2CPacket;
 import net.minecraft.network.packet.s2c.play.PlayerRemoveS2CPacket;
 import net.minecraft.network.packet.s2c.play.WorldTimeUpdateS2CPacket;
-import net.minecraft.text.Text;
+import net.minecraft.text.*;
+import net.minecraft.util.Formatting;
 import net.minecraft.world.GameMode;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
 
-@Experimental(value = "I'm still figuring out the quirks of the tab list system. If you don't mind a few stacktraces being printed to your console, feel free to use it as it mostly works.", hide = false)
+@Experimental(value = "Mostly working, but bugs should be expected & reported.", hide = false)
 public final class MonitorModule extends DModule {
     private static final long TEN_SECOND_MARK_TICKS = TimeUtil.getInTicks(10_000);
     private final Set<ListEntryStub> entryStubs = new LinkedHashSet<>();
@@ -76,13 +77,13 @@ public final class MonitorModule extends DModule {
         }
 
         final EnumSet<PlayerListS2CPacket.Action> actions = playerListPacket.getActions();
-        final List<Component> messages = new ObjectArrayList<>();
+        final List<Text> messages = new ObjectArrayList<>();
 
         for (final PlayerListS2CPacket.Entry entry : playerListPacket.getEntries()) {
             final Set<RecordableChange> changes = new ObjectArraySet<>();
             final ListEntryStub stub;
-            final UUID uuid = entry.profileId();
-
+            final GameProfile profile = entry.profile();
+            final UUID uuid = profile.getId();
             if (actions.contains(PlayerListS2CPacket.Action.ADD_PLAYER)) {
                 stub = ListEntryStub.from(entry);
                 this.entryStubs.add(stub);
@@ -94,12 +95,13 @@ public final class MonitorModule extends DModule {
                 });
             }
 
+            stub.mergeProfile(profile);
             final String username = stub.getProfile().getName();
 
             if (actions.contains(PlayerListS2CPacket.Action.UPDATE_DISPLAY_NAME)) {
-                final Pair<Component, Component> setDisplayName = stub.setDisplayName(Objects.requireNonNullElse(entry.displayName(), Text.literal(username)));
-                final Component oldDisplayName = setDisplayName.first();
-                final Component newDisplayName = setDisplayName.second();
+                final Pair<Text, Text> setDisplayName = stub.setDisplayName(Objects.requireNonNullElse(entry.displayName(), Text.literal(username)));
+                final Text oldDisplayName = setDisplayName.first();
+                final Text newDisplayName = setDisplayName.second();
 
                 if (!oldDisplayName.equals(newDisplayName)) {
                     changes.add(new RecordableChange("display name", oldDisplayName, newDisplayName));
@@ -112,8 +114,8 @@ public final class MonitorModule extends DModule {
 
                 if (!(oldGameMode != null && oldGameMode == newGameMode)) {
                     changes.add(new RecordableChange("game mode",
-                            oldGameMode == null ? Component.text("none") : oldGameMode.getSimpleTranslatableName().asComponent(),
-                            newGameMode.getSimpleTranslatableName().asComponent())
+                            oldGameMode == null ? Text.literal("none") : oldGameMode.getSimpleTranslatableName(),
+                            newGameMode.getSimpleTranslatableName())
                     );
                 }
             }
@@ -122,14 +124,32 @@ public final class MonitorModule extends DModule {
                 continue;
             }
 
-            changes.stream().map(c -> c.toComponent(username)).forEach(messages::add);
+            changes.stream().map(c -> c.toText(stub.getIdentifier())).forEach(messages::add);
         }
 
         if (messages.isEmpty()) {
             return;
         }
 
-        this.deviousMod.sendMultipleMessages(messages);
+        final MutableText text = Text.empty();
+
+        for (int i = 0; i < messages.size(); i++) {
+            if (i != 0) {
+                text.append("\n");
+            }
+
+            text.append(messages.get(i));
+        }
+
+        text.fillStyle(Style.EMPTY.withColor(Formatting.GRAY));
+
+        final ClientPlayerEntity player = DeviousMod.CLIENT.player;
+
+        if (player == null) {
+            return;
+        }
+
+        player.sendMessage(text);
     }
 
     private void reset(final boolean entries) {
@@ -193,32 +213,44 @@ public final class MonitorModule extends DModule {
         this.entryStubs.clear();
     }
 
-    private record RecordableChange(String what, Component from, Component to) {
-        Component toComponent(final String username) {
-            return Component.text(username)
-                    .append(Component.text(" changed their "))
-                    .append(Component.text(this.what))
-                    .append(Component.text(" from "))
-                    .append(this.from)
-                    .append(Component.text(" to "))
-                    .append(this.to);
+    private record RecordableChange(String what, Text from, Text to) {
+        MutableText toText(final String username) {
+            return MutableText.of(new TranslatableTextContent("%s changed their %s from %s to %s", "%s changed their %s from %s to %s", new Object[]{username, this.what, this.from, this.to}));
         }
     }
 
     private static final class ListEntryStub {
-        private final GameProfile profile;
-        private Component displayName;
+        private GameProfile profile;
+        private Text displayName;
         private GameMode gameMode;
 
-        ListEntryStub(final @Nullable Component displayName, final @Nullable GameMode gameMode, final @NotNull GameProfile profile) {
-            this.displayName = Objects.requireNonNullElse(displayName, Component.text(profile.getName()));
+        ListEntryStub(final @Nullable Text displayName, final @Nullable GameMode gameMode, final @NotNull GameProfile profile) {
+            this.displayName = Objects.requireNonNullElseGet(displayName, () -> Text.literal(profile.getName()));
             this.gameMode = gameMode;
             this.profile = profile;
         }
 
+        public String getIdentifier() {
+            return Objects.requireNonNullElseGet(this.profile.getName(), () -> this.profile.getId().toString());
+        }
+
+        public void mergeProfile(final @NotNull GameProfile gameProfile) {
+            GameProfile replacementProfile = null;
+
+            if (gameProfile.getName() != null) {
+                replacementProfile = new GameProfile(this.profile.getId(), gameProfile.getName());
+            }
+
+            if (replacementProfile == null) {
+                return;
+            }
+
+            this.profile = replacementProfile;
+        }
+
         static ListEntryStub from(final @NotNull PlayerListS2CPacket.Entry entry) {
             return new ListEntryStub(
-                    TextUtil.toAdventureNullable(entry.displayName()),
+                    entry.displayName(),
                     entry.gameMode(),
                     entry.profile()
             );
@@ -226,7 +258,7 @@ public final class MonitorModule extends DModule {
 
         static ListEntryStub from(final @NotNull PlayerListEntry entry) {
             return new ListEntryStub(
-                    TextUtil.toAdventureNullable(entry.getDisplayName()),
+                    entry.getDisplayName(),
                     entry.getGameMode(),
                     entry.getProfile()
             );
@@ -238,16 +270,10 @@ public final class MonitorModule extends DModule {
             return oldGameMode;
         }
 
-        public Pair<Component, Component> setDisplayName(final @NotNull Text text) {
-            final Component asComponent = text.asComponent();
-
-            return Pair.of(setDisplayName(asComponent), asComponent);
-        }
-
-        public Component setDisplayName(final @NotNull Component newDisplayName) {
-            final Component oldDisplayName = this.displayName;
+        public Pair<Text, Text> setDisplayName(final @NotNull Text newDisplayName) {
+            final Text oldDisplayName = this.displayName.copy();
             this.displayName = newDisplayName;
-            return oldDisplayName;
+            return Pair.of(oldDisplayName, this.displayName.copy());
         }
 
         public GameProfile getProfile() {
