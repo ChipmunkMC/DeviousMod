@@ -21,12 +21,11 @@ public final class AntiAnnoyingModule extends DModule {
 
     @Override
     protected DModuleSettings.Builder getSettingsBuilder() {
-        return super.getSettingsBuilder().
-                addField("demo", "Ignore demo screen", "Prevents the server from opening the demo screen.", true).
-                addField("end", "Ignore end screen", "Prevents the server from opening the end screen.", true).
-
-                addField("rdi", "Ignored Reduced Debug Info", "Prevents the server from force enabling the reduced debug info setting.", true).
-                addField("status_effect", "Ignore status effect state", "Prevents the server from disabling the status effect hud.", true);
+        return super.getSettingsBuilder()
+                .addField("demo", "Ignore demo screen", "Prevents the server from opening the demo screen.", true)
+                .addField("end", "Ignore end screen", "Prevents the server from opening the end screen.", true)
+                .addField("rdi", "Ignored Reduced Debug Info", "Prevents the server from force enabling the reduced debug info setting.", true)
+                .addField("status_effect", "Ignore status effect state", "Prevents the server from disabling the status effect hud.", true);
     }
 
     @Subscribe
@@ -34,10 +33,15 @@ public final class AntiAnnoyingModule extends DModule {
         if (e.getTarget() instanceof DemoScreen && this.settings.getSetting("demo", Boolean.class).getValue()) {
             e.setTarget(null);
         }
+
         if (e.getTarget() instanceof CreditsScreen && this.settings.getSetting("end", Boolean.class).getValue()) {
             e.setTarget(null);
             final ClientPlayerEntity player = MinecraftClient.getInstance().player;
-            if (player == null) return;
+
+            if (player == null) {
+                return;
+            }
+
             player.networkHandler.sendPacket(new ClientStatusC2SPacket(ClientStatusC2SPacket.Mode.PERFORM_RESPAWN));
         }
     }
