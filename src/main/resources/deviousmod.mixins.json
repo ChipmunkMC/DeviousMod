@@ -14,6 +14,7 @@
     "client.network.CommandCompletionStealer",
     "client.network.CommandInterceptor",
     "client.network.PacketSendAndReceive",
+    "client.render.DrawerMixin",
     "client.render.FakeEntityInjector",
     "client.screen.InfiniChat",
     "client.screen.InitListener",
@@ -47,7 +48,6 @@
     "patches.text.DoubleArrayFix",
     "patches.text.MapIconTextSizeLimiter",
     "patches.text.NullComponentFallback",
-    "patches.text.ObfuscationDisabler",
     "patches.text.PlaceholderLimiter",
     "patches.text.TellKickFix"
   ]

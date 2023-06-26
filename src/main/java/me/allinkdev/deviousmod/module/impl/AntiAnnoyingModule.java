@@ -2,6 +2,7 @@ package me.allinkdev.deviousmod.module.impl;
 
 import com.google.common.eventbus.Subscribe;
 import me.allinkdev.deviousmod.event.effect.ShowStatusEffectIconEvent;
+import me.allinkdev.deviousmod.event.render.text.ObfuscatedGlyphRendererSelectEvent;
 import me.allinkdev.deviousmod.event.screen.impl.SetScreenEvent;
 import me.allinkdev.deviousmod.event.self.SelfReducedDebugInfoEvent;
 import me.allinkdev.deviousmod.module.DModule;
@@ -24,7 +25,8 @@ public final class AntiAnnoyingModule extends DModule {
                 .addField("demo", "Ignore demo screen", "Prevents the server from opening the demo screen.", true)
                 .addField("end", "Ignore end screen", "Prevents the server from opening the end screen.", true)
                 .addField("rdi", "Ignored Reduced Debug Info", "Prevents the server from force enabling the reduced debug info setting.", true)
-                .addField("status_effect", "Ignore status effect state", "Prevents the server from disabling the status effect hud.", true);
+                .addField("status_effect", "Ignore status effect state", "Prevents the server from disabling the status effect hud.", true)
+                .addField("obfuscation", "Do not render obfuscated glyphs", "Prevents obfuscated glyph rendering.", true);
     }
 
     @Subscribe
@@ -53,6 +55,15 @@ public final class AntiAnnoyingModule extends DModule {
     @Subscribe
     public void onShowStatusEffectIcon(final ShowStatusEffectIconEvent e) {
         e.setShowIcon(this.settings.getSetting("status_effect", Boolean.class).getValue());
+    }
+
+    @Subscribe
+    public void onGlyphRendererSelect(final ObfuscatedGlyphRendererSelectEvent event) {
+        if (!this.settings.getSetting("obfuscation", Boolean.class).getValue()) {
+            return;
+        }
+
+        event.setCancelled(true);
     }
 
     @Override
