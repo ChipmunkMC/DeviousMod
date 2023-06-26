@@ -11,7 +11,7 @@ import me.allinkdev.deviousmod.module.DModule;
 import me.allinkdev.deviousmod.module.DModuleManager;
 import me.allinkdev.deviousmod.module.DModuleSettings;
 
-@Experimental
+@Experimental(value = "Recently added. Use with caution.", hide = false)
 public class NoRenderModule extends DModule {
     public NoRenderModule(final DModuleManager moduleManager) {
         super(moduleManager);
