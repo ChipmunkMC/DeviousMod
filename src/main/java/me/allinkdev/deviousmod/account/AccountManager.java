@@ -41,7 +41,7 @@ public class AccountManager {
         final TextFieldWidget textFieldWidget = new TextFieldWidget(this.client.textRenderer, screen.width - (width + 4), screen.height - (height + 4), width, height, Text.empty());
         textFieldWidget.setMaxLength(16);
         textFieldWidget.setText(this.getCurrentUsername());
-        textFieldWidget.setChangedListener(username -> setUsernameWidget(textFieldWidget, username));
+        textFieldWidget.setChangedListener(this::setUsername);
         accessor.invokeAddDrawableChild(textFieldWidget);
     }
 
@@ -62,17 +62,8 @@ public class AccountManager {
         return this.originalSession.getUsername();
     }
 
-    private void setUsernameWidget(final TextFieldWidget textFieldWidget, final String newUsername) {
-        if (newUsername.isEmpty() || newUsername.length() > 16) {
-            textFieldWidget.setText(this.getCurrentUsername());
-            return;
-        }
-
-        this.setUsername(newUsername);
-    }
-
     public void setUsername(final String username) {
-        if (username.equals(this.getOriginalUsername())) {
+        if (username.equals(this.getOriginalUsername()) || username.isEmpty() || username.length() > 16) {
             this.restoreSession();
             return;
         }
