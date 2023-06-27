@@ -45,8 +45,11 @@ public class NoRenderModule extends DModule {
                 .addField("glyphs", "No Glyphs", "Disables glyph rendering.", false)
                 .addField("uncullable", "No Uncullable Block Entities", "Disables rendering of uncullable block entities.", false)
                 .addField("cut-out", "No Cut-out Blocks", "Disables rendering of the cut-out entity layer (non-full blocks).", true)
+                .addField("cut-out_mipped", "No (Mipped) Cut-out Blocks", "Disables rendering of the mipped cut-out entity layer (grass block, iron bars, etc).", false)
                 .addField("tripwire", "No Tripwire Rendering", "Disables rendering of the tripwire layer.", true)
                 .addField("glint", "No Glint Rendering", "Disables rendering of the glint layers.", false)
+                .addField("translucent", "No Translucent Block Rendering", "Disables rendering of the translucent layer.", false)
+                .addField("solids", "No Solid Block Rendering", "Disables rendering of the solid block layer.", false)
                 .addField("obfuscation", "No Obfuscation", "Prevents obfuscated glyph rendering.", true);
     }
 
@@ -92,8 +95,16 @@ public class NoRenderModule extends DModule {
 
         if (renderLayer.equals(RenderLayer.getCutout())) {
             this.cancelIfNecessary("cut-out", event);
+        } else if (renderLayer.equals(RenderLayer.getCutoutMipped())) {
+            this.cancelIfNecessary("cut-out_mipped", event);
         } else if (renderLayer.equals(RenderLayer.getTripwire())) {
             this.cancelIfNecessary("tripwire", event);
+        } else if (renderLayer.equals(RenderLayer.getTranslucent())
+                || renderLayer.equals(RenderLayer.getTranslucentNoCrumbling())
+                || renderLayer.equals(RenderLayer.getTranslucentMovingBlock())) {
+            this.cancelIfNecessary("translucent", event);
+        } else if (renderLayer.equals(RenderLayer.getSolid())) {
+            this.cancelIfNecessary("solids", event);
         } else if (renderLayer.equals(RenderLayer.getGlint()) || renderLayer.equals(RenderLayer.getGlintTranslucent())
                 || renderLayer.equals(RenderLayer.getArmorGlint()) || renderLayer.equals(RenderLayer.getDirectGlint())
                 || renderLayer.equals(RenderLayer.getArmorEntityGlint()) || renderLayer.equals(RenderLayer.getDirectEntityGlint())) {
