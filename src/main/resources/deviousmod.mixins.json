@@ -6,6 +6,7 @@
   "client": [
     "accessor.ClientChunkManagerAccessor",
     "accessor.ScreenAccessor",
+    "accessor.WorldRendererAccessor",
     "client.chat.ChatAbnormaliser",
     "client.entity.EntityEquipmentOverrider",
     "client.entity.EntityStateEvents",
@@ -17,6 +18,7 @@
     "client.particle.ParticleRenderListener",
     "client.render.DrawerMixin",
     "client.render.GlyphRendererListener",
+    "client.render.ImmediateDrawListener",
     "client.render.WorldRenderListener",
     "client.screen.InfiniChat",
     "client.screen.InitListener",

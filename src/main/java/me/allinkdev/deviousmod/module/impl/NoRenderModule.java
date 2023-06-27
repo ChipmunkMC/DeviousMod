@@ -6,12 +6,14 @@ import com.google.common.eventbus.Subscribe;
 import me.allinkdev.deviousmod.event.render.block.PreBlockEntityRenderEvent;
 import me.allinkdev.deviousmod.event.render.block.PreUncullableBlockEntityRenderEvent;
 import me.allinkdev.deviousmod.event.render.entity.EntityRenderPipelineEvent;
+import me.allinkdev.deviousmod.event.render.entity.RenderLayerEvent;
 import me.allinkdev.deviousmod.event.render.glyph.PreGlyphRenderEvent;
 import me.allinkdev.deviousmod.event.render.particle.PreParticleBatchRenderEvent;
 import me.allinkdev.deviousmod.event.render.text.ObfuscatedGlyphRendererSelectEvent;
 import me.allinkdev.deviousmod.module.DModule;
 import me.allinkdev.deviousmod.module.DModuleManager;
 import me.allinkdev.deviousmod.module.DModuleSettings;
+import net.minecraft.client.render.RenderLayer;
 
 @Experimental(value = "Recently added. Use with caution.", hide = false)
 public class NoRenderModule extends DModule {
@@ -42,7 +44,9 @@ public class NoRenderModule extends DModule {
                 .addField("blocks", "No Block Entities", "Disables block entity rendering.", true)
                 .addField("glyphs", "No Glyphs", "Disables glyph rendering.", false)
                 .addField("uncullable", "No Uncullable Block Entities", "Disables rendering of uncullable block entities.", false)
-                .addField("laggy", "No Laggy Blocks", "Do not render known-laggy blocks.", true)
+                .addField("cut-out", "No Cut-out Blocks", "Disables rendering of the cut-out entity layer (non-full blocks).", true)
+                .addField("tripwire", "No Tripwire Rendering", "Disables rendering of the tripwire layer.", true)
+                .addField("glint", "No Glint Rendering", "Disables rendering of the glint layers.", false)
                 .addField("obfuscation", "No Obfuscation", "Prevents obfuscated glyph rendering.", true);
     }
 
@@ -80,5 +84,20 @@ public class NoRenderModule extends DModule {
     @Subscribe
     public void onGlyphRendererSelect(final ObfuscatedGlyphRendererSelectEvent event) {
         this.cancelIfNecessary("obfuscation", event);
+    }
+
+    @Subscribe
+    public void onRenderLayer(final RenderLayerEvent event) {
+        final RenderLayer renderLayer = event.getRenderLayer();
+
+        if (renderLayer.equals(RenderLayer.getCutout())) {
+            this.cancelIfNecessary("cut-out", event);
+        } else if (renderLayer.equals(RenderLayer.getTripwire())) {
+            this.cancelIfNecessary("tripwire", event);
+        } else if (renderLayer.equals(RenderLayer.getGlint()) || renderLayer.equals(RenderLayer.getGlintTranslucent())
+                || renderLayer.equals(RenderLayer.getArmorGlint()) || renderLayer.equals(RenderLayer.getDirectGlint())
+                || renderLayer.equals(RenderLayer.getArmorEntityGlint()) || renderLayer.equals(RenderLayer.getDirectEntityGlint())) {
+            this.cancelIfNecessary("glint", event);
+        }
     }
 }
