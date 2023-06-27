@@ -1,14 +1,13 @@
 package me.allinkdev.deviousmod.keybind;
 
 import com.github.allinkdev.deviousmod.api.keybind.KeyBind;
-import com.github.allinkdev.deviousmod.api.managers.EventManager;
 import com.github.allinkdev.deviousmod.api.managers.KeyBindManager;
 import com.github.allinkdev.reflector.Reflector;
-import com.google.common.eventbus.EventBus;
 import com.google.common.eventbus.Subscribe;
 import it.unimi.dsi.fastutil.Pair;
 import me.allinkdev.deviousmod.DeviousMod;
 import me.allinkdev.deviousmod.event.tick.impl.ClientTickEndEvent;
+import me.allinkdev.deviousmod.util.EventUtil;
 import net.fabricmc.fabric.api.client.keybinding.v1.KeyBindingHelper;
 import net.minecraft.client.option.KeyBinding;
 
@@ -18,8 +17,7 @@ public final class DKeyBindManager implements KeyBindManager<KeyBinding> {
     private final List<Pair<KeyBinding, KeyBind<KeyBinding>>> binds = new ArrayList<>();
 
     public DKeyBindManager(final DeviousMod deviousMod) {
-        final EventManager<EventBus> eventManager = deviousMod.getEventManager();
-        eventManager.registerListener(this);
+        EventUtil.registerListener(this);
 
         Reflector.createNew(DKeyBind.class)
                 .allSubClassesInSubPackage("impl")

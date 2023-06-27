@@ -5,6 +5,7 @@ import me.allinkdev.deviousmod.DeviousMod;
 import me.allinkdev.deviousmod.event.network.connection.ConnectionEndEvent;
 import me.allinkdev.deviousmod.event.network.connection.ConnectionStartEvent;
 import me.allinkdev.deviousmod.event.network.packet.impl.PacketS2CEvent;
+import me.allinkdev.deviousmod.util.EventUtil;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.network.ClientPlayNetworkHandler;
 import net.minecraft.client.network.ClientPlayerEntity;
@@ -37,7 +38,7 @@ public final class QueryManager {
         INSTANCE = new QueryManager();
 
         timer.schedule(new PacketSender(), 0L, 4L);
-        deviousMod.subscribeEvents(INSTANCE);
+        EventUtil.registerListener(INSTANCE);
     }
 
     public static CompletableFuture<NbtCompound> scheduleBlockQuery(final BlockPos blockPos) {

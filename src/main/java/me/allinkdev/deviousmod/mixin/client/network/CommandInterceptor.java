@@ -1,8 +1,7 @@
 package me.allinkdev.deviousmod.mixin.client.network;
 
-import com.google.common.eventbus.EventBus;
-import me.allinkdev.deviousmod.DeviousMod;
 import me.allinkdev.deviousmod.event.self.chat.impl.SelfSendCommandEvent;
+import me.allinkdev.deviousmod.util.EventUtil;
 import net.minecraft.client.network.ClientPlayNetworkHandler;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -17,10 +16,7 @@ public abstract class CommandInterceptor {
 
     @Inject(method = "sendChatCommand", at = @At("HEAD"), cancellable = true)
     public void onSendChatCommand(final String command, final CallbackInfo ci) {
-        final DeviousMod deviousMod = DeviousMod.getInstance();
-        final EventBus eventBus = deviousMod.getEventBus();
-        final SelfSendCommandEvent commandEvent = new SelfSendCommandEvent(command);
-        eventBus.post(commandEvent);
+        final SelfSendCommandEvent commandEvent = EventUtil.postEvent(new SelfSendCommandEvent(command));
 
         if (commandEvent.isCancelled()) {
             ci.cancel();

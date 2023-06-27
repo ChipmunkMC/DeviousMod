@@ -1,8 +1,7 @@
 package me.allinkdev.deviousmod.mixin.client.screen;
 
-import com.google.common.eventbus.EventBus;
-import me.allinkdev.deviousmod.DeviousMod;
 import me.allinkdev.deviousmod.event.screen.impl.SetScreenEvent;
+import me.allinkdev.deviousmod.util.EventUtil;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.Mouse;
 import net.minecraft.client.gui.screen.DeathScreen;
@@ -51,11 +50,7 @@ public abstract class ScreenOverrider {
 
     @Inject(method = "setScreen", at = @At("HEAD"), cancellable = true)
     private void onSetScreen(final Screen providedScreen, final CallbackInfo ci) {
-        final SetScreenEvent event = new SetScreenEvent(providedScreen);
-        final DeviousMod deviousMod = DeviousMod.getInstance();
-        final EventBus eventBus = deviousMod.getEventBus();
-        eventBus.post(event);
-
+        final SetScreenEvent event = EventUtil.postEvent(new SetScreenEvent(providedScreen));
         Screen overriddenScreen = event.getTarget();
 
         if (overriddenScreen == null) {

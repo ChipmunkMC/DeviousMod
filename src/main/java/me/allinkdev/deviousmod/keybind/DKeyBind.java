@@ -4,7 +4,6 @@ import com.github.allinkdev.deviousmod.api.keybind.KeyBind;
 import com.github.allinkdev.deviousmod.api.keybind.KeyBindLifecycle;
 import com.github.allinkdev.deviousmod.api.lifecycle.GenericLifecycleTracker;
 import com.github.allinkdev.deviousmod.api.managers.EventManager;
-import com.google.common.eventbus.EventBus;
 import me.allinkdev.deviousmod.DeviousMod;
 import me.allinkdev.deviousmod.event.api.factory.keybind.KeyBindLifecycleTransitionEventFactory;
 import net.minecraft.client.option.KeyBinding;
@@ -13,7 +12,7 @@ import org.lwjgl.glfw.GLFW;
 public abstract class DKeyBind extends GenericLifecycleTracker<KeyBindLifecycle> implements KeyBind<KeyBinding> {
     protected final DeviousMod deviousMod;
     private final KeyBindLifecycleTransitionEventFactory transitionEventFactory = new KeyBindLifecycleTransitionEventFactory();
-    private final EventManager<EventBus> eventManager;
+    private final EventManager<?> eventManager;
 
     protected DKeyBind(final DeviousMod deviousMod) {
         super(KeyBindLifecycle.NONE);

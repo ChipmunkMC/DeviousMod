@@ -4,7 +4,6 @@ import com.github.allinkdev.deviousmod.api.managers.EventManager;
 import com.github.allinkdev.deviousmod.api.module.Module;
 import com.github.allinkdev.deviousmod.api.module.ModuleLifecycle;
 import com.github.allinkdev.deviousmod.api.module.settings.ModuleSettings;
-import com.google.common.eventbus.EventBus;
 import me.allinkdev.deviousmod.DeviousMod;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
@@ -22,7 +21,7 @@ public abstract class DModule extends Module {
     protected final DeviousMod deviousMod;
     protected final MinecraftClient client = DeviousMod.CLIENT;
     private final DModuleManager moduleManager;
-    private final EventManager<EventBus> eventManager;
+    private final EventManager<?> eventManager;
     protected volatile DModuleSettings settings;
 
     protected DModule(final DModuleManager moduleManager) {

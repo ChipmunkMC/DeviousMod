@@ -1,8 +1,7 @@
 package me.allinkdev.deviousmod.mixin.client.world;
 
-import com.google.common.eventbus.EventBus;
-import me.allinkdev.deviousmod.DeviousMod;
 import me.allinkdev.deviousmod.event.world.chunk.BlockStateUpdateEvent;
+import me.allinkdev.deviousmod.util.EventUtil;
 import net.minecraft.block.BlockState;
 import net.minecraft.client.world.ClientWorld;
 import net.minecraft.registry.DynamicRegistryManager;
@@ -28,10 +27,6 @@ public abstract class BlockUpdateListener extends World {
 
     @Override
     public void onBlockChanged(final BlockPos pos, final BlockState oldBlock, final BlockState newBlock) {
-        final DeviousMod deviousMod = DeviousMod.getInstance();
-        final EventBus eventBus = deviousMod.getEventBus();
-        final BlockStateUpdateEvent event = new BlockStateUpdateEvent(pos, oldBlock, newBlock);
-
-        eventBus.post(event);
+        EventUtil.postEvent(new BlockStateUpdateEvent(pos, oldBlock, newBlock));
     }
 }

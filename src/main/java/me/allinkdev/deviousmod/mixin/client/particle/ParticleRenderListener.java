@@ -1,9 +1,7 @@
 package me.allinkdev.deviousmod.mixin.client.particle;
 
-import com.github.allinkdev.deviousmod.api.managers.EventManager;
-import com.google.common.eventbus.EventBus;
-import me.allinkdev.deviousmod.DeviousMod;
 import me.allinkdev.deviousmod.event.render.particle.PreParticleBatchRenderEvent;
+import me.allinkdev.deviousmod.util.EventUtil;
 import net.minecraft.client.particle.Particle;
 import net.minecraft.client.particle.ParticleManager;
 import net.minecraft.client.particle.ParticleTextureSheet;
@@ -26,11 +24,6 @@ public final class ParticleRenderListener {
             return null;
         }
 
-        final DeviousMod deviousMod = DeviousMod.getInstance();
-        final EventManager<EventBus> eventManager = deviousMod.getEventManager();
-        final PreParticleBatchRenderEvent event = new PreParticleBatchRenderEvent(textureSheet, particleBatch);
-        eventManager.broadcastEvent(event);
-
-        return event.isCancelled() ? null : particleBatch;
+        return EventUtil.postCancellable(new PreParticleBatchRenderEvent(textureSheet, particleBatch)) ? null : particleBatch;
     }
 }

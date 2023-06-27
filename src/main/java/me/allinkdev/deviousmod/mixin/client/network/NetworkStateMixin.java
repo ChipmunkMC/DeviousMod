@@ -1,10 +1,9 @@
 package me.allinkdev.deviousmod.mixin.client.network;
 
-import com.google.common.eventbus.EventBus;
 import io.netty.channel.ChannelHandlerContext;
-import me.allinkdev.deviousmod.DeviousMod;
 import me.allinkdev.deviousmod.event.network.connection.ConnectionEndEvent;
 import me.allinkdev.deviousmod.event.network.connection.ConnectionStartEvent;
+import me.allinkdev.deviousmod.util.EventUtil;
 import net.minecraft.network.ClientConnection;
 import net.minecraft.network.listener.ClientQueryPacketListener;
 import net.minecraft.network.listener.PacketListener;
@@ -27,10 +26,7 @@ public abstract class NetworkStateMixin {
             return;
         }
 
-        final DeviousMod deviousMod = DeviousMod.getInstance();
-        final EventBus eventBus = deviousMod.getEventBus();
-        final ConnectionEndEvent event = new ConnectionEndEvent();
-        eventBus.post(event);
+        EventUtil.postEvent(new ConnectionEndEvent());
     }
 
     @Inject(method = "channelActive", at = @At("HEAD"))
@@ -41,9 +37,6 @@ public abstract class NetworkStateMixin {
             return;
         }
 
-        final DeviousMod deviousMod = DeviousMod.getInstance();
-        final EventBus eventBus = deviousMod.getEventBus();
-        final ConnectionStartEvent event = new ConnectionStartEvent();
-        eventBus.post(event);
+        EventUtil.postEvent(new ConnectionStartEvent());
     }
 }

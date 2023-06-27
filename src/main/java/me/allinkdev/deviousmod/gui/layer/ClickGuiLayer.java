@@ -13,6 +13,7 @@ import me.allinkdev.deviousmod.event.tick.impl.ClientTickEndEvent;
 import me.allinkdev.deviousmod.gui.AbstractImGuiLayer;
 import me.allinkdev.deviousmod.gui.widget.SettingsWidget;
 import me.allinkdev.deviousmod.module.DModuleManager;
+import me.allinkdev.deviousmod.util.EventUtil;
 
 import java.util.HashMap;
 import java.util.HashSet;
@@ -69,7 +70,7 @@ public final class ClickGuiLayer extends AbstractImGuiLayer {
         final Set<Module> modules = moduleManager.getModules();
         modules.stream().filter(m -> ((m.getExperimentality() == Experimentality.NONE) || m.getExperimentality() == Experimentality.WARN) || (m.getExperimentality() == Experimentality.HIDE && DeviousMod.IS_EXPERIMENTAL)).forEach(this::registerModule);
 
-        this.deviousMod.subscribeEvents(this);
+        EventUtil.registerListener(this);
     }
 
     private void renderModule(final Module module) {

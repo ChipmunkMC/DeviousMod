@@ -1,9 +1,7 @@
 package me.allinkdev.deviousmod.mixin.client.render.block;
 
-import com.github.allinkdev.deviousmod.api.managers.EventManager;
-import com.google.common.eventbus.EventBus;
-import me.allinkdev.deviousmod.DeviousMod;
 import me.allinkdev.deviousmod.event.render.block.PreBeaconBeamRenderEvent;
+import me.allinkdev.deviousmod.util.EventUtil;
 import net.minecraft.client.render.VertexConsumerProvider;
 import net.minecraft.client.render.block.entity.BeaconBlockEntityRenderer;
 import net.minecraft.client.util.math.MatrixStack;
@@ -24,15 +22,8 @@ public final class BeaconRenderListener {
                                      final float[] color,
                                      final float innerRadius, final float outerRadius,
                                      final CallbackInfo ci) {
-        final DeviousMod deviousMod = DeviousMod.getInstance();
-        final EventManager<EventBus> eventManager = deviousMod.getEventManager();
-        final PreBeaconBeamRenderEvent event = new PreBeaconBeamRenderEvent();
-        eventManager.broadcastEvent(event);
-
-        if (!event.isCancelled()) {
-            return;
+        if (EventUtil.postCancellable(new PreBeaconBeamRenderEvent())) {
+            ci.cancel();
         }
-
-        ci.cancel();
     }
 }

@@ -1,14 +1,13 @@
 package me.allinkdev.deviousmod.module;
 
+import com.github.allinkdev.deviousmod.api.experiments.Experimentality;
 import com.github.allinkdev.deviousmod.api.managers.EventManager;
 import com.github.allinkdev.deviousmod.api.managers.ModuleManager;
 import com.github.allinkdev.deviousmod.api.module.Module;
 import com.github.allinkdev.deviousmod.api.module.ModuleLifecycle;
 import com.github.allinkdev.reflector.Reflector;
-import com.google.common.eventbus.EventBus;
 import me.allinkdev.deviousmod.DeviousMod;
 import me.allinkdev.deviousmod.event.api.factory.module.ModuleLifecycleTransitionEventFactory;
-import com.github.allinkdev.deviousmod.api.experiments.Experimentality;
 import me.allinkdev.deviousmod.keybind.DKeyBindManager;
 
 import java.util.*;
@@ -18,13 +17,12 @@ public final class DModuleManager implements ModuleManager {
     private static final Set<DModule> modules = new HashSet<>();
     private static final ModuleLifecycleTransitionEventFactory TRANSITION_EVENT_FACTORY = new ModuleLifecycleTransitionEventFactory();
     private final DeviousMod deviousMod;
-    private final EventManager<EventBus> eventManager;
+    private final EventManager<?> eventManager;
 
     public DModuleManager(final DeviousMod deviousMod) {
         this.deviousMod = deviousMod;
         this.eventManager = deviousMod.getEventManager();
-
-        deviousMod.subscribeEvents(this);
+        this.eventManager.registerListener(this);
 
         final List<? extends DModule> newModules = Reflector.createNew(DModule.class)
                 .allSubClassesInSubPackage("impl")
@@ -54,7 +52,7 @@ public final class DModuleManager implements ModuleManager {
         return moduleManager.getModuleNames();
     }
 
-    public static void postLifecycleUpdate(final EventManager<EventBus> eventManager, final ModuleLifecycle to, final Module module) {
+    public static void postLifecycleUpdate(final EventManager<?> eventManager, final ModuleLifecycle to, final Module module) {
         TRANSITION_EVENT_FACTORY.create(module, to, eventManager::broadcastEvent).join();
     }
 
@@ -85,14 +83,14 @@ public final class DModuleManager implements ModuleManager {
     @Override
     public void load(final Module module) {
         module.init();
-        deviousMod.subscribeEvents(module);
+        deviousMod.getEventManager().registerListener(module);
 
         this.postLifecycleUpdate(ModuleLifecycle.LOADED, module);
     }
 
     @Override
     public void unload(final Module module) {
-        deviousMod.unsubscribeEvents(module);
+        deviousMod.getEventManager().unregisterListener(module);
 
         this.postLifecycleUpdate(ModuleLifecycle.UNLOADED, module);
     }

@@ -99,7 +99,7 @@ public final class DeviousMod implements ClientModInitializer, DeviousModSilhoue
 
         entrypoints.forEach(e -> e.onPreLoad(this));
 
-        this.renderManager = new RenderManager(this);
+        this.renderManager = new RenderManager();
         this.accountManager = new AccountManager(CLIENT, this);
         this.botKeyProvider = new BotKeyProvider();
         this.keyBindManager = new DKeyBindManager(this);
@@ -116,20 +116,6 @@ public final class DeviousMod implements ClientModInitializer, DeviousModSilhoue
         ClientTickEvents.START_WORLD_TICK.register(WorldTickStartEvent::onWorldTickStart);
         ClientTickEvents.START_WORLD_TICK.register(WorldTickEndEvent::onWorldTickEnd);
         entrypoints.forEach(e -> e.onLoad(this));
-    }
-
-    public EventBus getEventBus() {
-        return this.eventManager.getInternalEventSystem();
-    }
-
-    @Deprecated(forRemoval = true)
-    public void subscribeEvents(final Object object) {
-        this.eventManager.registerListener(object);
-    }
-
-    @Deprecated(forRemoval = true)
-    public void unsubscribeEvents(final Object object) {
-        this.eventManager.unregisterListener(object);
     }
 
     public void sendMessage(final Component component) {

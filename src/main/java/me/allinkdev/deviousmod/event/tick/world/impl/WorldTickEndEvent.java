@@ -1,8 +1,7 @@
 package me.allinkdev.deviousmod.event.tick.world.impl;
 
-import com.google.common.eventbus.EventBus;
-import me.allinkdev.deviousmod.DeviousMod;
 import me.allinkdev.deviousmod.event.tick.world.GenericWorldTickEvent;
+import me.allinkdev.deviousmod.util.EventUtil;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.network.ClientPlayerEntity;
 import net.minecraft.client.world.ClientWorld;
@@ -20,10 +19,6 @@ public final class WorldTickEndEvent extends GenericWorldTickEvent {
             throw new IllegalStateException("Player null!");
         }
 
-        final WorldTickEndEvent event = new WorldTickEndEvent(client, player, world);
-        final DeviousMod deviousMod = DeviousMod.getInstance();
-        final EventBus eventBus = deviousMod.getEventBus();
-
-        eventBus.post(event);
+        EventUtil.postEvent(new WorldTickEndEvent(client, player, world));
     }
 }

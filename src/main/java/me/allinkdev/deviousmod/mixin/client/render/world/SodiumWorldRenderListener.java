@@ -1,9 +1,7 @@
 package me.allinkdev.deviousmod.mixin.client.render.world;
 
-import com.github.allinkdev.deviousmod.api.managers.EventManager;
-import com.google.common.eventbus.EventBus;
-import me.allinkdev.deviousmod.DeviousMod;
 import me.allinkdev.deviousmod.event.render.block.PreBlockEntityRenderEvent;
+import me.allinkdev.deviousmod.util.EventUtil;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.client.render.VertexConsumerProvider;
 import net.minecraft.client.render.block.entity.BlockEntityRenderDispatcher;
@@ -17,12 +15,7 @@ public final class SodiumWorldRenderListener {
     @Redirect(method = "renderTileEntities", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/render/block/entity/BlockEntityRenderDispatcher;render(Lnet/minecraft/block/entity/BlockEntity;FLnet/minecraft/client/util/math/MatrixStack;Lnet/minecraft/client/render/VertexConsumerProvider;)V"))
     private <E extends BlockEntity> void onGetVisibleBlockEntities(final BlockEntityRenderDispatcher instance, final E blockEntity, final float tickDelta,
                                                                    final MatrixStack matrices, final VertexConsumerProvider vertexConsumers) {
-        final DeviousMod deviousMod = DeviousMod.getInstance();
-        final EventManager<EventBus> eventManager = deviousMod.getEventManager();
-        final PreBlockEntityRenderEvent event = new PreBlockEntityRenderEvent(blockEntity);
-        eventManager.broadcastEvent(event);
-
-        if (event.isCancelled()) {
+        if (EventUtil.postCancellable(new PreBlockEntityRenderEvent(blockEntity))) {
             return;
         }
 

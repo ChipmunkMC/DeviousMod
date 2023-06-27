@@ -1,8 +1,8 @@
 package me.allinkdev.deviousmod.mixin.client.entity;
 
-import com.google.common.eventbus.EventBus;
 import me.allinkdev.deviousmod.DeviousMod;
 import me.allinkdev.deviousmod.event.entity.impl.EntityVisibilityCheckEvent;
+import me.allinkdev.deviousmod.util.EventUtil;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.network.ClientPlayerEntity;
 import net.minecraft.entity.Entity;
@@ -29,12 +29,7 @@ public final class EntityVisibilityOverrider {
 
         final boolean originalReturnValue = cir.getReturnValue();
         final Entity entity = (Entity) (Object) this;
-        final EntityVisibilityCheckEvent event = new EntityVisibilityCheckEvent(entity, originalReturnValue);
-        final DeviousMod deviousMod = DeviousMod.getInstance();
-        final EventBus eventBus = deviousMod.getEventBus();
-        eventBus.post(event);
 
-        final boolean newReturnValue = event.isVisible();
-        cir.setReturnValue(newReturnValue);
+        cir.setReturnValue(EventUtil.postEvent(new EntityVisibilityCheckEvent(entity, originalReturnValue)).isVisible());
     }
 }

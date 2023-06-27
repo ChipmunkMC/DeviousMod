@@ -1,8 +1,7 @@
 package me.allinkdev.deviousmod.event.tick.impl;
 
-import com.google.common.eventbus.EventBus;
-import me.allinkdev.deviousmod.DeviousMod;
 import me.allinkdev.deviousmod.event.tick.GenericClientTickEvent;
+import me.allinkdev.deviousmod.util.EventUtil;
 import net.minecraft.client.MinecraftClient;
 
 public final class ClientTickStartEvent extends GenericClientTickEvent {
@@ -11,10 +10,6 @@ public final class ClientTickStartEvent extends GenericClientTickEvent {
     }
 
     public static void onStartTick(final MinecraftClient client) {
-        final ClientTickStartEvent event = new ClientTickStartEvent(client);
-        final DeviousMod deviousMod = DeviousMod.getInstance();
-        final EventBus eventBus = deviousMod.getEventBus();
-
-        eventBus.post(event);
+        EventUtil.postEvent(new ClientTickStartEvent(client));
     }
 }
