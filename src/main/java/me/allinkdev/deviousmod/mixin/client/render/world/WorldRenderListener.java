@@ -118,7 +118,7 @@ public abstract class WorldRenderListener {
         final Optional<AbstractTexture> abstractTextureOptional = deviousMod.getRenderManager().searchForTexture(currentTexture);
 
         if (abstractTextureOptional.isEmpty()) {
-            DeviousMod.LOGGER.info("Could not find abstract texture for {}", currentTexture);
+            //DeviousMod.LOGGER.info("Could not find abstract texture for {}", currentTexture);
             BufferRenderer.drawWithGlobalProgram(buffer);
             return;
         }
@@ -126,7 +126,7 @@ public abstract class WorldRenderListener {
         final AbstractTexture abstractTexture = abstractTextureOptional.get();
 
         if (!(abstractTexture instanceof final ResourceTexture resourceTexture)) {
-            DeviousMod.LOGGER.warn("Abstract texture for {} was not an instance of resource texture, passing through. Class is {}", currentTexture, abstractTexture.getClass().getName());
+            //DeviousMod.LOGGER.warn("Abstract texture for {} was not an instance of resource texture, passing through. Class is {}", currentTexture, abstractTexture.getClass().getName());
             BufferRenderer.drawWithGlobalProgram(buffer);
             return;
         }
