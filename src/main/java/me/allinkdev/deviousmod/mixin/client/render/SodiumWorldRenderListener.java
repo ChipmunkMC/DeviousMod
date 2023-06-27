@@ -12,7 +12,7 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Redirect;
 
-@Mixin(targets = "me/jellysquid/mods/sodium/client/render/SodiumWorldRenderer", remap = false)
+@Mixin(targets = "me/jellysquid/mods/sodium/client/render/SodiumWorldRenderer")
 public final class SodiumWorldRenderListener {
     @Redirect(method = "renderTileEntities", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/render/block/entity/BlockEntityRenderDispatcher;render(Lnet/minecraft/block/entity/BlockEntity;FLnet/minecraft/client/util/math/MatrixStack;Lnet/minecraft/client/render/VertexConsumerProvider;)V"))
     private <E extends BlockEntity> void onGetVisibleBlockEntities(final BlockEntityRenderDispatcher instance, final E blockEntity, final float tickDelta,

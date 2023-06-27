@@ -39,7 +39,8 @@ public class NoRenderModule extends DModule {
                 .addField("particles", "No Particles", "Disables particle rendering.", true)
                 .addField("blocks", "No Block Entities", "Disables block entity rendering.", true)
                 .addField("glyphs", "No Glyphs", "Disables glyph rendering.", false)
-                .addField("uncullable", "No Uncullable Block Entities", "Disables rendering of uncullable block entities.", false);
+                .addField("uncullable", "No Uncullable Block Entities", "Disables rendering of uncullable block entities.", false)
+                .addField("laggy", "No Laggy Blocks", "Do not render known-laggy blocks.", true);
     }
 
     @Subscribe
