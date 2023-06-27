@@ -21,6 +21,7 @@ import java.util.stream.Collectors;
 public final class CommandPlaceholdersModule extends DModule {
     private static final String SEARCH_STRING = "all_suggestions";
     private final Queue<String> commandQueue = new LinkedBlockingQueue<>();
+    private final List<String> sending = Collections.synchronizedList(new ArrayList<>());
     private long tickCount = 0;
 
     public CommandPlaceholdersModule(final DModuleManager moduleManager) {
@@ -47,6 +48,11 @@ public final class CommandPlaceholdersModule extends DModule {
         final String command = event.getMessage();
 
         if (!command.contains(SEARCH_STRING)) {
+            return;
+        }
+
+        if (this.sending.contains(command)) {
+            this.sending.remove(command);
             return;
         }
 
@@ -195,16 +201,23 @@ public final class CommandPlaceholdersModule extends DModule {
             return;
         }
 
-        networkHandler.sendChatCommand(command.trim());
+        final String trimmedCommand = command.trim();
+        this.sending.add(trimmedCommand);
+        networkHandler.sendChatCommand(trimmedCommand);
+    }
+
+    private void reset() {
+        this.commandQueue.clear();
+        this.sending.clear();
     }
 
     @Subscribe
     public void onConnectionEnd(final ConnectionEndEvent event) {
-        this.commandQueue.clear();
+        this.reset();
     }
 
     @Subscribe
     public void onConnectionStart(final ConnectionStartEvent event) {
-        this.commandQueue.clear();
+        this.reset();
     }
 }
