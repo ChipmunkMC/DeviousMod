@@ -1,5 +1,6 @@
 package me.allinkdev.deviousmod.module.impl;
 
+import com.github.allinkdev.deviousmod.api.event.Cancellable;
 import com.github.allinkdev.deviousmod.api.experiments.Experimental;
 import com.google.common.eventbus.Subscribe;
 import me.allinkdev.deviousmod.event.render.block.PreBlockEntityRenderEvent;
@@ -45,45 +46,39 @@ public class NoRenderModule extends DModule {
                 .addField("obfuscation", "No Obfuscation", "Prevents obfuscated glyph rendering.", true);
     }
 
+    private void cancelIfNecessary(final String settingName, final Cancellable cancellableEvent) {
+        if (this.settings.getSetting(settingName, Boolean.class).getValue()) {
+            cancellableEvent.cancel();
+        }
+    }
+
     @Subscribe
     private void onPreEntitiesRender(final EntityRenderPipelineEvent event) {
-        if (this.settings.getSetting("entities", Boolean.class).getValue()) {
-            event.setCancelled(true);
-        }
+        this.cancelIfNecessary("entities", event);
     }
 
     @Subscribe
     private void onPreParticleBatchRender(final PreParticleBatchRenderEvent event) {
-        if (this.settings.getSetting("particles", Boolean.class).getValue()) {
-            event.setCancelled(true);
-        }
+        this.cancelIfNecessary("particles", event);
     }
 
     @Subscribe
     public void onPreBlockEntityRender(final PreBlockEntityRenderEvent event) {
-        if (this.settings.getSetting("blocks", Boolean.class).getValue()) {
-            event.setCancelled(true);
-        }
+        this.cancelIfNecessary("blocks", event);
     }
 
     @Subscribe
     public void onPreUncullableBlockEntityRender(final PreUncullableBlockEntityRenderEvent event) {
-        if (this.settings.getSetting("uncullable", Boolean.class).getValue()) {
-            event.setCancelled(true);
-        }
+        this.cancelIfNecessary("uncullable", event);
     }
 
     @Subscribe
     public void onPreGlyphRender(final PreGlyphRenderEvent event) {
-        if (this.settings.getSetting("glyphs", Boolean.class).getValue()) {
-            event.setCancelled(true);
-        }
+        this.cancelIfNecessary("glyphs", event);
     }
 
     @Subscribe
     public void onGlyphRendererSelect(final ObfuscatedGlyphRendererSelectEvent event) {
-        if (this.settings.getSetting("obfuscation", Boolean.class).getValue()) {
-            event.setCancelled(true);
-        }
+        this.cancelIfNecessary("obfuscation", event);
     }
 }
