@@ -1,4 +1,4 @@
-package me.allinkdev.deviousmod.mixin.client.render;
+package me.allinkdev.deviousmod.mixin.client.render.glyph;
 
 import com.github.allinkdev.deviousmod.api.managers.EventManager;
 import com.google.common.eventbus.EventBus;

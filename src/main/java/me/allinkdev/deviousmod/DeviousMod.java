@@ -17,6 +17,7 @@ import me.allinkdev.deviousmod.keybind.DKeyBindManager;
 import me.allinkdev.deviousmod.keying.BotKeyProvider;
 import me.allinkdev.deviousmod.module.DModuleManager;
 import me.allinkdev.deviousmod.query.QueryManager;
+import me.allinkdev.deviousmod.render.RenderManager;
 import me.allinkdev.deviousmod.util.TextUtil;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.fabric.api.client.command.v2.ClientCommandRegistrationCallback;
@@ -46,6 +47,7 @@ public final class DeviousMod implements ClientModInitializer, DeviousModSilhoue
     private DModuleManager moduleManager;
     private DCommandManager commandManager;
     private AccountManager accountManager;
+    private RenderManager renderManager;
 
     public static DeviousMod getInstance() {
         return INSTANCE;
@@ -79,6 +81,10 @@ public final class DeviousMod implements ClientModInitializer, DeviousModSilhoue
         return this.accountManager;
     }
 
+    public RenderManager getRenderManager() {
+        return this.renderManager;
+    }
+
     @Override
     public void onInitializeClient() {
         INSTANCE = this;
@@ -93,6 +99,7 @@ public final class DeviousMod implements ClientModInitializer, DeviousModSilhoue
 
         entrypoints.forEach(e -> e.onPreLoad(this));
 
+        this.renderManager = new RenderManager(this);
         this.accountManager = new AccountManager(CLIENT, this);
         this.botKeyProvider = new BotKeyProvider();
         this.keyBindManager = new DKeyBindManager(this);
