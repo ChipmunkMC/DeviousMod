@@ -30,6 +30,11 @@ repositories {
         name = "Jitpack"
         url = "https://jitpack.io/"
     }
+
+    maven {
+        name = "Modrinth"
+        url = "https://api.modrinth.com/maven"
+    }
 }
 
 configurations {
@@ -68,6 +73,8 @@ dependencies {
     require("net.kyori:adventure-text-serializer-gson:${project.adventure_version_TEMP_FOR_MIGRATION}")
 
     modImplementation include("net.kyori:adventure-platform-fabric:${project.adventure_platform_version}")
+
+    modImplementation "maven.modrinth:sodium:mc${project.sodium_version}"
 }
 
 tasks {

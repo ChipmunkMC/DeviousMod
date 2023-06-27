@@ -41,6 +41,7 @@
     "client.entity.PlayerEntityMixin",
     "client.network.ClientConnectionMixin",
     "client.network.NetworkStateMixin",
+    "client.render.SodiumWorldRenderListener",
     "patches.block.DecoratedPotCrashFix",
     "patches.entity.AreaEffectCloudParticleLimiter",
     "patches.item.MapIconCountLimiter",
