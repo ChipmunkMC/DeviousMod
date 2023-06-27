@@ -7,6 +7,7 @@ import me.allinkdev.deviousmod.event.render.block.PreUncullableBlockEntityRender
 import me.allinkdev.deviousmod.event.render.entity.EntityRenderPipelineEvent;
 import me.allinkdev.deviousmod.event.render.glyph.PreGlyphRenderEvent;
 import me.allinkdev.deviousmod.event.render.particle.PreParticleBatchRenderEvent;
+import me.allinkdev.deviousmod.event.render.text.ObfuscatedGlyphRendererSelectEvent;
 import me.allinkdev.deviousmod.module.DModule;
 import me.allinkdev.deviousmod.module.DModuleManager;
 import me.allinkdev.deviousmod.module.DModuleSettings;
@@ -40,7 +41,8 @@ public class NoRenderModule extends DModule {
                 .addField("blocks", "No Block Entities", "Disables block entity rendering.", true)
                 .addField("glyphs", "No Glyphs", "Disables glyph rendering.", false)
                 .addField("uncullable", "No Uncullable Block Entities", "Disables rendering of uncullable block entities.", false)
-                .addField("laggy", "No Laggy Blocks", "Do not render known-laggy blocks.", true);
+                .addField("laggy", "No Laggy Blocks", "Do not render known-laggy blocks.", true)
+                .addField("obfuscation", "No Obfuscation", "Prevents obfuscated glyph rendering.", true);
     }
 
     @Subscribe
@@ -74,6 +76,13 @@ public class NoRenderModule extends DModule {
     @Subscribe
     public void onPreGlyphRender(final PreGlyphRenderEvent event) {
         if (this.settings.getSetting("glyphs", Boolean.class).getValue()) {
+            event.setCancelled(true);
+        }
+    }
+
+    @Subscribe
+    public void onGlyphRendererSelect(final ObfuscatedGlyphRendererSelectEvent event) {
+        if (this.settings.getSetting("obfuscation", Boolean.class).getValue()) {
             event.setCancelled(true);
         }
     }
