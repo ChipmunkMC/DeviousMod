@@ -3,29 +3,25 @@ package me.allinkdev.deviousmod.module.impl;
 import com.google.common.eventbus.Subscribe;
 import com.mojang.brigadier.suggestion.Suggestion;
 import com.mojang.brigadier.suggestion.Suggestions;
+import me.allinkdev.deviousmod.DeviousMod;
 import me.allinkdev.deviousmod.command.CommandCompletionManager;
-import me.allinkdev.deviousmod.event.network.connection.ConnectionEndEvent;
-import me.allinkdev.deviousmod.event.network.connection.ConnectionStartEvent;
 import me.allinkdev.deviousmod.event.self.chat.impl.SelfSendCommandEvent;
-import me.allinkdev.deviousmod.event.tick.impl.ClientTickEndEvent;
 import me.allinkdev.deviousmod.module.DModule;
 import me.allinkdev.deviousmod.module.DModuleManager;
-import me.allinkdev.deviousmod.util.TimeUtil;
-import net.minecraft.client.network.ClientPlayNetworkHandler;
+import me.allinkdev.deviousmod.queue.CommandQueueManager;
 
 import java.util.*;
 import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.LinkedBlockingQueue;
 import java.util.stream.Collectors;
 
 public final class CommandPlaceholdersModule extends DModule {
     private static final String SEARCH_STRING = "all_suggestions";
-    private final Queue<String> commandQueue = new LinkedBlockingQueue<>();
     private final List<String> sending = Collections.synchronizedList(new ArrayList<>());
-    private long tickCount = 0;
+    private final CommandQueueManager commandQueueManager;
 
     public CommandPlaceholdersModule(final DModuleManager moduleManager) {
         super(moduleManager);
+        this.commandQueueManager = DeviousMod.getInstance().getCommandQueueManager();
     }
 
     @Override
@@ -45,6 +41,10 @@ public final class CommandPlaceholdersModule extends DModule {
 
     @Subscribe
     public void onSendCommandEvent(final SelfSendCommandEvent event) {
+        if (event.wasQueued()) {
+            return;
+        }
+
         final String command = event.getMessage();
 
         if (!command.contains(SEARCH_STRING)) {
@@ -99,7 +99,7 @@ public final class CommandPlaceholdersModule extends DModule {
 
             for (final String completion : completions) {
                 final String completedCommand = partialCommand + " " + completion + " " + commandRemainder;
-                this.queueCommand(completedCommand);
+                this.commandQueueManager.addCommandToBack(completedCommand);
             }
         });
     }
@@ -153,7 +153,7 @@ public final class CommandPlaceholdersModule extends DModule {
                 .map(String::trim)
                 .toList();
 
-        this.queueCommands(commands);
+        this.commandQueueManager.addCommandsToBack(commands);
     }
 
     private Set<String> getSuggestionContent(final Suggestions suggestions) {
@@ -161,63 +161,5 @@ public final class CommandPlaceholdersModule extends DModule {
                 .stream()
                 .map(Suggestion::getText)
                 .collect(Collectors.toUnmodifiableSet());
-    }
-
-    private void queueCommand(final String command) {
-        final ClientPlayNetworkHandler networkHandler = client.getNetworkHandler();
-
-        if (networkHandler == null) {
-            return;
-        }
-
-        this.commandQueue.add(command);
-    }
-
-    private void queueCommands(final List<String> command) {
-        this.commandQueue.addAll(command);
-    }
-
-    @Subscribe
-    public void onTick(final ClientTickEndEvent event) {
-        tickCount++;
-
-        final ClientPlayNetworkHandler networkHandler = client.getNetworkHandler();
-
-        if (networkHandler == null) {
-            return;
-        }
-
-        final long commandDelay = 90L;
-        final long commandDelayInTicks = TimeUtil.getInTicks(commandDelay);
-
-        if (tickCount % commandDelayInTicks != 0) {
-            return;
-        }
-
-
-        final String command = this.commandQueue.poll();
-
-        if (command == null) {
-            return;
-        }
-
-        final String trimmedCommand = command.trim();
-        this.sending.add(trimmedCommand);
-        networkHandler.sendChatCommand(trimmedCommand);
-    }
-
-    private void reset() {
-        this.commandQueue.clear();
-        this.sending.clear();
-    }
-
-    @Subscribe
-    public void onConnectionEnd(final ConnectionEndEvent event) {
-        this.reset();
-    }
-
-    @Subscribe
-    public void onConnectionStart(final ConnectionStartEvent event) {
-        this.reset();
     }
 }
