@@ -11,16 +11,17 @@ import com.google.common.eventbus.EventBus;
 import me.allinkdev.deviousmod.account.AccountManager;
 import me.allinkdev.deviousmod.command.DCommandManager;
 import me.allinkdev.deviousmod.event.DEventManager;
-import me.allinkdev.deviousmod.event.tick.impl.ClientTickEndEvent;
-import me.allinkdev.deviousmod.event.tick.impl.ClientTickStartEvent;
-import me.allinkdev.deviousmod.event.tick.world.impl.WorldTickEndEvent;
-import me.allinkdev.deviousmod.event.tick.world.impl.WorldTickStartEvent;
+import me.allinkdev.deviousmod.event.time.tick.impl.ClientTickEndEvent;
+import me.allinkdev.deviousmod.event.time.tick.impl.ClientTickStartEvent;
+import me.allinkdev.deviousmod.event.time.tick.world.impl.WorldTickEndEvent;
+import me.allinkdev.deviousmod.event.time.tick.world.impl.WorldTickStartEvent;
 import me.allinkdev.deviousmod.gui.DImGuiHolder;
 import me.allinkdev.deviousmod.gui.ImGuiHolderProxy;
 import me.allinkdev.deviousmod.keybind.DKeyBindManager;
 import me.allinkdev.deviousmod.keying.BotKeyProvider;
 import me.allinkdev.deviousmod.module.DModuleManager;
 import me.allinkdev.deviousmod.query.QueryManager;
+import me.allinkdev.deviousmod.command.queue.CommandQueueManager;
 import me.allinkdev.deviousmod.render.RenderManager;
 import me.allinkdev.deviousmod.util.EventUtil;
 import me.allinkdev.deviousmod.util.TextUtil;
@@ -53,6 +54,7 @@ public final class DeviousMod implements ClientModInitializer, DeviousModSilhoue
     private DCommandManager commandManager;
     private AccountManager accountManager;
     private RenderManager renderManager;
+    private CommandQueueManager commandQueueManager;
     private ImGuiHolderProxy imGuiHolder;
 
     public static DeviousMod getInstance() {
@@ -96,6 +98,10 @@ public final class DeviousMod implements ClientModInitializer, DeviousModSilhoue
         return this.renderManager;
     }
 
+    public CommandQueueManager getCommandQueueManager() {
+        return this.commandQueueManager;
+    }
+
     public void createImGuiHolder(final long handle) {
         this.imGuiHolder.setActualHolder(EventUtil.postEvent(new ImGuiHolderOverrideEvent()).getImGuiHolder().orElseGet(() -> new DImGuiHolder(handle)));
     }
@@ -115,6 +121,7 @@ public final class DeviousMod implements ClientModInitializer, DeviousModSilhoue
 
         entrypoints.forEach(e -> e.onPreLoad(this));
 
+        this.commandQueueManager = new CommandQueueManager();
         this.renderManager = new RenderManager();
         this.accountManager = new AccountManager(CLIENT, this);
         this.botKeyProvider = new BotKeyProvider();

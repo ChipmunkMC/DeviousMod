@@ -1,4 +1,4 @@
-package me.allinkdev.deviousmod.event.tick;
+package me.allinkdev.deviousmod.event.time.tick;
 
 import com.github.allinkdev.deviousmod.api.event.Event;
 import net.minecraft.client.MinecraftClient;
