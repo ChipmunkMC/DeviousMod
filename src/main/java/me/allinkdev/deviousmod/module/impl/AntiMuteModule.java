@@ -98,6 +98,9 @@ public final class AntiMuteModule extends CommandDependentModule {
                         }
                     }
                     case "unmuted" -> this.isMuted = false;
+                    default -> {
+                        // Do nothing
+                    }
                 }
             }
         }
