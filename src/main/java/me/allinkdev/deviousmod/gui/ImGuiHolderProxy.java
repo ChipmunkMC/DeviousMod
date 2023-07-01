@@ -17,6 +17,7 @@ public class ImGuiHolderProxy implements ImGuiHolder {
 
         this.actualHolder = actualHolder;
         this.layerQueue.forEach(this.actualHolder::addLayer);
+        this.layerQueue.clear();
     }
 
     @Override
