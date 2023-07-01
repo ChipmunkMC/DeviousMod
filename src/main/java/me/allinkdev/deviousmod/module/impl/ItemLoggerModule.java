@@ -54,11 +54,6 @@ public final class ItemLoggerModule extends DModule {
         if (Files.isDirectory(path)) {
             scanDirectoryForLocksAndRemove(count, path);
         }
-
-        if (path.endsWith(".lock")) {
-            Files.deleteIfExists(path);
-            count.incrementAndGet();
-        }
     }
 
 
@@ -204,34 +199,8 @@ public final class ItemLoggerModule extends DModule {
             // We want to implement locks as we're using more than one thread. It would be bad if we attempted to write to the same file in parallel!
 
             final String fileName = getFileName();
-            final String lock = fileName + ".lock";
 
             final Path filePath = path.resolve(fileName);
-            final Path lockPath = path.resolve(lock);
-
-            if (Files.exists(lockPath)) {
-                DeviousMod.LOGGER.warn("Waiting for lock to be lifted on {}!", filePath);
-
-                while (Files.exists(lockPath)) {
-                    try {
-                        Thread.sleep(100L);
-                    } catch (InterruptedException e) {
-                        DeviousMod.LOGGER.warn("Interrupted while waiting for lock to be lifted!");
-                        this.interrupt();
-                        return;
-                    }
-                }
-
-                DeviousMod.LOGGER.info("Lock lifted on {}!", filePath);
-            }
-
-            try {
-                Files.createFile(lockPath);
-            } catch (IOException e) {
-                DeviousMod.LOGGER.error("Failed to create lock file!", e);
-                return;
-            }
-
             final NbtCompound compound = itemStack.getNbt();
 
             if (compound == null) {
@@ -246,13 +215,6 @@ public final class ItemLoggerModule extends DModule {
             } catch (IOException e) {
                 DeviousMod.LOGGER.warn("Failed to write to log file!", e);
                 return;
-            }
-
-            // Release the lock.
-            try {
-                Files.deleteIfExists(lockPath);
-            } catch (IOException e) {
-                DeviousMod.LOGGER.warn("Failed to release the lock!", e);
             }
         }
     }
