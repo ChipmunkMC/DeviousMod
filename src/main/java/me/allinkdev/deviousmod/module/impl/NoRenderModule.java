@@ -58,7 +58,6 @@ public class NoRenderModule extends DModule {
                 .addField("glint", "No Glint Rendering", "Disables rendering of the glint layers.", false)
                 .addField("translucent", "No Translucent Block Rendering", "Disables rendering of the translucent layer.", false)
                 .addField("solids", "No Solid Block Rendering", "Disables rendering of the solid block layer.", false)
-                .addField("leash", "No Leash Rendering", "Disables rendering of leashes.", false)
                 .addField("beacon_beam", "No Beacon Beam Rendering", "Disables rendering of the beacon beam.", true)
                 .addField("items", "No Items", "Disables rendering of item entities.", false);
 
@@ -174,8 +173,6 @@ public class NoRenderModule extends DModule {
                 || renderLayer.equals(RenderLayer.getArmorGlint()) || renderLayer.equals(RenderLayer.getDirectGlint())
                 || renderLayer.equals(RenderLayer.getArmorEntityGlint()) || renderLayer.equals(RenderLayer.getDirectEntityGlint())) {
             this.cancelIfNecessary("glint", event);
-        } else if (renderLayer.equals(RenderLayer.getLeash())) {
-            this.cancelIfNecessary("leash", event);
         }
     }
 }
