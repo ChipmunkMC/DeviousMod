@@ -1,5 +1,6 @@
 package me.allinkdev.deviousmod.gui;
 
+import me.allinkdev.deviousmod.DeviousMod;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.screen.ScreenTexts;
@@ -12,7 +13,7 @@ public class ImGuiScreen extends Screen {
         super(text);
         this.imGuiLayer = imGuiLayer;
         this.imGuiLayer.layerInit();
-        ImGuiHolder.addLayer(this.imGuiLayer);
+        DeviousMod.getInstance().getImGuiHolder().addLayer(this.imGuiLayer);
     }
 
     public ImGuiScreen(final AbstractImGuiLayer imGuiLayer) {
@@ -30,6 +31,6 @@ public class ImGuiScreen extends Screen {
 
     @Override
     public void removed() {
-        ImGuiHolder.removeLayer(this.imGuiLayer);
+        DeviousMod.getInstance().getImGuiHolder().removeLayer(this.imGuiLayer);
     }
 }

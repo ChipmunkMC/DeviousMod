@@ -1,5 +1,6 @@
 package com.github.allinkdev.deviousmod.api;
 
+import com.github.allinkdev.deviousmod.api.gui.ImGuiHolder;
 import com.github.allinkdev.deviousmod.api.managers.CommandManager;
 import com.github.allinkdev.deviousmod.api.managers.EventManager;
 import com.github.allinkdev.deviousmod.api.managers.KeyBindManager;
@@ -45,6 +46,11 @@ public interface DeviousModSilhouette<T, U, V> {
      * @return the event manager associated with this {@link DeviousModSilhouette}
      */
     EventManager<V> getEventManager();
+
+    /**
+     * @return the im gui holder associated with this {@link DeviousModSilhouette}
+     */
+    ImGuiHolder getImGuiHolder();
 
     /**
      * Class that stores the current instance of the {@link DeviousModSilhouette} implementation. This is for internal usage only.

@@ -1,6 +1,8 @@
 package me.allinkdev.deviousmod;
 
 import com.github.allinkdev.deviousmod.api.DeviousModSilhouette;
+import com.github.allinkdev.deviousmod.api.event.impl.imgui.ImGuiHolderOverrideEvent;
+import com.github.allinkdev.deviousmod.api.gui.ImGuiHolder;
 import com.github.allinkdev.deviousmod.api.load.DeviousModEntrypoint;
 import com.github.allinkdev.deviousmod.api.managers.CommandManager;
 import com.github.allinkdev.deviousmod.api.managers.EventManager;
@@ -13,11 +15,14 @@ import me.allinkdev.deviousmod.event.tick.impl.ClientTickEndEvent;
 import me.allinkdev.deviousmod.event.tick.impl.ClientTickStartEvent;
 import me.allinkdev.deviousmod.event.tick.world.impl.WorldTickEndEvent;
 import me.allinkdev.deviousmod.event.tick.world.impl.WorldTickStartEvent;
+import me.allinkdev.deviousmod.gui.DImGuiHolder;
+import me.allinkdev.deviousmod.gui.ImGuiHolderProxy;
 import me.allinkdev.deviousmod.keybind.DKeyBindManager;
 import me.allinkdev.deviousmod.keying.BotKeyProvider;
 import me.allinkdev.deviousmod.module.DModuleManager;
 import me.allinkdev.deviousmod.query.QueryManager;
 import me.allinkdev.deviousmod.render.RenderManager;
+import me.allinkdev.deviousmod.util.EventUtil;
 import me.allinkdev.deviousmod.util.TextUtil;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.fabric.api.client.command.v2.ClientCommandRegistrationCallback;
@@ -48,6 +53,7 @@ public final class DeviousMod implements ClientModInitializer, DeviousModSilhoue
     private DCommandManager commandManager;
     private AccountManager accountManager;
     private RenderManager renderManager;
+    private ImGuiHolderProxy imGuiHolder;
 
     public static DeviousMod getInstance() {
         return INSTANCE;
@@ -77,12 +83,21 @@ public final class DeviousMod implements ClientModInitializer, DeviousModSilhoue
         return this.eventManager;
     }
 
+    @Override
+    public ImGuiHolder getImGuiHolder() {
+        return this.imGuiHolder;
+    }
+
     public AccountManager getAccountManager() {
         return this.accountManager;
     }
 
     public RenderManager getRenderManager() {
         return this.renderManager;
+    }
+
+    public void createImGuiHolder(final long handle) {
+        this.imGuiHolder.setActualHolder(EventUtil.postEvent(new ImGuiHolderOverrideEvent()).getImGuiHolder().orElseGet(() -> new DImGuiHolder(handle)));
     }
 
     @Override
@@ -96,6 +111,7 @@ public final class DeviousMod implements ClientModInitializer, DeviousModSilhoue
                 .toList();
 
         this.eventManager = new DEventManager();
+        this.imGuiHolder = new ImGuiHolderProxy();
 
         entrypoints.forEach(e -> e.onPreLoad(this));
 

@@ -1,9 +1,9 @@
 package me.allinkdev.deviousmod.module.impl;
 
+import com.github.allinkdev.deviousmod.api.gui.ImGuiLayer;
 import imgui.ImGui;
 import imgui.flag.ImGuiWindowFlags;
-import me.allinkdev.deviousmod.gui.ImGuiHolder;
-import me.allinkdev.deviousmod.gui.ImGuiLayer;
+import me.allinkdev.deviousmod.DeviousMod;
 import me.allinkdev.deviousmod.module.DModule;
 import me.allinkdev.deviousmod.module.DModuleManager;
 import net.minecraft.SharedConstants;
@@ -33,12 +33,12 @@ public final class LogosModule extends DModule implements ImGuiLayer {
 
     @Override
     public void onEnable() {
-        ImGuiHolder.addLayer(this);
+        DeviousMod.getInstance().getImGuiHolder().addLayer(this);
     }
 
     @Override
     public void onDisable() {
-        ImGuiHolder.removeLayer(this);
+        DeviousMod.getInstance().getImGuiHolder().removeLayer(this);
     }
 
     @Override

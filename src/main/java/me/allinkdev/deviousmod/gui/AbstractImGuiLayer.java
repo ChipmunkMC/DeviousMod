@@ -1,5 +1,6 @@
 package me.allinkdev.deviousmod.gui;
 
+import com.github.allinkdev.deviousmod.api.gui.ImGuiLayer;
 import me.allinkdev.deviousmod.DeviousMod;
 
 import java.util.ArrayList;
