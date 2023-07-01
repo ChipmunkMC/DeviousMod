@@ -103,6 +103,8 @@ public final class AntiMuteModule extends CommandDependentModule {
                     }
                 }
             }
+        } else if (args.length == 5 && args[0].equals("Your") && args[1].equals("voice") && args[2].equals("has") && args[3].equals("been") && args[4].equals("silenced!")) {
+            this.isMuted = true;
         }
 
         if (!this.isMuted) {
