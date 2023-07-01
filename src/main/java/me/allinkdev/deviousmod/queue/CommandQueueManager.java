@@ -4,6 +4,7 @@ import com.google.common.eventbus.Subscribe;
 import me.allinkdev.deviousmod.DeviousMod;
 import me.allinkdev.deviousmod.event.network.connection.ConnectionEndEvent;
 import me.allinkdev.deviousmod.event.network.connection.ConnectionStartEvent;
+import me.allinkdev.deviousmod.event.self.chat.impl.SelfSendCommandEvent;
 import me.allinkdev.deviousmod.event.tick.impl.ClientTickEndEvent;
 import me.allinkdev.deviousmod.util.EventUtil;
 import net.minecraft.client.MinecraftClient;
@@ -19,7 +20,7 @@ import java.util.concurrent.ConcurrentSkipListSet;
 public final class CommandQueueManager {
     private final Deque<String> commandDeque = new ConcurrentLinkedDeque<>();
     private final Set<String> sending = new ConcurrentSkipListSet<>();
-    private long currentTick = 0;
+    private long lastExecution = 0;
 
     public CommandQueueManager() {
         EventUtil.registerListener(this);
@@ -27,7 +28,7 @@ public final class CommandQueueManager {
 
     public void reset() {
         this.commandDeque.clear();
-        this.currentTick = 0;
+        this.lastExecution = 0;
     }
 
     @Subscribe
@@ -61,10 +62,20 @@ public final class CommandQueueManager {
     }
 
     @Subscribe
-    private void onTickEnd(final ClientTickEndEvent event) {
-        this.currentTick++;
+    private void onCommandSend(final SelfSendCommandEvent event) {
+        if (event.wasQueued()) {
+            return;
+        }
 
-        if (this.currentTick % 4 != 0) {
+        this.lastExecution = System.currentTimeMillis();
+    }
+
+    @Subscribe
+    private void onTickEnd(final ClientTickEndEvent event) {
+        final long now = System.currentTimeMillis();
+        final long diff = now - this.lastExecution;
+
+        if (diff < 200) {
             return;
         }
 
@@ -84,5 +95,6 @@ public final class CommandQueueManager {
         final String normalizedCommand = StringUtils.normalizeSpace(command);
         this.sending.add(normalizedCommand);
         networkHandler.sendChatCommand(normalizedCommand);
+        this.lastExecution = now;
     }
 }
