@@ -94,13 +94,7 @@ public final class DImGuiHolder implements ImGuiHolder {
     }
 
     public void process(final ImGuiLayer layer) {
-        final List<ImGuiLayer> children = new ArrayList<>();
-
-        if (layer instanceof final AbstractImGuiLayer abstractImGuiLayer) {
-            final List<ImGuiLayer> abstractChildren = abstractImGuiLayer.getChildren();
-            children.addAll(abstractChildren);
-        }
-
+        final List<ImGuiLayer> children = layer.getChildren();
         layer.preProcess();
         layer.process();
         layer.postProcess();

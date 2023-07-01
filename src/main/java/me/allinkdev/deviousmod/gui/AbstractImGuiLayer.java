@@ -19,10 +19,12 @@ public abstract class AbstractImGuiLayer implements ImGuiLayer {
         this.deviousMod = deviousMod;
     }
 
-    protected void addChild(final ImGuiLayer imGuiLayer) {
+    @Override
+    public void addChild(final ImGuiLayer imGuiLayer) {
         this.children.add(imGuiLayer);
     }
 
+    @Override
     public List<ImGuiLayer> getChildren() {
         return Collections.unmodifiableList(children);
     }
