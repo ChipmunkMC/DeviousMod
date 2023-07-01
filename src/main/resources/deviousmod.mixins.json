@@ -31,6 +31,7 @@
     "client.screen.ScreenOverrider",
     "client.screen.TooltipTransformer",
     "client.texture.TextureManagerListener",
+    "client.window.WindowFocusListener",
     "client.world.BlockUpdateListener",
     "client.world.chunk.ChunkSetListener",
     "imgui.MinecraftClientMixin",
