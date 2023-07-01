@@ -1,10 +1,10 @@
 package me.allinkdev.deviousmod.module.impl;
 
-import com.google.common.eventbus.Subscribe;
 import com.github.allinkdev.deviousmod.api.experiments.Experimental;
+import com.google.common.eventbus.Subscribe;
 import me.allinkdev.deviousmod.event.network.packet.impl.PacketC2SEvent;
 import me.allinkdev.deviousmod.event.network.packet.impl.PacketS2CEvent;
-import me.allinkdev.deviousmod.event.tick.impl.ClientTickEndEvent;
+import me.allinkdev.deviousmod.event.time.tick.impl.ClientTickEndEvent;
 import me.allinkdev.deviousmod.module.DModule;
 import me.allinkdev.deviousmod.module.DModuleManager;
 import net.minecraft.client.network.ClientPlayNetworkHandler;

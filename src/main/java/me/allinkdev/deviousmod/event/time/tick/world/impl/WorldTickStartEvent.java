@@ -1,6 +1,6 @@
-package me.allinkdev.deviousmod.event.tick.world.impl;
+package me.allinkdev.deviousmod.event.time.tick.world.impl;
 
-import me.allinkdev.deviousmod.event.tick.world.GenericWorldTickEvent;
+import me.allinkdev.deviousmod.event.time.tick.world.GenericWorldTickEvent;
 import me.allinkdev.deviousmod.util.EventUtil;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.network.ClientPlayerEntity;

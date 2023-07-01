@@ -5,7 +5,7 @@ import me.allinkdev.deviousmod.DeviousMod;
 import me.allinkdev.deviousmod.event.network.connection.ConnectionEndEvent;
 import me.allinkdev.deviousmod.event.network.connection.ConnectionStartEvent;
 import me.allinkdev.deviousmod.event.self.chat.impl.SelfSendCommandEvent;
-import me.allinkdev.deviousmod.event.tick.impl.ClientTickEndEvent;
+import me.allinkdev.deviousmod.event.time.tick.impl.ClientTickEndEvent;
 import me.allinkdev.deviousmod.util.EventUtil;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.network.ClientPlayNetworkHandler;
@@ -59,6 +59,10 @@ public final class CommandQueueManager {
 
     public boolean isQueuedAndIfSoRemove(final String command) {
         return this.sending.remove(command);
+    }
+
+    public void purgeInstancesOf(final String command) {
+        this.commandDeque.removeIf(c -> c.equals(command));
     }
 
     @Subscribe

@@ -9,7 +9,7 @@ import imgui.flag.ImGuiCond;
 import imgui.flag.ImGuiTreeNodeFlags;
 import it.unimi.dsi.fastutil.objects.ObjectArraySet;
 import me.allinkdev.deviousmod.DeviousMod;
-import me.allinkdev.deviousmod.event.tick.impl.ClientTickEndEvent;
+import me.allinkdev.deviousmod.event.time.tick.impl.ClientTickEndEvent;
 import me.allinkdev.deviousmod.gui.AbstractImGuiLayer;
 import me.allinkdev.deviousmod.gui.widget.SettingsWidget;
 import me.allinkdev.deviousmod.module.DModuleManager;

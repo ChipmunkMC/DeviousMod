@@ -6,7 +6,7 @@ import com.github.allinkdev.reflector.Reflector;
 import com.google.common.eventbus.Subscribe;
 import it.unimi.dsi.fastutil.Pair;
 import me.allinkdev.deviousmod.DeviousMod;
-import me.allinkdev.deviousmod.event.tick.impl.ClientTickEndEvent;
+import me.allinkdev.deviousmod.event.time.tick.impl.ClientTickEndEvent;
 import me.allinkdev.deviousmod.util.EventUtil;
 import net.fabricmc.fabric.api.client.keybinding.v1.KeyBindingHelper;
 import net.minecraft.client.option.KeyBinding;

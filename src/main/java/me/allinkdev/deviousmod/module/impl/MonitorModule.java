@@ -10,7 +10,7 @@ import me.allinkdev.deviousmod.DeviousMod;
 import me.allinkdev.deviousmod.event.network.connection.ConnectionEndEvent;
 import me.allinkdev.deviousmod.event.network.connection.ConnectionStartEvent;
 import me.allinkdev.deviousmod.event.network.packet.impl.PacketS2CEvent;
-import me.allinkdev.deviousmod.event.tick.world.impl.WorldTickEndEvent;
+import me.allinkdev.deviousmod.event.time.tick.world.impl.WorldTickEndEvent;
 import me.allinkdev.deviousmod.module.DModule;
 import me.allinkdev.deviousmod.module.DModuleManager;
 import me.allinkdev.deviousmod.util.TimeUtil;
@@ -23,7 +23,10 @@ import net.minecraft.network.packet.Packet;
 import net.minecraft.network.packet.s2c.play.PlayerListS2CPacket;
 import net.minecraft.network.packet.s2c.play.PlayerRemoveS2CPacket;
 import net.minecraft.network.packet.s2c.play.WorldTimeUpdateS2CPacket;
-import net.minecraft.text.*;
+import net.minecraft.text.MutableText;
+import net.minecraft.text.Style;
+import net.minecraft.text.Text;
+import net.minecraft.text.TranslatableTextContent;
 import net.minecraft.util.Formatting;
 import net.minecraft.world.GameMode;
 import org.jetbrains.annotations.NotNull;
@@ -230,6 +233,22 @@ public final class MonitorModule extends DModule {
             this.profile = profile;
         }
 
+        static ListEntryStub from(final @NotNull PlayerListS2CPacket.Entry entry) {
+            return new ListEntryStub(
+                    entry.displayName(),
+                    entry.gameMode(),
+                    entry.profile()
+            );
+        }
+
+        static ListEntryStub from(final @NotNull PlayerListEntry entry) {
+            return new ListEntryStub(
+                    entry.getDisplayName(),
+                    entry.getGameMode(),
+                    entry.getProfile()
+            );
+        }
+
         public String getIdentifier() {
             return Objects.requireNonNullElseGet(this.profile.getName(), () -> this.profile.getId().toString());
         }
@@ -246,22 +265,6 @@ public final class MonitorModule extends DModule {
             }
 
             this.profile = replacementProfile;
-        }
-
-        static ListEntryStub from(final @NotNull PlayerListS2CPacket.Entry entry) {
-            return new ListEntryStub(
-                    entry.displayName(),
-                    entry.gameMode(),
-                    entry.profile()
-            );
-        }
-
-        static ListEntryStub from(final @NotNull PlayerListEntry entry) {
-            return new ListEntryStub(
-                    entry.getDisplayName(),
-                    entry.getGameMode(),
-                    entry.getProfile()
-            );
         }
 
         public @Nullable GameMode setGameMode(final @NotNull GameMode newGameMode) {
