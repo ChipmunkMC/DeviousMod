@@ -43,6 +43,18 @@ public final class AntiMuteModule extends CommandDependentModule {
         return this.client.player == null ? "" : "essentials:mute " + this.client.player.getUuidAsString() + " 0s";
     }
 
+    @Override
+    public void onEnable() {
+        super.onEnable();
+        this.isMuted = false;
+    }
+
+    @Override
+    public void onDisable() {
+        super.onDisable();
+        this.isMuted = false;
+    }
+
     @Subscribe
     private void onConnectionStart(final ConnectionStartEvent event) {
         this.isMuted = false;

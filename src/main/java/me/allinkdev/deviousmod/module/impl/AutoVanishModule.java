@@ -40,6 +40,18 @@ public final class AutoVanishModule extends CommandDependentModule {
         DeviousMod.getInstance().getCommandQueueManager().addCommandToFront("v on");
     }
 
+    @Override
+    public void onEnable() {
+        super.onEnable();
+        this.vanishEnabled = false;
+    }
+
+    @Override
+    public void onDisable() {
+        super.onDisable();
+        this.vanishEnabled = false;
+    }
+
     @Subscribe
     private void onConnectionStart(final ConnectionStartEvent event) {
         this.vanishEnabled = false;

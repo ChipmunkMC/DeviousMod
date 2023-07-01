@@ -33,9 +33,14 @@ public final class AutoCommandSpyModule extends CommandDependentModule {
     }
 
     @Override
+    public void onDisable() {
+        super.onDisable();
+        this.commandSpyEnabled = false;
+    }
+
+    @Override
     public void onEnable() {
         super.onEnable();
-
         this.commandSpyEnabled = false;
     }
 

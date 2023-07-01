@@ -56,6 +56,18 @@ public final class AntiIcuModule extends CommandDependentModule {
         this.commandBlocks.clear();
     }
 
+    @Override
+    public void onDisable() {
+        super.onDisable();
+        this.reset();
+    }
+
+    @Override
+    public void onEnable() {
+        super.onEnable();
+        this.reset();
+    }
+
     @Subscribe
     private void onConnectionEnd(final ConnectionEndEvent event) {
         this.reset();
