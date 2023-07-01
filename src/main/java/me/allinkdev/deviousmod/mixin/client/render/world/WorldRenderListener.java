@@ -1,5 +1,7 @@
 package me.allinkdev.deviousmod.mixin.client.render.world;
 
+import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
+import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import com.mojang.blaze3d.systems.RenderSystem;
 import me.allinkdev.deviousmod.DeviousMod;
 import me.allinkdev.deviousmod.event.render.block.PreBlockEntityRenderEvent;
@@ -11,7 +13,6 @@ import me.allinkdev.deviousmod.event.render.world.PreSkyRenderEvent;
 import me.allinkdev.deviousmod.event.render.world.PreStarRenderEvent;
 import me.allinkdev.deviousmod.event.render.world.PreWeatherRenderEvent;
 import me.allinkdev.deviousmod.mixin.accessor.ResourceTextureAccessor;
-import me.allinkdev.deviousmod.mixin.accessor.WorldRendererAccessor;
 import me.allinkdev.deviousmod.util.EventUtil;
 import me.allinkdev.deviousmod.util.IterUtil;
 import net.minecraft.block.entity.BlockEntity;
@@ -25,6 +26,7 @@ import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.client.world.ClientWorld;
 import net.minecraft.entity.Entity;
 import net.minecraft.util.Identifier;
+import net.minecraft.util.math.BlockPos;
 import org.jetbrains.annotations.Nullable;
 import org.joml.Matrix4f;
 import org.objectweb.asm.Opcodes;
@@ -56,6 +58,9 @@ public abstract class WorldRenderListener {
     @Shadow
     protected abstract void renderStars();
 
+    @Shadow
+    public abstract boolean isRenderingReady(BlockPos pos);
+
     @Redirect(method = "render", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/world/ClientWorld;getEntities()Ljava/lang/Iterable;"))
     private Iterable<Entity> onRender(final ClientWorld instance) {
         final Iterable<Entity> entityIterable = instance.getEntities();
@@ -80,46 +85,46 @@ public abstract class WorldRenderListener {
         instance.render(blockEntity, tickDelta, matrices, vertexConsumers);
     }
 
-    @Redirect(method = "render", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/render/WorldRenderer;renderLayer(Lnet/minecraft/client/render/RenderLayer;Lnet/minecraft/client/util/math/MatrixStack;DDDLorg/joml/Matrix4f;)V"))
+    @WrapOperation(method = "render", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/render/WorldRenderer;renderLayer(Lnet/minecraft/client/render/RenderLayer;Lnet/minecraft/client/util/math/MatrixStack;DDDLorg/joml/Matrix4f;)V"))
     private void onRenderLayer(final WorldRenderer instance, final RenderLayer renderLayer, final MatrixStack matrices,
                                final double cameraX, final double cameraY, final double cameraZ,
-                               final Matrix4f positionMatrix) {
+                               final Matrix4f positionMatrix, final Operation<Void> operation) {
         if (EventUtil.postCancellable(new RenderLayerEvent(renderLayer))) {
             return;
         }
 
-        ((WorldRendererAccessor) instance).invokeRenderLayer(renderLayer, matrices, cameraX, cameraY, cameraZ, positionMatrix);
+        operation.call(instance, renderLayer, matrices, cameraX, cameraY, cameraZ, positionMatrix);
     }
 
-    @Redirect(method = "render", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/render/WorldRenderer;renderWeather(Lnet/minecraft/client/render/LightmapTextureManager;FDDD)V"))
+    @WrapOperation(method = "render", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/render/WorldRenderer;renderWeather(Lnet/minecraft/client/render/LightmapTextureManager;FDDD)V"))
     private void onRenderWeather(final WorldRenderer instance, final LightmapTextureManager manager, final float tickDelta,
-                                 final double cameraX, final double cameraY, final double cameraZ) {
+                                 final double cameraX, final double cameraY, final double cameraZ, final Operation<Void> operation) {
         if (EventUtil.postCancellable(new PreWeatherRenderEvent())) {
             return;
         }
 
-        ((WorldRendererAccessor) instance).invokeRenderWeather(manager, tickDelta, cameraX, cameraY, cameraZ);
+        operation.call(instance, manager, tickDelta, cameraX, cameraY, cameraZ);
     }
 
-    @Redirect(method = "render", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/render/WorldRenderer;renderSky(Lnet/minecraft/client/util/math/MatrixStack;Lorg/joml/Matrix4f;FLnet/minecraft/client/render/Camera;ZLjava/lang/Runnable;)V"))
+    @WrapOperation(method = "render", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/render/WorldRenderer;renderSky(Lnet/minecraft/client/util/math/MatrixStack;Lorg/joml/Matrix4f;FLnet/minecraft/client/render/Camera;ZLjava/lang/Runnable;)V"))
     private void onRenderSky(final WorldRenderer instance, final MatrixStack matrices, final Matrix4f projectionMatrix, final float tickDelta,
-                             final Camera camera, final boolean bl, final Runnable runnable) {
+                             final Camera camera, final boolean bl, final Runnable runnable, final Operation<Void> operation) {
         if (EventUtil.postCancellable(new PreSkyRenderEvent())) {
             return;
         }
 
-        instance.renderSky(matrices, projectionMatrix, tickDelta, camera, bl, runnable);
+        operation.call(instance, matrices, projectionMatrix, tickDelta, camera, bl, runnable);
     }
 
-    @Redirect(method = "renderSky(Lnet/minecraft/client/util/math/MatrixStack;Lorg/joml/Matrix4f;FLnet/minecraft/client/render/Camera;ZLjava/lang/Runnable;)V", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/render/BufferRenderer;drawWithGlobalProgram(Lnet/minecraft/client/render/BufferBuilder$BuiltBuffer;)V"))
-    private void onDrawWithGlobalProgram(final BufferBuilder.BuiltBuffer buffer) {
+    @WrapOperation(method = "renderSky(Lnet/minecraft/client/util/math/MatrixStack;Lorg/joml/Matrix4f;FLnet/minecraft/client/render/Camera;ZLjava/lang/Runnable;)V", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/render/BufferRenderer;drawWithGlobalProgram(Lnet/minecraft/client/render/BufferBuilder$BuiltBuffer;)V"))
+    private void onDrawWithGlobalProgram(final BufferBuilder.BuiltBuffer buffer, final Operation<Void> operation) {
         final int currentTexture = RenderSystem.getShaderTexture(0);
         final DeviousMod deviousMod = DeviousMod.getInstance();
         final Optional<AbstractTexture> abstractTextureOptional = deviousMod.getRenderManager().searchForTexture(currentTexture);
 
         if (abstractTextureOptional.isEmpty()) {
             //DeviousMod.LOGGER.info("Could not find abstract texture for {}", currentTexture);
-            BufferRenderer.drawWithGlobalProgram(buffer);
+            operation.call(buffer);
             return;
         }
 
@@ -127,14 +132,14 @@ public abstract class WorldRenderListener {
 
         if (!(abstractTexture instanceof final ResourceTexture resourceTexture)) {
             //DeviousMod.LOGGER.warn("Abstract texture for {} was not an instance of resource texture, passing through. Class is {}", currentTexture, abstractTexture.getClass().getName());
-            BufferRenderer.drawWithGlobalProgram(buffer);
+            operation.call(buffer);
             return;
         }
 
         final Identifier identifier = ((ResourceTextureAccessor) resourceTexture).getLocation();
 
         if (!identifier.equals(SUN) && !identifier.equals(MOON_PHASES)) {
-            BufferRenderer.drawWithGlobalProgram(buffer);
+            operation.call(buffer);
             return;
         }
 
@@ -143,19 +148,19 @@ public abstract class WorldRenderListener {
             return;
         }
 
-        BufferRenderer.drawWithGlobalProgram(buffer);
+        operation.call(buffer);
     }
 
     // TODO: De-duplicate event broadcasts
-    @Redirect(method = "renderSky(Lnet/minecraft/client/util/math/MatrixStack;Lorg/joml/Matrix4f;FLnet/minecraft/client/render/Camera;ZLjava/lang/Runnable;)V", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gl/VertexBuffer;bind()V"))
-    private void onRenderSky$starBuffers$bind(final VertexBuffer instance) {
+    @WrapOperation(method = "renderSky(Lnet/minecraft/client/util/math/MatrixStack;Lorg/joml/Matrix4f;FLnet/minecraft/client/render/Camera;ZLjava/lang/Runnable;)V", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gl/VertexBuffer;bind()V"))
+    private void onRenderSky$starBuffers$bind(final VertexBuffer instance, final Operation<Void> operation) {
         if (this.starsBuffer == null) {
-            instance.bind();
+            operation.call(instance);
             return;
         }
 
         if (!instance.equals(this.starsBuffer)) {
-            instance.bind();
+            operation.call(instance);
             return;
         }
 
@@ -163,19 +168,19 @@ public abstract class WorldRenderListener {
             return;
         }
 
-        instance.bind();
+        operation.call(instance);
     }
 
 
-    @Redirect(method = "renderSky(Lnet/minecraft/client/util/math/MatrixStack;Lorg/joml/Matrix4f;FLnet/minecraft/client/render/Camera;ZLjava/lang/Runnable;)V", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gl/VertexBuffer;draw(Lorg/joml/Matrix4f;Lorg/joml/Matrix4f;Lnet/minecraft/client/gl/ShaderProgram;)V"))
-    private void onRenderSky$starBuffers$draw(final VertexBuffer instance, final Matrix4f viewMatrix, final Matrix4f projectionMatrix, final ShaderProgram program) {
+    @WrapOperation(method = "renderSky(Lnet/minecraft/client/util/math/MatrixStack;Lorg/joml/Matrix4f;FLnet/minecraft/client/render/Camera;ZLjava/lang/Runnable;)V", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gl/VertexBuffer;draw(Lorg/joml/Matrix4f;Lorg/joml/Matrix4f;Lnet/minecraft/client/gl/ShaderProgram;)V"))
+    private void onRenderSky$starBuffers$draw(final VertexBuffer instance, final Matrix4f viewMatrix, final Matrix4f projectionMatrix, final ShaderProgram program, final Operation<Void> operation) {
         if (this.starsBuffer == null) {
-            instance.draw(viewMatrix, projectionMatrix, program);
+            operation.call(instance, viewMatrix, projectionMatrix, program);
             return;
         }
 
         if (!instance.equals(this.starsBuffer)) {
-            instance.draw(viewMatrix, projectionMatrix, program);
+            operation.call(instance, viewMatrix, projectionMatrix, program);
             return;
         }
 
@@ -183,6 +188,6 @@ public abstract class WorldRenderListener {
             return;
         }
 
-        instance.draw(viewMatrix, projectionMatrix, program);
+        operation.call(instance, viewMatrix, projectionMatrix, program);
     }
 }
