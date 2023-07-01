@@ -38,7 +38,7 @@
     "imgui.MouseMixin",
     "imgui.WindowMixin",
     "monitor.MinecraftClientMonitor",
-    "patches.text.ParticleCrashFix",
+    "patches.particle.ParticleCrashFix",
     "patches.text.TextRendererMixin"
   ],
   "injectors": {

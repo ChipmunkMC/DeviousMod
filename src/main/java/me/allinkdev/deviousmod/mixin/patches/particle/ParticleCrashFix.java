@@ -1,4 +1,4 @@
-package me.allinkdev.deviousmod.mixin.patches.text;
+package me.allinkdev.deviousmod.mixin.patches.particle;
 
 import net.minecraft.client.network.ClientPlayNetworkHandler;
 import net.minecraft.network.packet.s2c.play.ParticleS2CPacket;
