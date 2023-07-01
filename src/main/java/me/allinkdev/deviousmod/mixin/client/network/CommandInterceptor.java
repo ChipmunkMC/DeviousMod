@@ -10,14 +10,17 @@ import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 @Mixin(ClientPlayNetworkHandler.class)
 public abstract class CommandInterceptor {
     @Shadow
     public abstract void sendChatCommand(String command);
 
-    @Inject(method = "sendChatCommand", at = @At("HEAD"), cancellable = true)
-    public void onSendChatCommand(final String command, final CallbackInfo ci) {
+    @Shadow
+    public abstract boolean sendCommand(String command);
+
+    private void handle(final String command, final boolean properlySigned, final CallbackInfo ci) {
         final CommandQueueManager commandQueueManager = DeviousMod.getInstance().getCommandQueueManager();
         final SelfSendCommandEvent commandEvent = EventUtil.postEvent(new SelfSendCommandEvent(command, commandQueueManager.isQueuedAndIfSoRemove(command)));
 
@@ -30,7 +33,22 @@ public abstract class CommandInterceptor {
 
         if (!replacementCommand.equals(command)) {
             ci.cancel();
-            this.sendChatCommand(replacementCommand);
+
+            if (properlySigned) {
+                this.sendCommand(replacementCommand);
+            } else {
+                this.sendChatCommand(replacementCommand);
+            }
         }
+    }
+
+    @Inject(method = "sendCommand", at = @At("HEAD"), cancellable = true)
+    private void onSendCommand(final String command, final CallbackInfoReturnable<Boolean> cir) {
+        this.handle(command, false, cir);
+    }
+
+    @Inject(method = "sendChatCommand", at = @At("HEAD"), cancellable = true)
+    public void onSendChatCommand(final String command, final CallbackInfo ci) {
+        this.handle(command, true, ci);
     }
 }
