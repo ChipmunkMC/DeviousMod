@@ -85,7 +85,7 @@ public final class AntiMuteModule extends CommandDependentModule {
 
         // compleks algoriyth,
         if (args[0].equals("You")) {
-            if (args.length >= 5 && args[1].equals("can") && args[2].equals("now") && args[3].equals("talk") && args[4].equals("again.")) {
+            if (args.length == 5 && args[1].equals("can") && args[2].equals("now") && args[3].equals("talk") && args[4].equals("again.")) {
                 this.isMuted = false;
             } else if (args[1].equals("have") && args[2].equals("been")) {
                 switch (args[3]) {
