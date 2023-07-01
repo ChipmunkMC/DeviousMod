@@ -16,6 +16,7 @@ import java.util.Deque;
 import java.util.Set;
 import java.util.concurrent.ConcurrentLinkedDeque;
 import java.util.concurrent.ConcurrentSkipListSet;
+import java.util.function.Predicate;
 
 public final class CommandQueueManager {
     private final Deque<String> commandDeque = new ConcurrentLinkedDeque<>();
@@ -61,8 +62,12 @@ public final class CommandQueueManager {
         return this.sending.remove(command);
     }
 
+    public void purgeIf(final Predicate<? super String> predicate) {
+        this.commandDeque.removeIf(predicate);
+    }
+
     public void purgeInstancesOf(final String command) {
-        this.commandDeque.removeIf(c -> c.equals(command));
+        this.purgeIf(c -> c.equals(command));
     }
 
     @Subscribe
