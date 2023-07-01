@@ -97,6 +97,10 @@ public final class GamemodeEnforcerModule extends CommandDependentModule {
 
     @Subscribe
     private void onSelfSendCommand(final SelfSendCommandEvent event) {
+        if (event.wasQueued()) {
+            return;
+        }
+
         final String command = event.getMessage();
 
         if (BukkitUtil.isSameCommand(command, MINECRAFT_PREFIX, "gamemode survival") || BukkitUtil.isSameCommand(command, ESSENTIALS_PREFIX, "gms", "egms")) {
