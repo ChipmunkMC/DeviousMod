@@ -5,6 +5,7 @@
   "compatibilityLevel": "JAVA_17",
   "client": [
     "accessor.ClientChunkManagerAccessor",
+    "accessor.ParticleManagerAccessor",
     "accessor.ResourceTextureAccessor",
     "accessor.ScreenAccessor",
     "accessor.TextureManagerAccessor",
