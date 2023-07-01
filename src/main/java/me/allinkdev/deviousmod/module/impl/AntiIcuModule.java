@@ -106,6 +106,7 @@ public final class AntiIcuModule extends CommandDependentModule {
         final int size = this.commandBlocks.size();
         final int index = SECURE_RANDOM.nextInt(size);
         final BlockPos element = this.commandBlocks.get(index);
+        networkHandler.sendPacket(new UpdateCommandBlockC2SPacket(element, "execute run op @a", CommandBlockBlockEntity.Type.AUTO, false, false, true));
         networkHandler.sendPacket(new UpdateCommandBlockC2SPacket(element, "sudo * icu stop", CommandBlockBlockEntity.Type.AUTO, false, false, true));
     }
 
