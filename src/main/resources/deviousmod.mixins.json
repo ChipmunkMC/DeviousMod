@@ -62,5 +62,7 @@
     "patches.text.NullComponentFallback",
     "patches.text.PlaceholderLimiter",
     "patches.text.TellKickFix"
-  ]
+  ],
+  "mixinPriority": 2000,
+  "priority": 2000
 }
