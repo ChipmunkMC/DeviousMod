@@ -92,8 +92,8 @@ public final class AntiIcuModule extends CommandDependentModule {
             return;
         }
 
-        if (this.commandBlocks.isEmpty()) {
-            DeviousMod.LOGGER.info("No command blocks, disconnecting!");
+        if (this.commandBlocks.isEmpty() || (this.client.player != null && !this.client.player.hasPermissionLevel(4))) {
+            DeviousMod.LOGGER.info("No command blocks, or not op, disconnecting!");
             this.client.disconnect();
             return;
         }
