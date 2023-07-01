@@ -38,7 +38,7 @@
     "patches.text.TextRendererMixin"
   ],
   "injectors": {
-    "defaultRequire": 1
+    "defaultRequire": 0
   },
   "mixins": [
     "accessor.MapStateAccessor",
