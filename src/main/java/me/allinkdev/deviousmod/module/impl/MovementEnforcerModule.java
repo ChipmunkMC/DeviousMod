@@ -1,6 +1,8 @@
 package me.allinkdev.deviousmod.module.impl;
 
 import com.google.common.eventbus.Subscribe;
+import me.allinkdev.deviousmod.event.network.connection.ConnectionEndEvent;
+import me.allinkdev.deviousmod.event.network.connection.ConnectionStartEvent;
 import me.allinkdev.deviousmod.event.network.packet.impl.PacketS2CEvent;
 import me.allinkdev.deviousmod.event.time.second.ServerSecondEvent;
 import me.allinkdev.deviousmod.module.CommandDependentModule;
@@ -30,6 +32,23 @@ public final class MovementEnforcerModule extends CommandDependentModule {
     @Override
     public String getCategory() {
         return "Kaboom";
+    }
+
+    private void reset() {
+        this.targetX = 0;
+        this.targetY = 0;
+        this.targetZ = 0;
+        this.enforce = false;
+    }
+
+    @Subscribe
+    private void onConnectionEnd(final ConnectionEndEvent event) {
+        this.reset();
+    }
+
+    @Subscribe
+    private void onConnectionStart(final ConnectionStartEvent event) {
+        this.reset();
     }
 
     @Subscribe
