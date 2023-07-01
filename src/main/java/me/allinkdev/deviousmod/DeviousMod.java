@@ -17,7 +17,7 @@ import me.allinkdev.deviousmod.keybind.DKeyBindManager;
 import me.allinkdev.deviousmod.keying.BotKeyProvider;
 import me.allinkdev.deviousmod.module.DModuleManager;
 import me.allinkdev.deviousmod.query.QueryManager;
-import me.allinkdev.deviousmod.queue.CommandQueueManager;
+import me.allinkdev.deviousmod.command.queue.CommandQueueManager;
 import me.allinkdev.deviousmod.render.RenderManager;
 import me.allinkdev.deviousmod.util.TextUtil;
 import net.fabricmc.api.ClientModInitializer;

@@ -2,7 +2,7 @@ package me.allinkdev.deviousmod.mixin.client.network;
 
 import me.allinkdev.deviousmod.DeviousMod;
 import me.allinkdev.deviousmod.event.self.chat.impl.SelfSendCommandEvent;
-import me.allinkdev.deviousmod.queue.CommandQueueManager;
+import me.allinkdev.deviousmod.command.queue.CommandQueueManager;
 import me.allinkdev.deviousmod.util.EventUtil;
 import net.minecraft.client.network.ClientPlayNetworkHandler;
 import org.spongepowered.asm.mixin.Mixin;

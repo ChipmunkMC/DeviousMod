@@ -8,7 +8,7 @@ import me.allinkdev.deviousmod.command.CommandCompletionManager;
 import me.allinkdev.deviousmod.event.self.chat.impl.SelfSendCommandEvent;
 import me.allinkdev.deviousmod.module.DModule;
 import me.allinkdev.deviousmod.module.DModuleManager;
-import me.allinkdev.deviousmod.queue.CommandQueueManager;
+import me.allinkdev.deviousmod.command.queue.CommandQueueManager;
 
 import java.util.*;
 import java.util.concurrent.CompletableFuture;

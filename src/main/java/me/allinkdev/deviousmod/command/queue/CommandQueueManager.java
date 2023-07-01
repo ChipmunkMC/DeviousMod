@@ -1,4 +1,4 @@
-package me.allinkdev.deviousmod.queue;
+package me.allinkdev.deviousmod.command.queue;
 
 import com.google.common.eventbus.Subscribe;
 import me.allinkdev.deviousmod.DeviousMod;
