@@ -16,6 +16,9 @@
   "entrypoints": {
     "client": [
       "me.allinkdev.deviousmod.DeviousMod"
+    ],
+    "preLaunch": [
+      "me.allinkdev.deviousmod.entrypoints.PreLaunchEntrypointImpl"
     ]
   },
   "mixins": [
