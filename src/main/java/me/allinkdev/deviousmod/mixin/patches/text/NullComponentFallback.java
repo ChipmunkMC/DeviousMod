@@ -13,7 +13,7 @@ public final class NullComponentFallback {
     private static final MutableText DEFAULT_COMPONENT = Text.literal("NULL!!!")
             .formatted(Formatting.RED);
 
-    @Redirect(method = "readText", at = @At(value = "INVOKE", target = "Lnet/minecraft/text/Text$Serializer;fromJson(Ljava/lang/String;)Lnet/minecraft/text/MutableText;"))
+    @Redirect(method = "readText", at = @At(value = "INVOKE", target = "Lnet/minecraft/text/Text$Serializer;fromJson(Ljava/lang/String;)Lnet/minecraft/text/MutableText;"), require = 0)
     private MutableText onFromJson(final String json) {
         final MutableText deserializedText = Text.Serializer.fromJson(json);
 
