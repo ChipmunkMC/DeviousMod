@@ -15,6 +15,7 @@
     "client.entity.EntityStateEvents$EntityRemoval",
     "client.input.ItemUseCooldownReplacer",
     "client.network.CommandCompletionStealer",
+    "client.network.CommandDispatcherListener",
     "client.network.CommandInterceptor",
     "client.network.PacketSendAndReceive",
     "client.particle.ParticleRenderListener",
