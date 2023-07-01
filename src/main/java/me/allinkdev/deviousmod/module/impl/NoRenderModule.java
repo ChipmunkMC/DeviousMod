@@ -18,6 +18,7 @@ import me.allinkdev.deviousmod.event.render.world.PreWeatherRenderEvent;
 import me.allinkdev.deviousmod.module.DModule;
 import me.allinkdev.deviousmod.module.DModuleManager;
 import me.allinkdev.deviousmod.module.DModuleSettings;
+import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.client.render.RenderLayer;
 import net.minecraft.entity.ItemEntity;
 
@@ -44,7 +45,7 @@ public class NoRenderModule extends DModule {
 
     @Override
     protected DModuleSettings.Builder getSettingsBuilder() {
-        return super.getSettingsBuilder()
+        final DModuleSettings.Builder moduleSettings = super.getSettingsBuilder()
                 .addField("obfuscation", "No Obfuscation", "Prevents obfuscated glyph rendering.", true)
                 .addField("glyphs", "No Glyphs", "Disables glyph rendering.", false)
                 .addField("entities", "No Entities", "Disables entity rendering.", false)
@@ -59,14 +60,23 @@ public class NoRenderModule extends DModule {
                 .addField("solids", "No Solid Block Rendering", "Disables rendering of the solid block layer.", false)
                 .addField("leash", "No Leash Rendering", "Disables rendering of leashes.", false)
                 .addField("beacon_beam", "No Beacon Beam Rendering", "Disables rendering of the beacon beam.", true)
-                .addField("weather", "No Weather", "Disables rendering of the weather.", false)
-                .addField("sky", "No Sky", "Disables rendering of the sky.", false)
-                .addField("stars", "No Stars", "Disables rendering of the stars in the sky.", false)
-                .addField("sun_moon", "No Sun/Moon", "Disables rendering of the sun & moon.", false)
                 .addField("items", "No Items", "Disables rendering of item entities.", false);
+
+        if (!FabricLoader.getInstance().isModLoaded("sodium-extra")) {
+            moduleSettings.addField("weather", "No Weather", "Disables rendering of the weather.", false)
+                    .addField("sky", "No Sky", "Disables rendering of the sky.", false)
+                    .addField("stars", "No Stars", "Disables rendering of the stars in the sky.", false)
+                    .addField("sun_moon", "No Sun/Moon", "Disables rendering of the sun & moon.", false);
+        }
+
+        return moduleSettings;
     }
 
     private boolean cancelIfNecessary(final String settingName, final Cancellable cancellableEvent) {
+        if (!this.settingEnabled(settingName)) {
+            return false;
+        }
+
         if (this.settings.getSetting(settingName, Boolean.class).getValue()) {
             cancellableEvent.cancel();
             return true;
@@ -118,6 +128,10 @@ public class NoRenderModule extends DModule {
     @Subscribe
     private void onBeaconBeamPreRender(final PreBeaconBeamRenderEvent event) {
         this.cancelIfNecessary("beacon_beam", event);
+    }
+
+    private boolean settingEnabled(final String key) {
+        return this.settings.getKeys().contains(key);
     }
 
     @Subscribe
