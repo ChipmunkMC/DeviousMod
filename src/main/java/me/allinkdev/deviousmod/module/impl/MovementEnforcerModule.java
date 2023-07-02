@@ -1,5 +1,6 @@
 package me.allinkdev.deviousmod.module.impl;
 
+import com.github.allinkdev.deviousmod.api.experiments.Experimental;
 import com.google.common.eventbus.Subscribe;
 import me.allinkdev.deviousmod.event.network.connection.ConnectionEndEvent;
 import me.allinkdev.deviousmod.event.network.connection.ConnectionStartEvent;
@@ -9,6 +10,7 @@ import me.allinkdev.deviousmod.module.CommandDependentModule;
 import me.allinkdev.deviousmod.module.DModuleManager;
 import net.minecraft.network.packet.s2c.play.PlayerPositionLookS2CPacket;
 
+@Experimental(hide = false)
 public final class MovementEnforcerModule extends CommandDependentModule {
     private double targetX;
     private double targetY;
