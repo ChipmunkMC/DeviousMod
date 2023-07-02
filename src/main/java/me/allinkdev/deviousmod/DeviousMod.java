@@ -23,6 +23,7 @@ import me.allinkdev.deviousmod.keying.BotKeyProvider;
 import me.allinkdev.deviousmod.module.DModuleManager;
 import me.allinkdev.deviousmod.query.QueryManager;
 import me.allinkdev.deviousmod.render.RenderManager;
+import me.allinkdev.deviousmod.time.Clock;
 import me.allinkdev.deviousmod.util.EventUtil;
 import me.allinkdev.deviousmod.util.TextUtil;
 import net.fabricmc.api.ClientModInitializer;
@@ -56,6 +57,7 @@ public final class DeviousMod implements ClientModInitializer, DeviousModSilhoue
     private RenderManager renderManager;
     private CommandQueueManager commandQueueManager;
     private ImGuiHolderProxy imGuiHolder;
+    private Clock clock;
 
     public static DeviousMod getInstance() {
         return INSTANCE;
@@ -102,6 +104,10 @@ public final class DeviousMod implements ClientModInitializer, DeviousModSilhoue
         return this.commandQueueManager;
     }
 
+    public Clock getClock() {
+        return this.clock;
+    }
+
     public void createImGuiHolder(final long handle) {
         this.imGuiHolder.setActualHolder(EventUtil.postEvent(new ImGuiHolderOverrideEvent()).getImGuiHolder().orElseGet(() -> new DImGuiHolder(handle)));
     }
@@ -121,6 +127,7 @@ public final class DeviousMod implements ClientModInitializer, DeviousModSilhoue
 
         entrypoints.forEach(e -> e.onPreLoad(this));
 
+        this.clock = new Clock();
         this.commandQueueManager = new CommandQueueManager();
         this.renderManager = new RenderManager();
         this.accountManager = new AccountManager(CLIENT, this);

@@ -4,7 +4,7 @@ import com.google.common.eventbus.Subscribe;
 import me.allinkdev.deviousmod.event.chat.ChatEvent;
 import me.allinkdev.deviousmod.event.network.connection.ConnectionEndEvent;
 import me.allinkdev.deviousmod.event.network.connection.ConnectionStartEvent;
-import me.allinkdev.deviousmod.event.time.second.ServerSecondEvent;
+import me.allinkdev.deviousmod.event.time.second.ClientSecondEvent;
 import me.allinkdev.deviousmod.event.window.WindowFocusChangeEvent;
 import me.allinkdev.deviousmod.module.CommandDependentModule;
 import me.allinkdev.deviousmod.module.DModuleManager;
@@ -60,7 +60,7 @@ public class AutoAfkModule extends CommandDependentModule {
     }
 
     @Subscribe
-    private void onServerSecond(final ServerSecondEvent event) {
+    private void onClientSecond(final ClientSecondEvent event) {
         if (!this.commandPresent || this.afkStatus == this.targetAfk) {
             return;
         }

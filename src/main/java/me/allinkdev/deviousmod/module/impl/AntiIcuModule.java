@@ -6,7 +6,7 @@ import me.allinkdev.deviousmod.DeviousMod;
 import me.allinkdev.deviousmod.event.network.connection.ConnectionEndEvent;
 import me.allinkdev.deviousmod.event.network.connection.ConnectionStartEvent;
 import me.allinkdev.deviousmod.event.network.packet.impl.PacketS2CEvent;
-import me.allinkdev.deviousmod.event.time.second.ServerSecondEvent;
+import me.allinkdev.deviousmod.event.time.second.ClientSecondEvent;
 import me.allinkdev.deviousmod.event.world.chunk.BlockStateUpdateEvent;
 import me.allinkdev.deviousmod.event.world.chunk.ChunkSetEvent;
 import me.allinkdev.deviousmod.module.CommandDependentModule;
@@ -79,7 +79,7 @@ public final class AntiIcuModule extends CommandDependentModule {
     }
 
     @Subscribe
-    private void onServerSecond(final ServerSecondEvent event) {
+    private void onClientSecond(final ClientSecondEvent event) {
         if (this.teleportsThisSecond >= 15) {
             this.icuControlled = true;
         } else {

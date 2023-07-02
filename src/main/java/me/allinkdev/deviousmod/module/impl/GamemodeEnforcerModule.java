@@ -4,7 +4,7 @@ import com.google.common.eventbus.Subscribe;
 import me.allinkdev.deviousmod.DeviousMod;
 import me.allinkdev.deviousmod.event.network.packet.impl.PacketS2CEvent;
 import me.allinkdev.deviousmod.event.self.chat.impl.SelfSendCommandEvent;
-import me.allinkdev.deviousmod.event.time.second.ServerSecondEvent;
+import me.allinkdev.deviousmod.event.time.second.ClientSecondEvent;
 import me.allinkdev.deviousmod.module.CommandDependentModule;
 import me.allinkdev.deviousmod.module.DModuleManager;
 import me.allinkdev.deviousmod.util.BukkitUtil;
@@ -83,7 +83,7 @@ public final class GamemodeEnforcerModule extends CommandDependentModule {
     }
 
     @Subscribe
-    private void onServerSecond(final ServerSecondEvent event) {
+    private void onClientSecond(final ClientSecondEvent event) {
         if (this.currentGameMode.equals(this.requiredGameMode) || !this.commandPresent) {
             return;
         }

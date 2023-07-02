@@ -88,7 +88,7 @@ public final class MovementEnforcerModule extends CommandDependentModule {
         if (!(event.getPacket() instanceof final PlayerPositionLookS2CPacket positionPacket)) {
             return;
         }
-        
+
         final double serverX = positionPacket.getX();
         final double serverY = positionPacket.getY();
         final double serverZ = positionPacket.getZ();
