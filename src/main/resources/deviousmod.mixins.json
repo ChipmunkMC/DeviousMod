@@ -29,6 +29,7 @@
     "client.render.world.WorldRenderListener",
     "client.screen.InfiniChat",
     "client.screen.InitListener",
+    "client.screen.PanoramaListener",
     "client.screen.ScreenOverrider",
     "client.screen.TooltipTransformer",
     "client.texture.TextureManagerListener",
