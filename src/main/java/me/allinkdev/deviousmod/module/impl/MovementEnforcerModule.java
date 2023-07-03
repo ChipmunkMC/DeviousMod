@@ -20,7 +20,7 @@ public final class MovementEnforcerModule extends CommandDependentModule {
     private boolean enforce;
 
     public MovementEnforcerModule(final DModuleManager moduleManager) {
-        super(moduleManager, "essentials:tppos");
+        super(moduleManager, "etppos");
     }
 
     @Override
@@ -61,7 +61,7 @@ public final class MovementEnforcerModule extends CommandDependentModule {
             return;
         }
 
-        final String commandBuilder = "essentials:tppos " +
+        final String commandBuilder = "etppos " +
                 this.targetX +
                 " " +
                 this.targetY +
