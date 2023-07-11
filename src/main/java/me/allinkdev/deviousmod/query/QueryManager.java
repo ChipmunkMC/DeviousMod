@@ -1,11 +1,11 @@
 package me.allinkdev.deviousmod.query;
 
-import com.google.common.eventbus.Subscribe;
 import me.allinkdev.deviousmod.DeviousMod;
 import me.allinkdev.deviousmod.event.network.connection.ConnectionEndEvent;
 import me.allinkdev.deviousmod.event.network.connection.ConnectionStartEvent;
 import me.allinkdev.deviousmod.event.network.packet.impl.PacketS2CEvent;
 import me.allinkdev.deviousmod.util.EventUtil;
+import net.lenni0451.lambdaevents.EventHandler;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.network.ClientPlayNetworkHandler;
 import net.minecraft.client.network.ClientPlayerEntity;
@@ -103,8 +103,8 @@ public final class QueryManager {
         future.complete(compound);
     }
 
-    @Subscribe
-    private void onConnectionEnd(final ConnectionEndEvent event) {
+    @EventHandler
+    public void onConnectionEnd(final ConnectionEndEvent event) {
         connectionOpen = false;
 
         QUERY_MAP.values().forEach(k -> k.completeExceptionally(new IllegalStateException("Connection ended")));
@@ -113,13 +113,13 @@ public final class QueryManager {
         QUERY_ID.set(0);
     }
 
-    @Subscribe
-    private void onConnectionStart(final ConnectionStartEvent event) {
+    @EventHandler
+    public void onConnectionStart(final ConnectionStartEvent event) {
         connectionOpen = true;
     }
 
-    @Subscribe
-    private void onPacketReceive(final PacketS2CEvent event) {
+    @EventHandler
+    public void onPacketReceive(final PacketS2CEvent event) {
         final Packet<?> packet = event.getPacket();
 
         if (packet instanceof final NbtQueryResponseS2CPacket responseS2CPacket) {

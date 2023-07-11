@@ -1,9 +1,9 @@
 package me.allinkdev.deviousmod.render;
 
-import com.google.common.eventbus.Subscribe;
 import me.allinkdev.deviousmod.event.render.texture.impl.TextureLoadEvent;
 import me.allinkdev.deviousmod.event.render.texture.impl.TextureUnloadEvent;
 import me.allinkdev.deviousmod.util.EventUtil;
+import net.lenni0451.lambdaevents.EventHandler;
 import net.minecraft.client.texture.AbstractTexture;
 
 import java.util.Collections;
@@ -22,14 +22,14 @@ public final class RenderManager {
         return Optional.ofNullable(this.textureMap.get(glId));
     }
 
-    @Subscribe
+    @EventHandler
     public void onTextureLoad(final TextureLoadEvent event) {
         final AbstractTexture loadedTexture = event.getTexture();
 
         this.textureMap.put(loadedTexture.getGlId(), loadedTexture);
     }
 
-    @Subscribe
+    @EventHandler
     public void onTextureUnload(final TextureUnloadEvent event) {
         final AbstractTexture unloadedTexture = event.getTexture();
 

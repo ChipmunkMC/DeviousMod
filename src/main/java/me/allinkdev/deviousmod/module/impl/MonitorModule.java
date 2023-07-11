@@ -1,7 +1,6 @@
 package me.allinkdev.deviousmod.module.impl;
 
 import com.github.allinkdev.deviousmod.api.experiments.Experimental;
-import com.google.common.eventbus.Subscribe;
 import com.mojang.authlib.GameProfile;
 import it.unimi.dsi.fastutil.Pair;
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
@@ -16,6 +15,7 @@ import me.allinkdev.deviousmod.module.DModuleManager;
 import me.allinkdev.deviousmod.util.TimeUtil;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
+import net.lenni0451.lambdaevents.EventHandler;
 import net.minecraft.client.network.ClientPlayNetworkHandler;
 import net.minecraft.client.network.ClientPlayerEntity;
 import net.minecraft.client.network.PlayerListEntry;
@@ -61,7 +61,7 @@ public final class MonitorModule extends DModule {
         return "Monitors server state information such as player gamemodes and server performance information.";
     }
 
-    @Subscribe
+    @EventHandler
     public void onPacketS2C(final PacketS2CEvent event) {
         final Packet<?> packet = event.getPacket();
 
@@ -165,17 +165,17 @@ public final class MonitorModule extends DModule {
         this.lastTimePacket = System.currentTimeMillis();
     }
 
-    @Subscribe
+    @EventHandler
     public void onConnectionEnd(final ConnectionEndEvent event) {
         this.reset(true);
     }
 
-    @Subscribe
+    @EventHandler
     public void onConnectionStart(final ConnectionStartEvent event) {
         this.reset(false);
     }
 
-    @Subscribe
+    @EventHandler
     public void onTick(final WorldTickEndEvent event) {
         this.worldTickCount++;
         final boolean tenSecondMark = this.worldTickCount % TEN_SECOND_MARK_TICKS == 0;

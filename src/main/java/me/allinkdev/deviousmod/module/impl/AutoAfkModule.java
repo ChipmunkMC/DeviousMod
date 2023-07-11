@@ -1,6 +1,5 @@
 package me.allinkdev.deviousmod.module.impl;
 
-import com.google.common.eventbus.Subscribe;
 import me.allinkdev.deviousmod.event.chat.ChatEvent;
 import me.allinkdev.deviousmod.event.network.connection.ConnectionEndEvent;
 import me.allinkdev.deviousmod.event.network.connection.ConnectionStartEvent;
@@ -8,6 +7,7 @@ import me.allinkdev.deviousmod.event.time.second.ClientSecondEvent;
 import me.allinkdev.deviousmod.event.window.WindowFocusChangeEvent;
 import me.allinkdev.deviousmod.module.CommandDependentModule;
 import me.allinkdev.deviousmod.module.DModuleManager;
+import net.lenni0451.lambdaevents.EventHandler;
 
 public class AutoAfkModule extends CommandDependentModule {
     private boolean afkStatus;
@@ -37,13 +37,13 @@ public class AutoAfkModule extends CommandDependentModule {
         this.afkStatus = false;
     }
 
-    @Subscribe
-    private void onConnectionStart(final ConnectionStartEvent event) {
+    @EventHandler
+    public void onConnectionStart(final ConnectionStartEvent event) {
         this.reset();
     }
 
-    @Subscribe
-    private void onConnectionEnd(final ConnectionEndEvent event) {
+    @EventHandler
+    public void onConnectionEnd(final ConnectionEndEvent event) {
         this.reset();
     }
 
@@ -59,8 +59,8 @@ public class AutoAfkModule extends CommandDependentModule {
         this.reset();
     }
 
-    @Subscribe
-    private void onClientSecond(final ClientSecondEvent event) {
+    @EventHandler
+    public void onClientSecond(final ClientSecondEvent event) {
         if (!this.commandPresent || this.afkStatus == this.targetAfk) {
             return;
         }
@@ -68,13 +68,13 @@ public class AutoAfkModule extends CommandDependentModule {
         this.deviousMod.getCommandQueueManager().addCommandToFront("eafk");
     }
 
-    @Subscribe
-    private void onFocusChanged(final WindowFocusChangeEvent event) {
+    @EventHandler
+    public void onFocusChanged(final WindowFocusChangeEvent event) {
         this.targetAfk = !event.getNewFocus();
     }
 
-    @Subscribe
-    private void onChat(final ChatEvent event) {
+    @EventHandler
+    public void onChat(final ChatEvent event) {
         if (!event.getType().equals(ChatEvent.Type.SYSTEM) || !this.commandPresent) {
             return;
         }

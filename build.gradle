@@ -27,6 +27,11 @@ repositories {
     }
 
     maven {
+        name = "Lenni0451"
+        url = "https://maven.lenni0451.net/releases/"
+    }
+
+    maven {
         name = "Jitpack"
         url = "https://jitpack.io/"
     }
@@ -71,6 +76,8 @@ dependencies {
     require("net.kyori:adventure-text-minimessage:${project.adventure_version_TEMP_FOR_MIGRATION}")
     require("net.kyori:adventure-text-serializer-plain:${project.adventure_version_TEMP_FOR_MIGRATION}")
     require("net.kyori:adventure-text-serializer-gson:${project.adventure_version_TEMP_FOR_MIGRATION}")
+
+    require("net.lenni0451:LambdaEvents:${project.lambda_events_version}")
 
     modImplementation include("net.kyori:adventure-platform-fabric:${project.adventure_platform_version}")
 

@@ -1,12 +1,12 @@
 package me.allinkdev.deviousmod.module.impl;
 
 import com.github.allinkdev.deviousmod.api.experiments.Experimental;
-import com.google.common.eventbus.Subscribe;
 import me.allinkdev.deviousmod.event.network.packet.impl.PacketC2SEvent;
 import me.allinkdev.deviousmod.event.network.packet.impl.PacketS2CEvent;
 import me.allinkdev.deviousmod.event.time.tick.impl.ClientTickEndEvent;
 import me.allinkdev.deviousmod.module.DModule;
 import me.allinkdev.deviousmod.module.DModuleManager;
+import net.lenni0451.lambdaevents.EventHandler;
 import net.minecraft.client.network.ClientPlayNetworkHandler;
 import net.minecraft.client.network.ClientPlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
@@ -96,7 +96,7 @@ public final class ClientsideInventoryModule extends DModule {
         networkHandler.sendPacket(new CreativeInventoryActionC2SPacket(networkSlot, selectedItem));
     }
 
-    @Subscribe
+    @EventHandler
     public void onPacketSend(final PacketC2SEvent event) {
         final Packet<?> packet = event.getPacket();
 
@@ -107,7 +107,7 @@ public final class ClientsideInventoryModule extends DModule {
         }
     }
 
-    @Subscribe
+    @EventHandler
     public void onPacketReceive(final PacketS2CEvent event) {
         final Packet<?> packet = event.getPacket();
 
@@ -116,7 +116,7 @@ public final class ClientsideInventoryModule extends DModule {
         }
     }
 
-    @Subscribe
+    @EventHandler
     public void onEndClientTick(final ClientTickEndEvent event) {
         final ClientPlayNetworkHandler networkHandler = client.getNetworkHandler();
 

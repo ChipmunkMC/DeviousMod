@@ -1,10 +1,10 @@
 package me.allinkdev.deviousmod.module.impl;
 
-import com.google.common.eventbus.Subscribe;
 import com.github.allinkdev.deviousmod.api.experiments.Experimental;
 import me.allinkdev.deviousmod.event.network.connection.ConnectionErrorEvent;
 import me.allinkdev.deviousmod.module.DModule;
 import me.allinkdev.deviousmod.module.DModuleManager;
+import net.lenni0451.lambdaevents.EventHandler;
 
 @Experimental(value = "Just downright unsafe.", hide = false)
 public final class ConnectionErrorCancellerModule extends DModule {
@@ -27,7 +27,7 @@ public final class ConnectionErrorCancellerModule extends DModule {
         return "Cancels all connection errors.";
     }
 
-    @Subscribe
+    @EventHandler
     public void onConnectionError(final ConnectionErrorEvent event) {
         event.cancel();
 

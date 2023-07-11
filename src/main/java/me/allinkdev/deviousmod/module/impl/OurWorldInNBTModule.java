@@ -1,7 +1,6 @@
 package me.allinkdev.deviousmod.module.impl;
 
 import com.github.allinkdev.deviousmod.api.experiments.Experimental;
-import com.google.common.eventbus.Subscribe;
 import it.unimi.dsi.fastutil.objects.Object2ObjectArrayMap;
 import me.allinkdev.deviousmod.DeviousMod;
 import me.allinkdev.deviousmod.event.network.connection.ConnectionEndEvent;
@@ -14,6 +13,7 @@ import me.allinkdev.deviousmod.mixin.accessor.ClientChunkManagerAccessor;
 import me.allinkdev.deviousmod.module.DModule;
 import me.allinkdev.deviousmod.module.DModuleManager;
 import me.allinkdev.deviousmod.query.QueryManager;
+import net.lenni0451.lambdaevents.EventHandler;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.client.network.ClientPlayerEntity;
 import net.minecraft.client.world.ClientChunkManager;
@@ -62,13 +62,13 @@ public final class OurWorldInNBTModule extends DModule {
         return "Displays the NBT of every block entity in render distance.";
     }
 
-    @Subscribe
-    private void onConnectionEnd(final ConnectionEndEvent event) {
+    @EventHandler
+    public void onConnectionEnd(final ConnectionEndEvent event) {
         this.blockPosToTextDisplay.clear();
     }
 
-    @Subscribe
-    private void onConnectionStart(final ConnectionStartEvent event) {
+    @EventHandler
+    public void onConnectionStart(final ConnectionStartEvent event) {
         this.blockPosToTextDisplay.clear();
     }
 
@@ -106,7 +106,7 @@ public final class OurWorldInNBTModule extends DModule {
                 .thenAccept(n -> this.putDisplayEntity(blockPos, blockEntity, n));
     }
 
-    @Subscribe
+    @EventHandler
     public void onChunkSet(final ChunkSetEvent event) {
         final WorldChunk worldChunk = event.getChunk();
 
@@ -130,7 +130,7 @@ public final class OurWorldInNBTModule extends DModule {
         this.updateMeta(blockPos, blockEntity);
     }
 
-    @Subscribe
+    @EventHandler
     public void onBlockStateUpdate(final BlockStateUpdateEvent event) {
         final BlockPos blockPos = event.getPos();
 
@@ -176,7 +176,7 @@ public final class OurWorldInNBTModule extends DModule {
                 .forEach(this::updateMeta);
     }
 
-    @Subscribe
+    @EventHandler
     public void onPacketReceive(final PacketS2CEvent event) {
         final Packet<?> packet = event.getPacket();
 
@@ -191,7 +191,7 @@ public final class OurWorldInNBTModule extends DModule {
         }
     }
 
-    @Subscribe
+    @EventHandler
     public void onPreEntitiesRender(final EntityRenderPipelineEvent event) {
         final ClientPlayerEntity player = client.player;
 

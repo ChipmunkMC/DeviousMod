@@ -7,7 +7,6 @@ import com.github.allinkdev.deviousmod.api.load.DeviousModEntrypoint;
 import com.github.allinkdev.deviousmod.api.managers.CommandManager;
 import com.github.allinkdev.deviousmod.api.managers.EventManager;
 import com.github.allinkdev.deviousmod.api.managers.KeyBindManager;
-import com.google.common.eventbus.EventBus;
 import me.allinkdev.deviousmod.account.AccountManager;
 import me.allinkdev.deviousmod.command.DCommandManager;
 import me.allinkdev.deviousmod.command.queue.CommandQueueManager;
@@ -34,6 +33,7 @@ import net.fabricmc.loader.api.FabricLoader;
 import net.fabricmc.loader.api.entrypoint.EntrypointContainer;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
+import net.lenni0451.lambdaevents.LambdaManager;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.option.KeyBinding;
 import org.slf4j.Logger;
@@ -42,13 +42,13 @@ import org.slf4j.LoggerFactory;
 import java.lang.management.ManagementFactory;
 import java.util.List;
 
-public final class DeviousMod implements ClientModInitializer, DeviousModSilhouette<FabricClientCommandSource, KeyBinding, EventBus> {
+public final class DeviousMod implements ClientModInitializer, DeviousModSilhouette<FabricClientCommandSource, KeyBinding, LambdaManager> {
     public static final Logger LOGGER = LoggerFactory.getLogger("Devious Mod");
     public static final MinecraftClient CLIENT = MinecraftClient.getInstance();
     public static final boolean IS_EXPERIMENTAL = ManagementFactory.getRuntimeMXBean().getInputArguments().stream().anyMatch(s -> s.startsWith("-agentlib:jdwp")) || Boolean.getBoolean("com.github.allinkdev.deviousmod.experimental");
     private static DeviousMod INSTANCE;
 
-    private EventManager<EventBus> eventManager;
+    private EventManager<LambdaManager> eventManager;
     private BotKeyProvider botKeyProvider;
     private DKeyBindManager keyBindManager;
     private DModuleManager moduleManager;
@@ -83,7 +83,7 @@ public final class DeviousMod implements ClientModInitializer, DeviousModSilhoue
     }
 
     @Override
-    public EventManager<EventBus> getEventManager() {
+    public EventManager<LambdaManager> getEventManager() {
         return this.eventManager;
     }
 

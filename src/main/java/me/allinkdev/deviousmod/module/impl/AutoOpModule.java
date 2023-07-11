@@ -1,12 +1,12 @@
 package me.allinkdev.deviousmod.module.impl;
 
-import com.google.common.eventbus.Subscribe;
 import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.tree.CommandNode;
 import me.allinkdev.deviousmod.DeviousMod;
 import me.allinkdev.deviousmod.event.command.CommandDispatcherSwapEvent;
 import me.allinkdev.deviousmod.module.DModule;
 import me.allinkdev.deviousmod.module.DModuleManager;
+import net.lenni0451.lambdaevents.EventHandler;
 import net.minecraft.command.CommandSource;
 
 public final class AutoOpModule extends DModule {
@@ -29,8 +29,8 @@ public final class AutoOpModule extends DModule {
         return "Kaboom";
     }
 
-    @Subscribe
-    private void onCommandDispatcherSwap(final CommandDispatcherSwapEvent event) {
+    @EventHandler
+    public void onCommandDispatcherSwap(final CommandDispatcherSwapEvent event) {
         final CommandDispatcher<CommandSource> newDispatcher = event.getNewDispatcher();
 
         final CommandNode<CommandSource> opNode = newDispatcher.getRoot().getChild("op");

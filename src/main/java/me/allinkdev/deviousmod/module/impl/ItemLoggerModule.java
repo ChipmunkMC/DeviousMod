@@ -1,12 +1,12 @@
 package me.allinkdev.deviousmod.module.impl;
 
-import com.google.common.eventbus.Subscribe;
 import com.mojang.authlib.GameProfile;
 import me.allinkdev.deviousmod.DeviousMod;
 import me.allinkdev.deviousmod.event.entity.living.impl.LivingEntityEquipmentUpdateEvent;
 import me.allinkdev.deviousmod.module.DModule;
 import me.allinkdev.deviousmod.module.DModuleManager;
 import me.allinkdev.deviousmod.util.IterUtil;
+import net.lenni0451.lambdaevents.EventHandler;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
@@ -87,7 +87,7 @@ public final class ItemLoggerModule extends DModule {
         return "Logs every player equipment update with custom NBT to disk.";
     }
 
-    @Subscribe
+    @EventHandler
     public void onEquipmentUpdate(final LivingEntityEquipmentUpdateEvent event) {
         final LivingEntity livingEntity = event.getLivingEntity();
 
@@ -214,7 +214,6 @@ public final class ItemLoggerModule extends DModule {
                 Files.writeString(filePath, stringifiedNbt, StandardOpenOption.CREATE, StandardOpenOption.APPEND, StandardOpenOption.WRITE);
             } catch (IOException e) {
                 DeviousMod.LOGGER.warn("Failed to write to log file!", e);
-                return;
             }
         }
     }

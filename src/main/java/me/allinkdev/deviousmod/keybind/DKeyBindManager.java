@@ -3,12 +3,12 @@ package me.allinkdev.deviousmod.keybind;
 import com.github.allinkdev.deviousmod.api.keybind.KeyBind;
 import com.github.allinkdev.deviousmod.api.managers.KeyBindManager;
 import com.github.allinkdev.reflector.Reflector;
-import com.google.common.eventbus.Subscribe;
 import it.unimi.dsi.fastutil.Pair;
 import me.allinkdev.deviousmod.DeviousMod;
 import me.allinkdev.deviousmod.event.time.tick.impl.ClientTickEndEvent;
 import me.allinkdev.deviousmod.util.EventUtil;
 import net.fabricmc.fabric.api.client.keybinding.v1.KeyBindingHelper;
+import net.lenni0451.lambdaevents.EventHandler;
 import net.minecraft.client.option.KeyBinding;
 
 import java.util.*;
@@ -71,7 +71,7 @@ public final class DKeyBindManager implements KeyBindManager<KeyBinding> {
         return Collections.unmodifiableSet(keyBinds);
     }
 
-    @Subscribe
+    @EventHandler
     public void onTickEvent(final ClientTickEndEvent event) {
         this.binds.forEach(this::checkPress);
     }

@@ -1,9 +1,9 @@
 package me.allinkdev.deviousmod.module.impl;
 
-import com.google.common.eventbus.Subscribe;
 import me.allinkdev.deviousmod.event.input.ItemUseCooldownCheckEvent;
 import me.allinkdev.deviousmod.module.DModule;
 import me.allinkdev.deviousmod.module.DModuleManager;
+import net.lenni0451.lambdaevents.EventHandler;
 
 public final class NoItemUseCooldownModule extends DModule {
     public NoItemUseCooldownModule(final DModuleManager moduleManager) {
@@ -25,7 +25,7 @@ public final class NoItemUseCooldownModule extends DModule {
         return "Disables the item use cool down.";
     }
 
-    @Subscribe
+    @EventHandler
     public void onItemUseCooldownCheck(final ItemUseCooldownCheckEvent event) {
         event.setValue(0);
     }

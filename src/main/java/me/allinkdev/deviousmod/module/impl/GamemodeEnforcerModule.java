@@ -1,6 +1,5 @@
 package me.allinkdev.deviousmod.module.impl;
 
-import com.google.common.eventbus.Subscribe;
 import me.allinkdev.deviousmod.DeviousMod;
 import me.allinkdev.deviousmod.event.network.packet.impl.PacketS2CEvent;
 import me.allinkdev.deviousmod.event.self.chat.impl.SelfSendCommandEvent;
@@ -8,6 +7,7 @@ import me.allinkdev.deviousmod.event.time.second.ClientSecondEvent;
 import me.allinkdev.deviousmod.module.CommandDependentModule;
 import me.allinkdev.deviousmod.module.DModuleManager;
 import me.allinkdev.deviousmod.util.BukkitUtil;
+import net.lenni0451.lambdaevents.EventHandler;
 import net.minecraft.client.network.ClientPlayerEntity;
 import net.minecraft.network.packet.Packet;
 import net.minecraft.network.packet.s2c.play.GameJoinS2CPacket;
@@ -50,8 +50,8 @@ public final class GamemodeEnforcerModule extends CommandDependentModule {
         this.currentGameMode = this.client.interactionManager.getCurrentGameMode();
     }
 
-    @Subscribe
-    private void onPacketReceive(final PacketS2CEvent event) {
+    @EventHandler
+    public void onPacketReceive(final PacketS2CEvent event) {
         final Packet<?> packet = event.getPacket();
         if (packet instanceof final GameJoinS2CPacket gameJoinPacket) {
             this.currentGameMode = gameJoinPacket.gameMode();
@@ -82,8 +82,8 @@ public final class GamemodeEnforcerModule extends CommandDependentModule {
         }
     }
 
-    @Subscribe
-    private void onClientSecond(final ClientSecondEvent event) {
+    @EventHandler
+    public void onClientSecond(final ClientSecondEvent event) {
         if (this.currentGameMode.equals(this.requiredGameMode) || !this.commandPresent) {
             return;
         }
@@ -95,8 +95,8 @@ public final class GamemodeEnforcerModule extends CommandDependentModule {
         return "minecraft:gamemode " + this.requiredGameMode.getName();
     }
 
-    @Subscribe
-    private void onSelfSendCommand(final SelfSendCommandEvent event) {
+    @EventHandler
+    public void onSelfSendCommand(final SelfSendCommandEvent event) {
         if (event.wasQueued()) {
             return;
         }

@@ -2,7 +2,6 @@ package me.allinkdev.deviousmod.module.impl;
 
 import com.github.allinkdev.deviousmod.api.event.Cancellable;
 import com.github.allinkdev.deviousmod.api.experiments.Experimental;
-import com.google.common.eventbus.Subscribe;
 import me.allinkdev.deviousmod.event.render.block.PreBeaconBeamRenderEvent;
 import me.allinkdev.deviousmod.event.render.block.PreBlockEntityRenderEvent;
 import me.allinkdev.deviousmod.event.render.block.PreUncullableBlockEntityRenderEvent;
@@ -19,6 +18,7 @@ import me.allinkdev.deviousmod.module.DModule;
 import me.allinkdev.deviousmod.module.DModuleManager;
 import me.allinkdev.deviousmod.module.DModuleSettings;
 import net.fabricmc.loader.api.FabricLoader;
+import net.lenni0451.lambdaevents.EventHandler;
 import net.minecraft.client.render.RenderLayer;
 import net.minecraft.entity.ItemEntity;
 
@@ -84,8 +84,8 @@ public class NoRenderModule extends DModule {
         return false;
     }
 
-    @Subscribe
-    private void onPreEntitiesRender(final EntityRenderPipelineEvent event) {
+    @EventHandler
+    public void onPreEntitiesRender(final EntityRenderPipelineEvent event) {
         final boolean fullyCancelled = this.cancelIfNecessary("entities", event);
 
         if (fullyCancelled) {
@@ -99,33 +99,33 @@ public class NoRenderModule extends DModule {
         event.getEntityList().removeIf(ItemEntity.class::isInstance);
     }
 
-    @Subscribe
-    private void onPreParticleBatchRender(final PreParticleBatchRenderEvent event) {
+    @EventHandler
+    public void onPreParticleBatchRender(final PreParticleBatchRenderEvent event) {
         this.cancelIfNecessary("particles", event);
     }
 
-    @Subscribe
-    private void onPreBlockEntityRender(final PreBlockEntityRenderEvent event) {
+    @EventHandler
+    public void onPreBlockEntityRender(final PreBlockEntityRenderEvent event) {
         this.cancelIfNecessary("blocks", event);
     }
 
-    @Subscribe
-    private void onPreUncullableBlockEntityRender(final PreUncullableBlockEntityRenderEvent event) {
+    @EventHandler
+    public void onPreUncullableBlockEntityRender(final PreUncullableBlockEntityRenderEvent event) {
         this.cancelIfNecessary("uncullable", event);
     }
 
-    @Subscribe
-    private void onPreGlyphRender(final PreGlyphRenderEvent event) {
+    @EventHandler
+    public void onPreGlyphRender(final PreGlyphRenderEvent event) {
         this.cancelIfNecessary("glyphs", event);
     }
 
-    @Subscribe
-    private void onGlyphRendererSelect(final ObfuscatedGlyphRendererSelectEvent event) {
+    @EventHandler
+    public void onGlyphRendererSelect(final ObfuscatedGlyphRendererSelectEvent event) {
         this.cancelIfNecessary("obfuscation", event);
     }
 
-    @Subscribe
-    private void onBeaconBeamPreRender(final PreBeaconBeamRenderEvent event) {
+    @EventHandler
+    public void onBeaconBeamPreRender(final PreBeaconBeamRenderEvent event) {
         this.cancelIfNecessary("beacon_beam", event);
     }
 
@@ -133,28 +133,28 @@ public class NoRenderModule extends DModule {
         return this.settings.getKeys().contains(key);
     }
 
-    @Subscribe
-    private void onPrePlanetaryBodyRender(final PrePlanetaryBodyRenderEvent event) {
+    @EventHandler
+    public void onPrePlanetaryBodyRender(final PrePlanetaryBodyRenderEvent event) {
         this.cancelIfNecessary("sun_moon", event);
     }
 
-    @Subscribe
-    private void onPreWeatherRender(final PreWeatherRenderEvent event) {
+    @EventHandler
+    public void onPreWeatherRender(final PreWeatherRenderEvent event) {
         this.cancelIfNecessary("weather", event);
     }
 
-    @Subscribe
-    private void onPreSkyRender(final PreSkyRenderEvent event) {
+    @EventHandler
+    public void onPreSkyRender(final PreSkyRenderEvent event) {
         this.cancelIfNecessary("sky", event);
     }
 
-    @Subscribe
-    private void onStarsPreRender(final PreStarRenderEvent event) {
+    @EventHandler
+    public void onStarsPreRender(final PreStarRenderEvent event) {
         this.cancelIfNecessary("stars", event);
     }
 
-    @Subscribe
-    private void onRenderLayer(final RenderLayerEvent event) {
+    @EventHandler
+    public void onRenderLayer(final RenderLayerEvent event) {
         final RenderLayer renderLayer = event.getRenderLayer();
 
         if (renderLayer.equals(RenderLayer.getCutout())) {

@@ -1,11 +1,11 @@
 package me.allinkdev.deviousmod.module;
 
-import com.google.common.eventbus.Subscribe;
 import com.mojang.brigadier.CommandDispatcher;
 import me.allinkdev.deviousmod.DeviousMod;
 import me.allinkdev.deviousmod.event.command.CommandDispatcherSwapEvent;
 import me.allinkdev.deviousmod.event.network.connection.ConnectionEndEvent;
 import me.allinkdev.deviousmod.event.network.connection.ConnectionStartEvent;
+import net.lenni0451.lambdaevents.EventHandler;
 import net.minecraft.client.network.ClientPlayNetworkHandler;
 import net.minecraft.command.CommandSource;
 
@@ -32,13 +32,13 @@ public abstract class CommandDependentModule extends DModule {
         this.checkPresence(networkHandler.getCommandDispatcher());
     }
 
-    @Subscribe
-    private void onConnectionEnd(final ConnectionEndEvent event) {
+    @EventHandler
+    public void onConnectionEnd(final ConnectionEndEvent event) {
         this.commandPresent = false;
     }
 
-    @Subscribe
-    private void onConnectionStart(final ConnectionStartEvent event) {
+    @EventHandler
+    public void onConnectionStart(final ConnectionStartEvent event) {
         this.commandPresent = false;
     }
 
@@ -51,8 +51,8 @@ public abstract class CommandDependentModule extends DModule {
         this.commandPresent = commandDispatcher.getRoot().getChild(this.command) != null;
     }
 
-    @Subscribe
-    private void onCommandDispatcherSwap(final CommandDispatcherSwapEvent event) {
+    @EventHandler
+    public void onCommandDispatcherSwap(final CommandDispatcherSwapEvent event) {
         this.checkPresence(event.getNewDispatcher());
     }
 }

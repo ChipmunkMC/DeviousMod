@@ -1,12 +1,12 @@
 package me.allinkdev.deviousmod.module.impl;
 
-import com.google.common.eventbus.Subscribe;
 import me.allinkdev.deviousmod.event.effect.ShowStatusEffectIconEvent;
 import me.allinkdev.deviousmod.event.screen.impl.SetScreenEvent;
 import me.allinkdev.deviousmod.event.self.SelfReducedDebugInfoEvent;
 import me.allinkdev.deviousmod.module.DModule;
 import me.allinkdev.deviousmod.module.DModuleManager;
 import me.allinkdev.deviousmod.module.DModuleSettings;
+import net.lenni0451.lambdaevents.EventHandler;
 import net.minecraft.client.gui.screen.CreditsScreen;
 import net.minecraft.client.gui.screen.DemoScreen;
 import net.minecraft.client.network.ClientPlayerEntity;
@@ -27,7 +27,7 @@ public final class AntiAnnoyingModule extends DModule {
                 .addField("status_effect", "Ignore status effect state", "Prevents the server from disabling the status effect hud.", true);
     }
 
-    @Subscribe
+    @EventHandler
     public void onSetScreen(final SetScreenEvent e) {
         if (e.getTarget() instanceof DemoScreen && this.settings.getSetting("demo", Boolean.class).getValue()) {
             e.setTarget(null);
@@ -45,14 +45,14 @@ public final class AntiAnnoyingModule extends DModule {
         }
     }
 
-    @Subscribe
+    @EventHandler
     public void onSelfReducedDebugInfo(final SelfReducedDebugInfoEvent e) {
         if (this.settings.getSetting("rdi", Boolean.class).getValue()) {
             e.setReducedDebugInfo(false);
         }
     }
 
-    @Subscribe
+    @EventHandler
     public void onShowStatusEffectIcon(final ShowStatusEffectIconEvent e) {
         if (this.settings.getSetting("status_effect", Boolean.class).getValue()) {
             e.setShowIcon(true);

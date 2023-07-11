@@ -2,7 +2,6 @@ package me.allinkdev.deviousmod.gui.layer;
 
 import com.github.allinkdev.deviousmod.api.experiments.Experimentality;
 import com.github.allinkdev.deviousmod.api.module.Module;
-import com.google.common.eventbus.Subscribe;
 import imgui.ImGui;
 import imgui.flag.ImGuiCol;
 import imgui.flag.ImGuiCond;
@@ -14,6 +13,7 @@ import me.allinkdev.deviousmod.gui.AbstractImGuiLayer;
 import me.allinkdev.deviousmod.gui.widget.SettingsWidget;
 import me.allinkdev.deviousmod.module.DModuleManager;
 import me.allinkdev.deviousmod.util.EventUtil;
+import net.lenni0451.lambdaevents.EventHandler;
 
 import java.util.HashMap;
 import java.util.HashSet;
@@ -173,7 +173,7 @@ public final class ClickGuiLayer extends AbstractImGuiLayer {
         this.categoryModuleMap.forEach((name, modules) -> this.renderCategory(offset, name, modules));
     }
 
-    @Subscribe
+    @EventHandler
     public void onTick(final ClientTickEndEvent event) {
         if (this.moduleToggleMap.isEmpty()) {
             return;

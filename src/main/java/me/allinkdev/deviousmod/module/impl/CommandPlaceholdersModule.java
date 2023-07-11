@@ -1,14 +1,14 @@
 package me.allinkdev.deviousmod.module.impl;
 
-import com.google.common.eventbus.Subscribe;
 import com.mojang.brigadier.suggestion.Suggestion;
 import com.mojang.brigadier.suggestion.Suggestions;
 import me.allinkdev.deviousmod.DeviousMod;
 import me.allinkdev.deviousmod.command.CommandCompletionManager;
+import me.allinkdev.deviousmod.command.queue.CommandQueueManager;
 import me.allinkdev.deviousmod.event.self.chat.impl.SelfSendCommandEvent;
 import me.allinkdev.deviousmod.module.DModule;
 import me.allinkdev.deviousmod.module.DModuleManager;
-import me.allinkdev.deviousmod.command.queue.CommandQueueManager;
+import net.lenni0451.lambdaevents.EventHandler;
 
 import java.util.*;
 import java.util.concurrent.CompletableFuture;
@@ -39,7 +39,7 @@ public final class CommandPlaceholdersModule extends DModule {
         return "Allows you to use all_suggestions to run a command with every completion.";
     }
 
-    @Subscribe
+    @EventHandler
     public void onSendCommandEvent(final SelfSendCommandEvent event) {
         if (event.wasQueued()) {
             return;

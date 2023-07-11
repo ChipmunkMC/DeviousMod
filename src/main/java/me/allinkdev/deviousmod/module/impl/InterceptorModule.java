@@ -1,6 +1,5 @@
 package me.allinkdev.deviousmod.module.impl;
 
-import com.google.common.eventbus.Subscribe;
 import me.allinkdev.deviousmod.DeviousMod;
 import me.allinkdev.deviousmod.event.network.packet.GenericPrePacketEvent;
 import me.allinkdev.deviousmod.event.network.packet.impl.PrePacketC2SEvent;
@@ -8,6 +7,7 @@ import me.allinkdev.deviousmod.event.network.packet.impl.PrePacketS2CEvent;
 import me.allinkdev.deviousmod.module.DModule;
 import me.allinkdev.deviousmod.module.DModuleManager;
 import me.allinkdev.deviousmod.module.DModuleSettings;
+import net.lenni0451.lambdaevents.EventHandler;
 
 import java.util.Arrays;
 
@@ -51,7 +51,7 @@ public class InterceptorModule extends DModule {
         DeviousMod.LOGGER.info("[{}] {}", prefix, display);
     }
 
-    @Subscribe
+    @EventHandler
     public void onPrePacketReceive(final PrePacketS2CEvent event) {
         if (!this.settings.getSetting("serverside", Boolean.class).getValue()) {
             return;
@@ -60,7 +60,7 @@ public class InterceptorModule extends DModule {
         this.logRawPacketData("S->C", this.settings.getSetting("hex", Boolean.class).getValue(), event);
     }
 
-    @Subscribe
+    @EventHandler
     public void onPrePacketSend(final PrePacketC2SEvent event) {
         if (!this.settings.getSetting("clientside", Boolean.class).getValue()) {
             return;

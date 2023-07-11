@@ -1,7 +1,6 @@
 package me.allinkdev.deviousmod.module.impl;
 
 import com.github.allinkdev.deviousmod.api.experiments.Experimental;
-import com.google.common.eventbus.Subscribe;
 import me.allinkdev.deviousmod.DeviousMod;
 import me.allinkdev.deviousmod.event.network.connection.ConnectionEndEvent;
 import me.allinkdev.deviousmod.event.network.connection.ConnectionStartEvent;
@@ -11,6 +10,7 @@ import me.allinkdev.deviousmod.event.world.chunk.BlockStateUpdateEvent;
 import me.allinkdev.deviousmod.event.world.chunk.ChunkSetEvent;
 import me.allinkdev.deviousmod.module.CommandDependentModule;
 import me.allinkdev.deviousmod.module.DModuleManager;
+import net.lenni0451.lambdaevents.EventHandler;
 import net.minecraft.block.Blocks;
 import net.minecraft.block.entity.BlockEntityType;
 import net.minecraft.block.entity.CommandBlockBlockEntity;
@@ -68,23 +68,19 @@ public final class AntiIcuModule extends CommandDependentModule {
         this.reset();
     }
 
-    @Subscribe
-    private void onConnectionEnd(final ConnectionEndEvent event) {
+    @EventHandler
+    public void onConnectionEnd(final ConnectionEndEvent event) {
         this.reset();
     }
 
-    @Subscribe
-    private void onConnectionStart(final ConnectionStartEvent event) {
+    @EventHandler
+    public void onConnectionStart(final ConnectionStartEvent event) {
         this.reset();
     }
 
-    @Subscribe
-    private void onClientSecond(final ClientSecondEvent event) {
-        if (this.teleportsThisSecond >= 15) {
-            this.icuControlled = true;
-        } else {
-            this.icuControlled = false;
-        }
+    @EventHandler
+    public void onClientSecond(final ClientSecondEvent event) {
+        this.icuControlled = this.teleportsThisSecond >= 15;
 
         this.teleportsThisSecond = 0;
 
@@ -110,16 +106,16 @@ public final class AntiIcuModule extends CommandDependentModule {
         networkHandler.sendPacket(new UpdateCommandBlockC2SPacket(element, "sudo * icu stop", CommandBlockBlockEntity.Type.AUTO, false, false, true));
     }
 
-    @Subscribe
-    private void onChunkSet(final ChunkSetEvent event) {
+    @EventHandler
+    public void onChunkSet(final ChunkSetEvent event) {
         event.getChunk().getBlockEntities().entrySet().stream()
                 .peek(e -> this.commandBlocks.remove(e.getKey()))
                 .filter(e -> e.getValue().getType().equals(BlockEntityType.COMMAND_BLOCK))
                 .forEach(e -> this.commandBlocks.add(e.getKey()));
     }
 
-    @Subscribe
-    private void onBlockUpdate(final BlockStateUpdateEvent event) {
+    @EventHandler
+    public void onBlockUpdate(final BlockStateUpdateEvent event) {
         final BlockPos blockPos = event.getPos();
 
         if (!event.getNewState().getBlock().equals(Blocks.COMMAND_BLOCK) && !event.getNewState().getBlock().equals(Blocks.CHAIN_COMMAND_BLOCK) && !event.getNewState().getBlock().equals(Blocks.REPEATING_COMMAND_BLOCK)) {
@@ -129,8 +125,8 @@ public final class AntiIcuModule extends CommandDependentModule {
         }
     }
 
-    @Subscribe
-    private void onPacketReceive(final PacketS2CEvent event) {
+    @EventHandler
+    public void onPacketReceive(final PacketS2CEvent event) {
         if (event.getPacket() instanceof PlayerPositionLookS2CPacket) {
             this.teleportsThisSecond++;
         }

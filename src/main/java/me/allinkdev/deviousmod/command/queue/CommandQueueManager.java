@@ -1,12 +1,12 @@
 package me.allinkdev.deviousmod.command.queue;
 
-import com.google.common.eventbus.Subscribe;
 import me.allinkdev.deviousmod.DeviousMod;
 import me.allinkdev.deviousmod.event.network.connection.ConnectionEndEvent;
 import me.allinkdev.deviousmod.event.network.connection.ConnectionStartEvent;
 import me.allinkdev.deviousmod.event.self.chat.impl.SelfSendCommandEvent;
 import me.allinkdev.deviousmod.event.time.tick.impl.ClientTickEndEvent;
 import me.allinkdev.deviousmod.util.EventUtil;
+import net.lenni0451.lambdaevents.EventHandler;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.network.ClientPlayNetworkHandler;
 import org.apache.commons.lang3.StringUtils;
@@ -32,13 +32,13 @@ public final class CommandQueueManager {
         this.lastExecution = 0;
     }
 
-    @Subscribe
-    private void onConnectionStart(final ConnectionStartEvent event) {
+    @EventHandler
+    public void onConnectionStart(final ConnectionStartEvent event) {
         this.reset();
     }
 
-    @Subscribe
-    private void onConnectionEnd(final ConnectionEndEvent event) {
+    @EventHandler
+    public void onConnectionEnd(final ConnectionEndEvent event) {
         this.reset();
     }
 
@@ -70,8 +70,8 @@ public final class CommandQueueManager {
         this.purgeIf(c -> c.equals(command));
     }
 
-    @Subscribe
-    private void onCommandSend(final SelfSendCommandEvent event) {
+    @EventHandler
+    public void onCommandSend(final SelfSendCommandEvent event) {
         if (event.wasQueued()) {
             return;
         }
@@ -79,8 +79,8 @@ public final class CommandQueueManager {
         this.lastExecution = System.currentTimeMillis();
     }
 
-    @Subscribe
-    private void onTickEnd(final ClientTickEndEvent event) {
+    @EventHandler
+    public void onTickEnd(final ClientTickEndEvent event) {
         final long now = System.currentTimeMillis();
         final long diff = now - this.lastExecution;
 

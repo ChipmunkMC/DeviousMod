@@ -1,13 +1,13 @@
 package me.allinkdev.deviousmod.module.impl;
 
 import com.github.allinkdev.deviousmod.api.experiments.Experimental;
-import com.google.common.eventbus.Subscribe;
 import me.allinkdev.deviousmod.event.network.connection.ConnectionEndEvent;
 import me.allinkdev.deviousmod.event.network.connection.ConnectionStartEvent;
 import me.allinkdev.deviousmod.event.network.packet.impl.PacketS2CEvent;
 import me.allinkdev.deviousmod.event.time.second.ServerSecondEvent;
 import me.allinkdev.deviousmod.module.CommandDependentModule;
 import me.allinkdev.deviousmod.module.DModuleManager;
+import net.lenni0451.lambdaevents.EventHandler;
 import net.minecraft.network.packet.s2c.play.PlayerPositionLookS2CPacket;
 
 @Experimental(hide = false)
@@ -45,18 +45,18 @@ public final class MovementEnforcerModule extends CommandDependentModule {
         this.enforce = false;
     }
 
-    @Subscribe
-    private void onConnectionEnd(final ConnectionEndEvent event) {
+    @EventHandler
+    public void onConnectionEnd(final ConnectionEndEvent event) {
         this.reset();
     }
 
-    @Subscribe
-    private void onConnectionStart(final ConnectionStartEvent event) {
+    @EventHandler
+    public void onConnectionStart(final ConnectionStartEvent event) {
         this.reset();
     }
 
-    @Subscribe
-    private void onServerSecond(final ServerSecondEvent event) {
+    @EventHandler
+    public void onServerSecond(final ServerSecondEvent event) {
         if (!this.enforce || !this.commandPresent) {
             return;
         }
@@ -79,8 +79,8 @@ public final class MovementEnforcerModule extends CommandDependentModule {
         this.deviousMod.getCommandQueueManager().purgeIf(c -> c.startsWith("essentials:tppos"));
     }
 
-    @Subscribe
-    private void onPacketReceive(final PacketS2CEvent event) {
+    @EventHandler
+    public void onPacketReceive(final PacketS2CEvent event) {
         // TODO: Death stuff
 
         if (!this.commandPresent || this.client.player == null) {

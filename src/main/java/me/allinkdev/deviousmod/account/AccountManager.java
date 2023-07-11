@@ -1,9 +1,9 @@
 package me.allinkdev.deviousmod.account;
 
-import com.google.common.eventbus.Subscribe;
 import me.allinkdev.deviousmod.DeviousMod;
 import me.allinkdev.deviousmod.event.screen.impl.InitScreenEvent;
 import me.allinkdev.deviousmod.mixin.accessor.ScreenAccessor;
+import net.lenni0451.lambdaevents.EventHandler;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.screen.multiplayer.MultiplayerScreen;
@@ -45,7 +45,7 @@ public class AccountManager {
         accessor.invokeAddDrawableChild(textFieldWidget);
     }
 
-    @Subscribe
+    @EventHandler
     public void onScreenInit(final InitScreenEvent event) {
         if (!(event.getScreen() instanceof MultiplayerScreen)) {
             return;
