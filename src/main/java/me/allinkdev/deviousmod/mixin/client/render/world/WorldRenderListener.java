@@ -26,7 +26,6 @@ import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.client.world.ClientWorld;
 import net.minecraft.entity.Entity;
 import net.minecraft.util.Identifier;
-import net.minecraft.util.math.BlockPos;
 import org.jetbrains.annotations.Nullable;
 import org.joml.Matrix4f;
 import org.objectweb.asm.Opcodes;
@@ -34,7 +33,6 @@ import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
-import org.spongepowered.asm.mixin.injection.Redirect;
 
 import java.util.Collections;
 import java.util.List;
@@ -50,39 +48,30 @@ public abstract class WorldRenderListener {
     @Final
     private static Identifier MOON_PHASES;
     @Shadow
-    @Final
-    private Set<BlockEntity> noCullingBlockEntities;
-    @Shadow
     private @Nullable VertexBuffer starsBuffer;
 
-    @Shadow
-    protected abstract void renderStars();
-
-    @Shadow
-    public abstract boolean isRenderingReady(BlockPos pos);
-
-    @Redirect(method = "render", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/world/ClientWorld;getEntities()Ljava/lang/Iterable;"))
-    private Iterable<Entity> onRender(final ClientWorld instance) {
-        final Iterable<Entity> entityIterable = instance.getEntities();
+    @WrapOperation(method = "render", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/world/ClientWorld;getEntities()Ljava/lang/Iterable;"))
+    private Iterable<Entity> onRender(final ClientWorld instance, final Operation<Iterable<Entity>> operation) {
+        final Iterable<Entity> entityIterable = operation.call(instance);
         final List<Entity> entities = IterUtil.toList(entityIterable);
 
         return EventUtil.postCancellable(new EntityRenderPipelineEvent(entities)) ? Collections.emptyList() : entities;
     }
 
-    @Redirect(method = "render", at = @At(value = "FIELD", target = "Lnet/minecraft/client/render/WorldRenderer;noCullingBlockEntities:Ljava/util/Set;", opcode = Opcodes.ACC_SYNCHRONIZED))
-    private Set<BlockEntity> onGetNoCullingBlockEntities(final WorldRenderer instance) {
-        final PreUncullableBlockEntityRenderEvent event = new PreUncullableBlockEntityRenderEvent(this.noCullingBlockEntities);
+    @WrapOperation(method = "render", at = @At(value = "FIELD", target = "Lnet/minecraft/client/render/WorldRenderer;noCullingBlockEntities:Ljava/util/Set;", opcode = Opcodes.ACC_SYNCHRONIZED))
+    private Set<BlockEntity> onGetNoCullingBlockEntities(final WorldRenderer instance, final Operation<Set<BlockEntity>> operation) {
+        final PreUncullableBlockEntityRenderEvent event = new PreUncullableBlockEntityRenderEvent(operation.call(instance));
         return EventUtil.postCancellable(event) ? Collections.emptySet() : event.getBlockEntities();
     }
 
-    @Redirect(method = "render", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/render/block/entity/BlockEntityRenderDispatcher;render(Lnet/minecraft/block/entity/BlockEntity;FLnet/minecraft/client/util/math/MatrixStack;Lnet/minecraft/client/render/VertexConsumerProvider;)V"))
+    @WrapOperation(method = "render", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/render/block/entity/BlockEntityRenderDispatcher;render(Lnet/minecraft/block/entity/BlockEntity;FLnet/minecraft/client/util/math/MatrixStack;Lnet/minecraft/client/render/VertexConsumerProvider;)V"))
     private <E extends BlockEntity> void onRenderBlockEntity(final BlockEntityRenderDispatcher instance, final E blockEntity, final float tickDelta,
-                                                             final MatrixStack matrices, final VertexConsumerProvider vertexConsumers) {
+                                                             final MatrixStack matrices, final VertexConsumerProvider vertexConsumers, final Operation<Void> operation) {
         if (EventUtil.postCancellable(new PreBlockEntityRenderEvent(blockEntity))) {
             return;
         }
 
-        instance.render(blockEntity, tickDelta, matrices, vertexConsumers);
+        operation.call(instance, blockEntity, tickDelta, matrices, vertexConsumers);
     }
 
     @WrapOperation(method = "render", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/render/WorldRenderer;renderLayer(Lnet/minecraft/client/render/RenderLayer;Lnet/minecraft/client/util/math/MatrixStack;DDDLorg/joml/Matrix4f;)V"))
