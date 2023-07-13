@@ -1,4 +1,4 @@
-# DeviousMod v3 [![DeviousMod Discord](https://discordapp.com/api/guilds/985872005712732240/widget.png?style=shield)](https://discord.gg/gPNxzEgS8)
+# DeviousMod v3 [![DeviousMod Discord](https://discordapp.com/api/guilds/1128986180575309924/widget.png?style=shield)](https://discord.gg/Bpd7ec7nft)
 
 This is the premiere creative utility client.
 
