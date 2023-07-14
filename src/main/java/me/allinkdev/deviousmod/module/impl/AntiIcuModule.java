@@ -81,7 +81,6 @@ public final class AntiIcuModule extends CommandDependentModule {
     @EventHandler
     public void onClientSecond(final ClientSecondEvent event) {
         this.icuControlled = this.teleportsThisSecond >= 15;
-
         this.teleportsThisSecond = 0;
 
         if (!this.icuControlled || !this.commandPresent) {

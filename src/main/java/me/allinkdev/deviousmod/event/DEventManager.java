@@ -8,8 +8,11 @@ import net.lenni0451.lambdaevents.generator.MethodHandleGenerator;
 import java.util.Collections;
 import java.util.LinkedHashSet;
 import java.util.Set;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 public final class DEventManager implements EventManager<LambdaManager> {
+    private final ExecutorService ASYNC_EXECUTOR = Executors.newCachedThreadPool();
     private final LambdaManager lambdaManager = LambdaManager.threadSafe(new MethodHandleGenerator());
     private final Set<Object> listeners = Collections.synchronizedSet(new LinkedHashSet<>());
 
@@ -35,7 +38,11 @@ public final class DEventManager implements EventManager<LambdaManager> {
 
     @Override
     public void broadcastEvent(final Event event) {
-        this.lambdaManager.call(event);
+        if (event.getClass().getDeclaredAnnotation(Async.class) != null) {
+            ASYNC_EXECUTOR.submit(() -> this.lambdaManager.call(event));
+        } else {
+            this.lambdaManager.call(event);
+        }
     }
 
     @Override

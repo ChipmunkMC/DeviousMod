@@ -1,9 +1,11 @@
 package me.allinkdev.deviousmod.event.world.chunk;
 
 import com.github.allinkdev.deviousmod.api.event.Event;
+import me.allinkdev.deviousmod.event.Async;
 import net.minecraft.block.BlockState;
 import net.minecraft.util.math.BlockPos;
 
+@Async
 public final class BlockStateUpdateEvent implements Event {
     private final BlockPos pos;
     private final BlockState oldState;
