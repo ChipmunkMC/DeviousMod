@@ -18,20 +18,14 @@ public final class DEventManager implements EventManager<LambdaManager> {
 
     @Override
     public void registerListener(final Object listener) {
-        if (this.listeners.contains(listener)) {
-            return;
-        }
-
+        if (this.listeners.contains(listener)) return;
         this.lambdaManager.register(listener);
         this.listeners.add(listener);
     }
 
     @Override
     public void unregisterListener(final Object listener) {
-        if (!this.listeners.contains(listener)) {
-            return;
-        }
-
+        if (!this.listeners.contains(listener)) return;
         this.lambdaManager.unregister(listener);
         this.listeners.remove(listener);
     }
