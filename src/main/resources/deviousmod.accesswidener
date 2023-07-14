@@ -14,3 +14,6 @@ accessible field net/minecraft/entity/decoration/DisplayEntity$TextDisplayEntity
 accessible field net/minecraft/client/world/ClientChunkManager$ClientChunkMap chunks Ljava/util/concurrent/atomic/AtomicReferenceArray;
 
 accessible method net/minecraft/entity/decoration/DisplayEntity$BillboardMode getIndex ()B
+
+# For the ClientsideBookViewer module
+accessible method net/minecraft/client/gui/screen/ingame/BookScreen <init> (Lnet/minecraft/client/gui/screen/ingame/BookScreen$Contents;Z)V
