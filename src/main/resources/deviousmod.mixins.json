@@ -54,6 +54,7 @@
     "client.network.ClientConnectionMixin",
     "client.network.NetworkStateMixin",
     "client.render.world.SodiumWorldRenderListener",
+    "external.lambdaevents.ScanSuperclass",
     "patches.block.DecoratedPotCrashFix",
     "patches.entity.AreaEffectCloudParticleLimiter",
     "patches.item.MapIconCountLimiter",
