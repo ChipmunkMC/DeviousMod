@@ -46,7 +46,8 @@ public final class ClientsideBookReaderModule extends DModule {
         }
 
         final PlayerInventory playerInventory = clientPlayerEntity.getInventory();
-        final ItemStack mainStack = playerInventory.main.stream().filter(this::isWrittenBook).findFirst().orElse(null);
+        final ItemStack heldStack = playerInventory.getStack(playerInventory.selectedSlot);
+        final ItemStack mainStack = isWrittenBook(heldStack) ? heldStack : null;
         final ItemStack offhandStack = playerInventory.offHand.stream().filter(this::isWrittenBook).findFirst().orElse(null);
         final boolean holdingBook = mainStack != null || offhandStack != null;
 
