@@ -12,7 +12,7 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 public final class DEventManager implements EventManager<LambdaManager> {
-    private final ExecutorService ASYNC_EXECUTOR = Executors.newCachedThreadPool();
+    private static final ExecutorService ASYNC_EXECUTOR = Executors.newCachedThreadPool();
     private final LambdaManager lambdaManager = LambdaManager.threadSafe(new MethodHandleGenerator());
     private final Set<Object> listeners = Collections.synchronizedSet(new LinkedHashSet<>());
 
