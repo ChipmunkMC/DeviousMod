@@ -16,6 +16,10 @@ public final class DEventManager implements EventManager<LambdaManager> {
     private final LambdaManager lambdaManager = LambdaManager.threadSafe(new LambdaMetaFactoryGenerator());
     private final Set<Object> listeners = Collections.synchronizedSet(new LinkedHashSet<>());
 
+    public DEventManager() {
+        this.lambdaManager.setRegisterSuperHandler(true);
+    }
+
     @Override
     public void registerListener(final Object listener) {
         if (this.listeners.contains(listener)) return;
