@@ -24,7 +24,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-@Experimental(value = "Only works if you join the game with it enabled. Otherwise, it requires you to reload the chunks.", hide = false)
+@Experimental(value = "Only works if you join the game with it enabled. Otherwise, it requires you to reload the chunks.")
 public final class AntiIcuModule extends CommandDependentModule {
     private static final SecureRandom SECURE_RANDOM = new SecureRandom();
     private final List<BlockPos> commandBlocks = Collections.synchronizedList(new ArrayList<>());
