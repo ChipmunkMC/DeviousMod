@@ -105,7 +105,7 @@ public final class ItemLoggerModule extends DModule {
             for (final String key : keys) {
                 if (key.equals("Damage")) continue;
                 justDamage = false;
-                // TODO: Break here
+                break;
             }
 
             return !justDamage;
