@@ -72,10 +72,7 @@ public class NoRenderModule extends DModule {
     }
 
     private boolean cancelIfNecessary(final String settingName, final Cancellable cancellableEvent) {
-        if (!this.settingEnabled(settingName)) {
-            return false;
-        }
-
+        if (!this.settingEnabled(settingName)) return false;
         if (this.settings.getSetting(settingName, Boolean.class).getValue()) {
             cancellableEvent.cancel();
             return true;
@@ -88,14 +85,7 @@ public class NoRenderModule extends DModule {
     public void onPreEntitiesRender(final EntityRenderPipelineEvent event) {
         final boolean fullyCancelled = this.cancelIfNecessary("entities", event);
 
-        if (fullyCancelled) {
-            return;
-        }
-
-        if (!this.getSettings().getSetting("items", Boolean.class).getValue()) {
-            return;
-        }
-
+        if (fullyCancelled || !this.getSettings().getSetting("items", Boolean.class).getValue()) return;
         event.getEntityList().removeIf(ItemEntity.class::isInstance);
     }
 

@@ -81,16 +81,11 @@ public final class DModuleSettings extends AbstractDataStore implements ModuleSe
     public <T> Setting<T> getSetting(final String name, final Class<T> clazz) {
         final DSetting<?> setting = this.settings.get(name);
 
-        if (setting == null) {
-            throw new NullPointerException("Tried to read a field that didn't exist: " + name);
-        }
-
+        if (setting == null) throw new NullPointerException("Tried to read a field that didn't exist: " + name);
         final Class<?> actualClass = setting.getValueClass();
 
-        if (!(actualClass.isAssignableFrom(clazz)) && !(clazz.isAssignableFrom(actualClass))) {
+        if (!(actualClass.isAssignableFrom(clazz)) && !(clazz.isAssignableFrom(actualClass)))
             throw new IllegalArgumentException("Tried to get a field of an invalid type, expected " + clazz.getName() + " when we actually got " + actualClass.getName());
-        }
-
         return (Setting<T>) setting;
     }
 
@@ -98,16 +93,11 @@ public final class DModuleSettings extends AbstractDataStore implements ModuleSe
     public <T> void writeValue(final String name, final T object, final Class<T> clazz) throws IOException {
         final DSetting<Object> setting = this.settings.get(name);
 
-        if (setting == null) {
-            throw new NullPointerException("Tried to set a field that doesn't exist: " + name);
-        }
-
+        if (setting == null) throw new NullPointerException("Tried to set a field that doesn't exist: " + name);
         final Class<?> actualClass = setting.getValueClass();
 
-        if (!(actualClass.isAssignableFrom(clazz)) && !(clazz.isAssignableFrom(actualClass))) {
+        if (!(actualClass.isAssignableFrom(clazz)) && !(clazz.isAssignableFrom(actualClass)))
             throw new IllegalArgumentException("Tried to set a field of an invalid type, expected " + clazz.getName() + " when we actually got " + actualClass.getName());
-        }
-
         setting.setValue(object);
         this.save();
     }
@@ -115,11 +105,7 @@ public final class DModuleSettings extends AbstractDataStore implements ModuleSe
     @Override
     public Class<?> getValueClass(final String name) {
         final DSetting<?> setting = this.settings.get(name);
-
-        if (setting == null) {
-            throw new NullPointerException("Tried to query the class of a field that didn't exist: " + name);
-        }
-
+        if (setting == null) throw new NullPointerException("Tried to query the class of a field that didn't exist: " + name);
         return setting.getValueClass();
     }
 
@@ -133,10 +119,7 @@ public final class DModuleSettings extends AbstractDataStore implements ModuleSe
         private @Nullable Path path;
 
         private void throwIfExists(final String name) {
-            if (!objectMap.containsKey(name)) {
-                return;
-            }
-
+            if (!objectMap.containsKey(name)) return;
             throw new IllegalArgumentException("Tried to add a field with the same name twice!");
         }
 
@@ -156,10 +139,7 @@ public final class DModuleSettings extends AbstractDataStore implements ModuleSe
         }
 
         public DModuleSettings build() {
-            if (this.path == null) {
-                throw new IllegalArgumentException("Tried to construct a module settings instance without first setting a path!");
-            }
-
+            if (this.path == null) throw new IllegalArgumentException("Tried to construct a module settings instance without first setting a path!");
             return new DModuleSettings(this.path, this.objectMap);
         }
     }

@@ -13,14 +13,8 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 public final class LongCommandCompletionsKickFix {
     @Inject(method = "send(Lnet/minecraft/network/packet/Packet;Lnet/minecraft/network/PacketCallbacks;)V", at = @At("HEAD"), cancellable = true)
     public void onSend(final Packet<?> packet, final PacketCallbacks callbacks, final CallbackInfo ci) {
-        if (!(packet instanceof final RequestCommandCompletionsC2SPacket completionsPacket)) {
-            return;
-        }
-
-        if (completionsPacket.getPartialCommand().length() <= 2048) {
-            return;
-        }
-
+        if (!(packet instanceof final RequestCommandCompletionsC2SPacket completionsPacket)) return;
+        if (completionsPacket.getPartialCommand().length() <= 2048) return;
         ci.cancel();
     }
 }

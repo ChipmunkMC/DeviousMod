@@ -40,11 +40,7 @@ public final class ClientsideBookReaderModule extends DModule {
     @EventHandler
     public void onPacketSend(final PacketC2SEvent event) {
         final ClientPlayerEntity clientPlayerEntity = this.client.player;
-
-        if (clientPlayerEntity == null) {
-            return;
-        }
-
+        if (clientPlayerEntity == null) return;
         final PlayerInventory playerInventory = clientPlayerEntity.getInventory();
         final ItemStack heldStack = playerInventory.getStack(playerInventory.selectedSlot);
         final ItemStack mainStack = isWrittenBook(heldStack) ? heldStack : null;
@@ -52,9 +48,7 @@ public final class ClientsideBookReaderModule extends DModule {
         final boolean holdingBook = mainStack != null || offhandStack != null;
 
         final Packet<?> packet = event.getPacket();
-        if (!(packet instanceof PlayerInteractBlockC2SPacket) && !(packet instanceof PlayerInteractItemC2SPacket) || !holdingBook) {
-            return;
-        }
+        if (!(packet instanceof PlayerInteractBlockC2SPacket) && !(packet instanceof PlayerInteractItemC2SPacket) || !holdingBook) return;
         event.setCancelled(true);
 
         final ItemStack heldBook = (mainStack == null ? offhandStack : mainStack).copy();

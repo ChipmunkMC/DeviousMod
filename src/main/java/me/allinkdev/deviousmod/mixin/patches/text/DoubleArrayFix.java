@@ -16,8 +16,7 @@ import java.lang.reflect.Type;
 public final class DoubleArrayFix {
     @Inject(method = "deserialize(Lcom/google/gson/JsonElement;Ljava/lang/reflect/Type;Lcom/google/gson/JsonDeserializationContext;)Lnet/minecraft/text/MutableText;", at = @At("HEAD"))
     private void deserialize(final JsonElement jsonElement, final Type type, final JsonDeserializationContext jsonDeserializationContext, final CallbackInfoReturnable<MutableText> cir) {
-        if (jsonElement.isJsonArray() && jsonElement.getAsJsonArray().size() <= 0) {
+        if (jsonElement.isJsonArray() && jsonElement.getAsJsonArray().size() <= 0)
             throw new JsonParseException("Unexpected empty array of components");
-        }
     }
 }

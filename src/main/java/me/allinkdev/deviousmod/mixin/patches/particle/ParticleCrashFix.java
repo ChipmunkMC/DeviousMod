@@ -45,11 +45,7 @@ public final class ParticleCrashFix {
 
         final ParticleManagerAccessor particleManagerAccessor = (ParticleManagerAccessor) this.client.particleManager;
         final long estimatedCount = (long) particleManagerAccessor.getNewParticles().size() + particleManagerAccessor.getParticles().entrySet().size() + packetParticleCount;
-
-        if (estimatedCount < 500) {
-            return;
-        }
-
+        if (estimatedCount < 500) return;
         ci.cancel();
     }
 }

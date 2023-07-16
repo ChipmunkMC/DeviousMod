@@ -56,25 +56,16 @@ public final class AutoCommandSpyModule extends CommandDependentModule {
 
     @EventHandler
     public void onClientSecond(final ClientSecondEvent event) {
-        if (this.commandSpyEnabled || !this.commandPresent) {
-            return;
-        }
-
+        if (this.commandSpyEnabled || !this.commandPresent) return;
         DeviousMod.getInstance().getCommandQueueManager().addCommandToFront("c on");
     }
 
     @EventHandler
     public void onChatEvent(final ChatEvent event) {
-        if (!event.getType().equals(ChatEvent.Type.SYSTEM) || !this.commandPresent) {
-            return;
-        }
-
+        if (!event.getType().equals(ChatEvent.Type.SYSTEM) || !this.commandPresent) return;
         final ClientPlayNetworkHandler networkHandler = DeviousMod.CLIENT.getNetworkHandler();
 
-        if (networkHandler == null) {
-            return;
-        }
-
+        if (networkHandler == null) return;
         final String content = event.getContent();
         if (content.equals("Successfully enabled CommandSpy")) {
             this.commandSpyEnabled = true;

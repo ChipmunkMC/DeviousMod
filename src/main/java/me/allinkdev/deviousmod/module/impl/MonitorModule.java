@@ -75,10 +75,7 @@ public final class MonitorModule extends DModule {
             return;
         }
 
-        if (!(packet instanceof final PlayerListS2CPacket playerListPacket)) {
-            return;
-        }
-
+        if (!(packet instanceof final PlayerListS2CPacket playerListPacket)) return;
         final EnumSet<PlayerListS2CPacket.Action> actions = playerListPacket.getActions();
         final List<Text> messages = new ObjectArrayList<>();
 
@@ -105,10 +102,7 @@ public final class MonitorModule extends DModule {
                 final Pair<Text, Text> setDisplayName = stub.setDisplayName(Objects.requireNonNullElse(entry.displayName(), Text.literal(username)));
                 final Text oldDisplayName = setDisplayName.first();
                 final Text newDisplayName = setDisplayName.second();
-
-                if (!oldDisplayName.equals(newDisplayName)) {
-                    changes.add(new RecordableChange("display name", oldDisplayName, newDisplayName));
-                }
+                if (!oldDisplayName.equals(newDisplayName)) changes.add(new RecordableChange("display name", oldDisplayName, newDisplayName));
             }
 
             if (actions.contains(PlayerListS2CPacket.Action.UPDATE_GAME_MODE)) {
@@ -123,24 +117,15 @@ public final class MonitorModule extends DModule {
                 }
             }
 
-            if (changes.isEmpty()) {
-                continue;
-            }
-
+            if (changes.isEmpty()) continue;
             changes.stream().map(c -> c.toText(stub.getIdentifier())).forEach(messages::add);
         }
 
-        if (messages.isEmpty()) {
-            return;
-        }
-
+        if (messages.isEmpty()) return;
         final MutableText text = Text.empty();
 
         for (int i = 0; i < messages.size(); i++) {
-            if (i != 0) {
-                text.append("\n");
-            }
-
+            if (i != 0) text.append("\n");
             text.append(messages.get(i));
         }
 
@@ -148,18 +133,12 @@ public final class MonitorModule extends DModule {
 
         final ClientPlayerEntity player = DeviousMod.CLIENT.player;
 
-        if (player == null) {
-            return;
-        }
-
+        if (player == null) return;
         player.sendMessage(text);
     }
 
     private void reset(final boolean entries) {
-        if (entries) {
-            this.entryStubs.clear();
-        }
-
+        if (entries) this.entryStubs.clear();
         this.worldTickCount = 0;
         this.notifiedAboutLag = false;
         this.lastTimePacket = System.currentTimeMillis();
@@ -180,10 +159,7 @@ public final class MonitorModule extends DModule {
         this.worldTickCount++;
         final boolean tenSecondMark = this.worldTickCount % TEN_SECOND_MARK_TICKS == 0;
 
-        if (!tenSecondMark) {
-            return;
-        }
-
+        if (!tenSecondMark) return;
         final long now = System.currentTimeMillis();
         final boolean lagging = (now - this.lastTimePacket) >= 5_000;
 
@@ -256,13 +232,8 @@ public final class MonitorModule extends DModule {
         public void mergeProfile(final @NotNull GameProfile gameProfile) {
             GameProfile replacementProfile = null;
 
-            if (gameProfile.getName() != null) {
-                replacementProfile = new GameProfile(this.profile.getId(), gameProfile.getName());
-            }
-
-            if (replacementProfile == null) {
-                return;
-            }
+            if (gameProfile.getName() != null) replacementProfile = new GameProfile(this.profile.getId(), gameProfile.getName());
+            if (replacementProfile == null) return;
 
             this.profile = replacementProfile;
         }

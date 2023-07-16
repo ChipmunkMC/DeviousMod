@@ -24,11 +24,7 @@ public final class MapIconCountLimiter {
                            final double x, final double z,
                            final double rotation, final Text text, final CallbackInfo ci) {
         final int iconCount = this.icons.size();
-
-        if (iconCount < 15) {
-            return;
-        }
-
+        if (iconCount < 15) return;
         ci.cancel();
     }
 }

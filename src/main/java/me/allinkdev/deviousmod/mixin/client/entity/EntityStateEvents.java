@@ -18,13 +18,8 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 public final class EntityStateEvents {
     @Inject(method = "addEntity", at = @At("HEAD"), cancellable = true)
     private void onAddEntity(final EntityLike entityLike, final CallbackInfo ci) {
-        if (!(entityLike instanceof final Entity entity)) {
-            return;
-        }
-
-        if (EventUtil.postCancellable(new EntityAddEvent(entity))) {
-            ci.cancel();
-        }
+        if (!(entityLike instanceof final Entity entity)) return;
+        if (EventUtil.postCancellable(new EntityAddEvent(entity))) ci.cancel();
     }
 
     @Mixin(ClientWorld.class)
@@ -33,14 +28,8 @@ public final class EntityStateEvents {
         private EntityLike onRemoveEntity(final EntityLookup instance, final int id) {
             final EntityLike entityLike = instance.get(id);
 
-            if (!(entityLike instanceof final Entity entity)) {
-                return entityLike;
-            }
-
-            if (!EventUtil.postCancellable(new EntityRemoveEvent(entity))) {
-                return entity;
-            }
-
+            if (!(entityLike instanceof final Entity entity)) return entityLike;
+            if (!EventUtil.postCancellable(new EntityRemoveEvent(entity))) return entity;
             return null;
         }
     }

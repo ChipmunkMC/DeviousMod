@@ -43,10 +43,7 @@ public final class GamemodeEnforcerModule extends CommandDependentModule {
     public void onEnable() {
         super.onEnable();
 
-        if (this.client.interactionManager == null) {
-            return;
-        }
-
+        if (this.client.interactionManager == null) return;
         this.currentGameMode = this.client.interactionManager.getCurrentGameMode();
     }
 
@@ -57,15 +54,7 @@ public final class GamemodeEnforcerModule extends CommandDependentModule {
             this.currentGameMode = gameJoinPacket.gameMode();
         } else if (packet instanceof final GameStateChangeS2CPacket gameStateChangePacket) {
             final ClientPlayerEntity player = this.client.player;
-
-            if (player == null) {
-                return;
-            }
-
-            if (gameStateChangePacket.getReason() != GameStateChangeS2CPacket.GAME_MODE_CHANGED) {
-                return;
-            }
-
+            if (player == null || gameStateChangePacket.getReason() != GameStateChangeS2CPacket.GAME_MODE_CHANGED) return;
             switch ((int) Math.floor(gameStateChangePacket.getValue())) {
                 case 0 -> this.currentGameMode = GameMode.SURVIVAL;
                 case 1 -> this.currentGameMode = GameMode.CREATIVE;
@@ -76,18 +65,14 @@ public final class GamemodeEnforcerModule extends CommandDependentModule {
                 }
             }
 
-            if (this.currentGameMode.equals(this.requiredGameMode)) {
+            if (this.currentGameMode.equals(this.requiredGameMode))
                 DeviousMod.getInstance().getCommandQueueManager().purgeInstancesOf(this.getGamemodeChangeCommand());
-            }
         }
     }
 
     @EventHandler
     public void onClientSecond(final ClientSecondEvent event) {
-        if (this.currentGameMode.equals(this.requiredGameMode) || !this.commandPresent) {
-            return;
-        }
-
+        if (this.currentGameMode.equals(this.requiredGameMode) || !this.commandPresent) return;
         DeviousMod.getInstance().getCommandQueueManager().addCommandToFront(this.getGamemodeChangeCommand());
     }
 
@@ -97,10 +82,7 @@ public final class GamemodeEnforcerModule extends CommandDependentModule {
 
     @EventHandler
     public void onSelfSendCommand(final SelfSendCommandEvent event) {
-        if (event.wasQueued()) {
-            return;
-        }
-
+        if (event.wasQueued()) return;
         final String command = event.getMessage();
 
         if (BukkitUtil.isSameCommand(command, MINECRAFT_PREFIX, "gamemode survival") || BukkitUtil.isSameCommand(command, ESSENTIALS_PREFIX, "gms", "egms")) {

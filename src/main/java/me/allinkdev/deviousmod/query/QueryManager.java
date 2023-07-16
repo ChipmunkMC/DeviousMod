@@ -42,42 +42,26 @@ public final class QueryManager {
     }
 
     public static CompletableFuture<NbtCompound> scheduleBlockQuery(final BlockPos blockPos) {
-        if (!connectionOpen) {
-            return CompletableFuture.failedFuture(new IllegalStateException("Not connected!"));
-        }
-
+        if (!connectionOpen) return CompletableFuture.failedFuture(new IllegalStateException("Not connected!"));
         final MinecraftClient client = DeviousMod.CLIENT;
         final ClientPlayNetworkHandler networkHandler = client.getNetworkHandler();
 
-        if (networkHandler == null) {
-            return CompletableFuture.failedFuture(new IllegalStateException("ClientPlayNetworkHandler null!"));
-        }
-
-
+        if (networkHandler == null) return CompletableFuture.failedFuture(new IllegalStateException("ClientPlayNetworkHandler null!"));
         final int transactionId = getQueryId();
         final CompletableFuture<NbtCompound> future = new CompletableFuture<>();
-
         QUERY_MAP.put(transactionId, future);
 
         final QueryBlockNbtC2SPacket packet = new QueryBlockNbtC2SPacket(transactionId, blockPos);
         PACKET_QUEUE.offer(packet);
-
         return future;
     }
 
     public static CompletableFuture<NbtCompound> scheduleEntityQuery(final Entity entity) {
-        if (!connectionOpen) {
-            return CompletableFuture.failedFuture(new IllegalStateException("Not connected!"));
-        }
-
+        if (!connectionOpen) return CompletableFuture.failedFuture(new IllegalStateException("Not connected!"));
         final MinecraftClient client = DeviousMod.CLIENT;
         final ClientPlayNetworkHandler networkHandler = client.getNetworkHandler();
 
-        if (networkHandler == null) {
-            return CompletableFuture.failedFuture(new IllegalStateException("ClientPlayNetworkHandler null!"));
-        }
-
-
+        if (networkHandler == null) return CompletableFuture.failedFuture(new IllegalStateException("ClientPlayNetworkHandler null!"));
         final int transactionId = getQueryId();
         final CompletableFuture<NbtCompound> future = new CompletableFuture<>();
 
@@ -95,10 +79,7 @@ public final class QueryManager {
     }
 
     private static void completeQuery(final int transactionId, final NbtCompound compound) {
-        if (!QUERY_MAP.containsKey(transactionId)) {
-            return;
-        }
-
+        if (!QUERY_MAP.containsKey(transactionId)) return;
         final CompletableFuture<NbtCompound> future = QUERY_MAP.get(transactionId);
         future.complete(compound);
     }
@@ -135,22 +116,11 @@ public final class QueryManager {
         public void run() {
             final ClientPlayerEntity player = DeviousMod.CLIENT.player;
 
-            if (player == null) {
-                return;
-            }
-
+            if (player == null) return;
             final boolean hasPerms = player.hasPermissionLevel(2);
-
-            if (!hasPerms) {
-                return;
-            }
-
+            if (!hasPerms) return;
             final Packet<?> packet = PACKET_QUEUE.poll();
-
-            if (packet == null) {
-                return;
-            }
-
+            if (packet == null) return;
             final MinecraftClient client = DeviousMod.CLIENT;
             final ClientPlayNetworkHandler networkHandler = client.getNetworkHandler();
 
@@ -158,7 +128,6 @@ public final class QueryManager {
                 PACKET_QUEUE.clear();
                 return;
             }
-
 
             networkHandler.sendPacket(packet);
         }

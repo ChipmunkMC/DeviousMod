@@ -67,10 +67,7 @@ public abstract class WorldRenderListener {
     @WrapOperation(method = "render", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/render/block/entity/BlockEntityRenderDispatcher;render(Lnet/minecraft/block/entity/BlockEntity;FLnet/minecraft/client/util/math/MatrixStack;Lnet/minecraft/client/render/VertexConsumerProvider;)V"))
     private <E extends BlockEntity> void onRenderBlockEntity(final BlockEntityRenderDispatcher instance, final E blockEntity, final float tickDelta,
                                                              final MatrixStack matrices, final VertexConsumerProvider vertexConsumers, final Operation<Void> operation) {
-        if (EventUtil.postCancellable(new PreBlockEntityRenderEvent(blockEntity))) {
-            return;
-        }
-
+        if (EventUtil.postCancellable(new PreBlockEntityRenderEvent(blockEntity))) return;
         operation.call(instance, blockEntity, tickDelta, matrices, vertexConsumers);
     }
 
@@ -78,30 +75,21 @@ public abstract class WorldRenderListener {
     private void onRenderLayer(final WorldRenderer instance, final RenderLayer renderLayer, final MatrixStack matrices,
                                final double cameraX, final double cameraY, final double cameraZ,
                                final Matrix4f positionMatrix, final Operation<Void> operation) {
-        if (EventUtil.postCancellable(new RenderLayerEvent(renderLayer))) {
-            return;
-        }
-
+        if (EventUtil.postCancellable(new RenderLayerEvent(renderLayer))) return;
         operation.call(instance, renderLayer, matrices, cameraX, cameraY, cameraZ, positionMatrix);
     }
 
     @WrapOperation(method = "render", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/render/WorldRenderer;renderWeather(Lnet/minecraft/client/render/LightmapTextureManager;FDDD)V"))
     private void onRenderWeather(final WorldRenderer instance, final LightmapTextureManager manager, final float tickDelta,
                                  final double cameraX, final double cameraY, final double cameraZ, final Operation<Void> operation) {
-        if (EventUtil.postCancellable(new PreWeatherRenderEvent())) {
-            return;
-        }
-
+        if (EventUtil.postCancellable(new PreWeatherRenderEvent())) return;
         operation.call(instance, manager, tickDelta, cameraX, cameraY, cameraZ);
     }
 
     @WrapOperation(method = "render", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/render/WorldRenderer;renderSky(Lnet/minecraft/client/util/math/MatrixStack;Lorg/joml/Matrix4f;FLnet/minecraft/client/render/Camera;ZLjava/lang/Runnable;)V"))
     private void onRenderSky(final WorldRenderer instance, final MatrixStack matrices, final Matrix4f projectionMatrix, final float tickDelta,
                              final Camera camera, final boolean bl, final Runnable runnable, final Operation<Void> operation) {
-        if (EventUtil.postCancellable(new PreSkyRenderEvent())) {
-            return;
-        }
-
+        if (EventUtil.postCancellable(new PreSkyRenderEvent())) return;
         operation.call(instance, matrices, projectionMatrix, tickDelta, camera, bl, runnable);
     }
 
@@ -153,10 +141,7 @@ public abstract class WorldRenderListener {
             return;
         }
 
-        if (EventUtil.postCancellable(new PreStarRenderEvent())) {
-            return;
-        }
-
+        if (EventUtil.postCancellable(new PreStarRenderEvent())) return;
         operation.call(instance);
     }
 
@@ -173,10 +158,7 @@ public abstract class WorldRenderListener {
             return;
         }
 
-        if (EventUtil.postCancellable(new PreStarRenderEvent())) {
-            return;
-        }
-
+        if (EventUtil.postCancellable(new PreStarRenderEvent())) return;
         operation.call(instance, viewMatrix, projectionMatrix, program);
     }
 }

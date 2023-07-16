@@ -57,10 +57,7 @@ public final class MovementEnforcerModule extends CommandDependentModule {
 
     @EventHandler
     public void onServerSecond(final ServerSecondEvent event) {
-        if (!this.enforce || !this.commandPresent) {
-            return;
-        }
-
+        if (!this.enforce || !this.commandPresent) return;
         final String commandBuilder = "etppos " +
                 this.targetX +
                 " " +
@@ -83,14 +80,8 @@ public final class MovementEnforcerModule extends CommandDependentModule {
     public void onPacketReceive(final PacketS2CEvent event) {
         // TODO: Death stuff
 
-        if (!this.commandPresent || this.client.player == null) {
+        if (!this.commandPresent || this.client.player == null || !(event.getPacket() instanceof final PlayerPositionLookS2CPacket positionPacket))
             return;
-        }
-
-        if (!(event.getPacket() instanceof final PlayerPositionLookS2CPacket positionPacket)) {
-            return;
-        }
-
         final double serverX = positionPacket.getX();
         final double serverY = positionPacket.getY();
         final double serverZ = positionPacket.getZ();

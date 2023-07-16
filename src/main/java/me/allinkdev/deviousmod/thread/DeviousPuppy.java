@@ -127,10 +127,7 @@ public final class DeviousPuppy {
             }
 
             // #23 - Do not monitor the difference between ping timestamps if the player is not in-game
-            if (MinecraftClient.getInstance().player == null) {
-                return;
-            }
-
+            if (MinecraftClient.getInstance().player == null) return;
             if (diff < 3_000) { // 3 seconds
                 // Reset every value, as the thread is (now) responding
                 this.lastStackTracePrintTimestamp = 0;
@@ -140,9 +137,8 @@ public final class DeviousPuppy {
 
             final long stackTracePrintDiff = now - this.lastStackTracePrintTimestamp;
 
-            if (stackTracePrintDiff < 10_000) { // We don't want to spam the logs, after all
-                return;
-            }
+            // We don't want to spam the logs, after all
+            if (stackTracePrintDiff < 10_000) return;
 
             final StackTraceElement[] monitoredThreadTraceElements = this.monitoredThread.getStackTrace();
             final String monitoredThreadTrace = ThrowableUtil.getStackTrace(monitoredThreadTraceElements);
@@ -157,9 +153,7 @@ public final class DeviousPuppy {
             this.lastStackTracePrintTimestamp = now;
             this.violationCount++;
 
-            if (this.violationCount >= 3) {
-                killJvm();
-            }
+            if (this.violationCount >= 3) killJvm();
         }
 
         public void contact() throws IllegalAccessException {

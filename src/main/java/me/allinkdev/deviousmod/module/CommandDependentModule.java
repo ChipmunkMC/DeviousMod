@@ -24,11 +24,7 @@ public abstract class CommandDependentModule extends DModule {
         this.commandPresent = false;
 
         final ClientPlayNetworkHandler networkHandler = DeviousMod.CLIENT.getNetworkHandler();
-
-        if (networkHandler == null) {
-            return;
-        }
-
+        if (networkHandler == null) return;
         this.checkPresence(networkHandler.getCommandDispatcher());
     }
 

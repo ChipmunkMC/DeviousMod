@@ -29,34 +29,23 @@ public final class AntiAnnoyingModule extends DModule {
 
     @EventHandler
     public void onSetScreen(final SetScreenEvent e) {
-        if (e.getTarget() instanceof DemoScreen && this.settings.getSetting("demo", Boolean.class).getValue()) {
-            e.setTarget(null);
-        }
-
+        if (e.getTarget() instanceof DemoScreen && this.settings.getSetting("demo", Boolean.class).getValue()) e.setTarget(null);
         if (e.getTarget() instanceof CreditsScreen && this.settings.getSetting("end", Boolean.class).getValue()) {
             e.setTarget(null);
             final ClientPlayerEntity player = this.client.player;
-
-            if (player == null) {
-                return;
-            }
-
+            if (player == null) return;
             player.networkHandler.sendPacket(new ClientStatusC2SPacket(ClientStatusC2SPacket.Mode.PERFORM_RESPAWN));
         }
     }
 
     @EventHandler
     public void onSelfReducedDebugInfo(final SelfReducedDebugInfoEvent e) {
-        if (this.settings.getSetting("rdi", Boolean.class).getValue()) {
-            e.setReducedDebugInfo(false);
-        }
+        if (this.settings.getSetting("rdi", Boolean.class).getValue()) e.setReducedDebugInfo(false);
     }
 
     @EventHandler
     public void onShowStatusEffectIcon(final ShowStatusEffectIconEvent e) {
-        if (this.settings.getSetting("status_effect", Boolean.class).getValue()) {
-            e.setShowIcon(true);
-        }
+        if (this.settings.getSetting("status_effect", Boolean.class).getValue()) e.setShowIcon(true);
     }
 
     @Override

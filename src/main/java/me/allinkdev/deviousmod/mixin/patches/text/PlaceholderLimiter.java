@@ -23,11 +23,7 @@ public final class PlaceholderLimiter {
     public void onForEachPart(final String translation, final Consumer<StringVisitable> partsConsumer, final CallbackInfo ci) {
         final Matcher matcher = ARG_FORMAT.matcher(translation);
         final int count = matcher.groupCount();
-
-        if (count < 10) {
-            return;
-        }
-
+        if (count < 10) return;
         ci.cancel();
     }
 }

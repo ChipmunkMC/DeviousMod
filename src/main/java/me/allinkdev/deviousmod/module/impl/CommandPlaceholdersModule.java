@@ -41,16 +41,10 @@ public final class CommandPlaceholdersModule extends DModule {
 
     @EventHandler
     public void onSendCommandEvent(final SelfSendCommandEvent event) {
-        if (event.wasQueued()) {
-            return;
-        }
-
+        if (event.wasQueued()) return;
         final String command = event.getMessage();
 
-        if (!command.contains(SEARCH_STRING)) {
-            return;
-        }
-
+        if (!command.contains(SEARCH_STRING)) return;
         if (this.sending.contains(command)) {
             this.sending.remove(command);
             return;
@@ -110,9 +104,7 @@ public final class CommandPlaceholdersModule extends DModule {
         for (int i = 0; i < parts.length; i++) {
             final String part = parts[i];
 
-            if (part.equals(SEARCH_STRING)) {
-                indexes.add(i);
-            }
+            if (part.equals(SEARCH_STRING)) indexes.add(i);
         }
 
         final String[] sections = new String[indexes.size()];

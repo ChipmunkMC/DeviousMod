@@ -53,23 +53,14 @@ public abstract class ScreenOverrider {
         final SetScreenEvent event = EventUtil.postEvent(new SetScreenEvent(providedScreen));
         Screen overriddenScreen = event.getTarget();
 
-        if (overriddenScreen == null) {
-            overriddenScreen = onNullScreen();
-        }
-
+        if (overriddenScreen == null) overriddenScreen = onNullScreen();
         customSetScreen(overriddenScreen);
         ci.cancel();
     }
 
     private @Nullable Screen onNullScreen() {
-        if (this.world == null || this.player == null) {
-            return new TitleScreen();
-        }
-
-        if (!this.player.isDead()) {
-            return null;
-        }
-
+        if (this.world == null || this.player == null) return new TitleScreen();
+        if (!this.player.isDead()) return null;
         if (!this.player.showsDeathScreen()) {
             this.player.requestRespawn();
             return null;
@@ -81,10 +72,7 @@ public abstract class ScreenOverrider {
     }
 
     private void customSetScreen(@Nullable final Screen screen) {
-        if (currentScreen != null) {
-            currentScreen.removed();
-        }
-
+        if (currentScreen != null) currentScreen.removed();
         currentScreen = screen;
         BufferRenderer.reset();
         if (screen != null) {

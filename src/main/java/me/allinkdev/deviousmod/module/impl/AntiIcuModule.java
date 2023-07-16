@@ -83,10 +83,7 @@ public final class AntiIcuModule extends CommandDependentModule {
         this.icuControlled = this.teleportsThisSecond >= 15;
         this.teleportsThisSecond = 0;
 
-        if (!this.icuControlled || !this.commandPresent) {
-            return;
-        }
-
+        if (!this.icuControlled || !this.commandPresent) return;
         if (this.commandBlocks.isEmpty() || (this.client.player != null && !this.client.player.hasPermissionLevel(4))) {
             DeviousMod.LOGGER.info("No command blocks, or not op, disconnecting!");
             this.client.disconnect();
@@ -94,10 +91,7 @@ public final class AntiIcuModule extends CommandDependentModule {
         }
 
         final ClientPlayNetworkHandler networkHandler = this.client.getNetworkHandler();
-        if (networkHandler == null) {
-            return;
-        }
-
+        if (networkHandler == null) return;
         final int size = this.commandBlocks.size();
         final int index = SECURE_RANDOM.nextInt(size);
         final BlockPos element = this.commandBlocks.get(index);
@@ -126,8 +120,6 @@ public final class AntiIcuModule extends CommandDependentModule {
 
     @EventHandler
     public void onPacketReceive(final PacketS2CEvent event) {
-        if (event.getPacket() instanceof PlayerPositionLookS2CPacket) {
-            this.teleportsThisSecond++;
-        }
+        if (event.getPacket() instanceof PlayerPositionLookS2CPacket) this.teleportsThisSecond++;
     }
 }

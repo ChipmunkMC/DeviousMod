@@ -19,11 +19,7 @@ public final class ParticleRenderListener {
     private Object onRenderParticles(final Map instance, final Object o) {
         final ParticleTextureSheet textureSheet = (ParticleTextureSheet) o;
         final Queue<Particle> particleBatch = (Queue<Particle>) instance.get(textureSheet);
-
-        if (particleBatch == null) {
-            return null;
-        }
-
+        if (particleBatch == null) return null;
         return EventUtil.postCancellable(new PreParticleBatchRenderEvent(textureSheet, particleBatch)) ? null : particleBatch;
     }
 }

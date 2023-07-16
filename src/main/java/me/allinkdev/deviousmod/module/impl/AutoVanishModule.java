@@ -33,10 +33,7 @@ public final class AutoVanishModule extends CommandDependentModule {
 
     @EventHandler
     public void onClientSecond(final ClientSecondEvent event) {
-        if (this.vanishEnabled || !this.commandPresent) {
-            return;
-        }
-
+        if (this.vanishEnabled || !this.commandPresent) return;
         DeviousMod.getInstance().getCommandQueueManager().addCommandToFront("v on");
     }
 
@@ -64,14 +61,7 @@ public final class AutoVanishModule extends CommandDependentModule {
 
     @EventHandler
     public void onChatEvent(final ChatEvent event) {
-        if (!event.getType().equals(ChatEvent.Type.SYSTEM)) {
-            return;
-        }
-
-        if (!this.commandPresent) {
-            return;
-        }
-
+        if (!event.getType().equals(ChatEvent.Type.SYSTEM) || !this.commandPresent) return;
         final String content = event.getContent();
         if (content.startsWith("Vanish for")) {
             if (content.endsWith("disabled")) {

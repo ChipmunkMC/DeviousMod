@@ -32,10 +32,7 @@ public final class AntiMuteModule extends CommandDependentModule {
 
     @EventHandler
     public void onClientSecond(final ClientSecondEvent event) {
-        if (!this.commandPresent || !this.isMuted) {
-            return;
-        }
-
+        if (!this.commandPresent || !this.isMuted) return;
         this.deviousMod.getCommandQueueManager().addCommandToFront(this.getUnmuteCommand());
     }
 
@@ -67,22 +64,13 @@ public final class AntiMuteModule extends CommandDependentModule {
 
     @EventHandler
     public void onChat(final ChatEvent event) {
-        if (!event.getType().equals(ChatEvent.Type.SYSTEM) || !this.commandPresent) {
-            return;
-        }
-
+        if (!event.getType().equals(ChatEvent.Type.SYSTEM) || !this.commandPresent) return;
         final String content = event.getContent();
 
-        if (!content.contains(" ")) {
-            return;
-        }
-
+        if (!content.contains(" ")) return;
         final String[] args = content.split(" ");
 
-        if (args.length < 4) {
-            return;
-        }
-
+        if (args.length < 4) return;
         // compleks algoriyth,
         if (args[0].equals("You")) {
             if (args.length == 5 && args[1].equals("can") && args[2].equals("now") && args[3].equals("talk") && args[4].equals("again.")) {
@@ -107,8 +95,6 @@ public final class AntiMuteModule extends CommandDependentModule {
             this.isMuted = true;
         }
 
-        if (!this.isMuted) {
-            this.deviousMod.getCommandQueueManager().purgeInstancesOf(this.getUnmuteCommand());
-        }
+        if (!this.isMuted) this.deviousMod.getCommandQueueManager().purgeInstancesOf(this.getUnmuteCommand());
     }
 }

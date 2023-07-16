@@ -36,26 +36,14 @@ public class EntityEquipmentOverrider {
         NetworkThreadUtils.forceMainThread(packet, (ClientPlayPacketListener) this, this.client);
         final Entity entity = this.world.getEntityById(packet.getId());
 
-        if (entity == null) {
-            return;
-        }
-
-        if (!(entity instanceof final LivingEntity livingEntity)) {
-            return;
-        }
-
+        if (!(entity instanceof final LivingEntity livingEntity)) return;
         for (final Pair<EquipmentSlot, ItemStack> pair : packet.getEquipmentList()) {
             final EquipmentSlot slot = pair.getFirst();
             final ItemStack oldStack = livingEntity.getEquippedStack(slot);
             final ItemStack newStack = pair.getSecond();
             final LivingEntityEquipmentUpdateEvent event = EventUtil.postEvent(new LivingEntityEquipmentUpdateEvent(livingEntity, newStack, oldStack));
-
-            if (event.isCancelled()) {
-                continue;
-            }
-
+            if (event.isCancelled()) continue;
             final ItemStack override = event.getReplacedStack();
-
             livingEntity.equipStack(slot, override);
         }
     }

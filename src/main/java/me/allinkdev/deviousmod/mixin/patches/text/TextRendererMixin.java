@@ -18,9 +18,7 @@ public abstract class TextRendererMixin {
     private void onDrawInternal(final String text, final float x, final float y, final int color, final boolean shadow, final Matrix4f matrix, final VertexConsumerProvider vertexConsumers, final TextRenderer.TextLayerType layerType, final int backgroundColor, final int light, final boolean mirror, final CallbackInfoReturnable<Integer> cir) {
         final int length = text.length();
 
-        if (length >= 512) {
-            cir.cancel();
-        }
+        if (length >= 512) cir.cancel();
     }
 
     @Inject(method = "drawInternal(Lnet/minecraft/text/OrderedText;FFIZLorg/joml/Matrix4f;Lnet/minecraft/client/render/VertexConsumerProvider;Lnet/minecraft/client/font/TextRenderer$TextLayerType;II)I", at = @At("HEAD"), cancellable = true)
@@ -35,8 +33,6 @@ public abstract class TextRendererMixin {
         text.accept(characterVisitor);
 
         final int length = atomicLength.get();
-        if (length >= 512) {
-            cir.cancel();
-        }
+        if (length >= 512) cir.cancel();
     }
 }

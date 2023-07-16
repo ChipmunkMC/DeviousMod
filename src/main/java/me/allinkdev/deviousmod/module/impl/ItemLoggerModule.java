@@ -30,6 +30,7 @@ public final class ItemLoggerModule extends DModule {
     private static final ExecutorService EXECUTOR = Executors.newCachedThreadPool();
     private static final Path ROOT_PATH = Path.of("logs", "deviousmod", "nbt");
 
+    // TODO: Actually fucking remove the lock system
     static {
         final AtomicInteger count = new AtomicInteger();
 
@@ -41,9 +42,7 @@ public final class ItemLoggerModule extends DModule {
 
         final int lockCount = count.get();
 
-        if (lockCount > 0) {
-            DeviousMod.LOGGER.warn("Cleared {} locks!", lockCount);
-        }
+        if (lockCount > 0) DeviousMod.LOGGER.warn("Cleared {} locks!", lockCount);
     }
 
     public ItemLoggerModule(final DModuleManager moduleManager) {
@@ -51,25 +50,18 @@ public final class ItemLoggerModule extends DModule {
     }
 
     private static void processPath(final AtomicInteger count, final Path path) throws IOException {
-        if (Files.isDirectory(path)) {
-            scanDirectoryForLocksAndRemove(count, path);
-        }
+        if (Files.isDirectory(path)) scanDirectoryForLocksAndRemove(count, path);
     }
 
 
     private static void scanDirectoryForLocksAndRemove(final AtomicInteger count, final Path path) throws IOException {
-        if (!Files.exists(path)) {
-            return;
-        }
-
+        if (!Files.exists(path)) return;
         final DirectoryStream<Path> directoryStream = Files.newDirectoryStream(path);
         final Iterator<Path> pathIterator = directoryStream.iterator();
         final List<Path> paths = IterUtil.toList(pathIterator);
         directoryStream.close();
 
-        for (final Path childPath : paths) {
-            processPath(count, childPath);
-        }
+        for (final Path childPath : paths) processPath(count, childPath);
     }
 
     @Override
@@ -90,11 +82,7 @@ public final class ItemLoggerModule extends DModule {
     @EventHandler
     public void onEquipmentUpdate(final LivingEntityEquipmentUpdateEvent event) {
         final LivingEntity livingEntity = event.getLivingEntity();
-
-        if (!(livingEntity instanceof final PlayerEntity playerEntity)) {
-            return;
-        }
-
+        if (!(livingEntity instanceof final PlayerEntity playerEntity)) return;
         final GameProfile gameProfile = playerEntity.getGameProfile();
         final ItemStack itemStack = event.getNewStack();
         final UUID uuid = gameProfile.getId();
@@ -128,10 +116,7 @@ public final class ItemLoggerModule extends DModule {
         }
 
         private void createDirectories(final Path uuidPath) throws IOException {
-            if (Files.exists(uuidPath)) {
-                return;
-            }
-
+            if (Files.exists(uuidPath)) return;
             final Path absoluteUuidPath = uuidPath.toAbsolutePath();
             final String absoluteUuidPathStr = absoluteUuidPath.toString();
 
@@ -142,38 +127,20 @@ public final class ItemLoggerModule extends DModule {
 
         private boolean hasMeta(final ItemStack itemStack) {
             final boolean hasTag = itemStack.hasNbt();
-
-            if (!hasTag) {
-                return false;
-            }
-
+            if (!hasTag) return false;
             final NbtCompound nbtCompound = itemStack.getNbt();
-
-            if (nbtCompound == null) {
-                return false;
-            }
-
+            if (nbtCompound == null) return false;
             final Set<String> keys = nbtCompound.getKeys();
             final int keyAmount = keys.size();
-
-            if (keyAmount == 0) {
-                return false;
-            }
-
+            if (keyAmount == 0) return false;
             final boolean hasDamage = keys.contains("Damage");
-
-            if (!hasDamage) {
-                return true;
-            }
-
+            if (!hasDamage) return true;
             boolean justDamage = true;
 
             for (final String key : keys) {
-                if (key.equals("Damage")) {
-                    continue;
-                }
-
+                if (key.equals("Damage")) continue;
                 justDamage = false;
+                // TODO: Break here
             }
 
             return !justDamage;
@@ -182,10 +149,7 @@ public final class ItemLoggerModule extends DModule {
         @Override
         public void run() {
             final boolean hasMeta = this.hasMeta(this.itemStack);
-
-            if (!hasMeta) {
-                return;
-            }
+            if (!hasMeta) return;
 
             final Path path = this.getPath(this.uuid);
 

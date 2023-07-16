@@ -116,10 +116,7 @@ public final class OurWorldInNBTModule extends DModule {
     private void genericBlockUpdate(final BlockPos blockPos) {
         final ClientWorld clientWorld = DeviousMod.CLIENT.world;
 
-        if (clientWorld == null) {
-            return;
-        }
-
+        if (clientWorld == null) return;
         final BlockEntity blockEntity = clientWorld.getBlockEntity(blockPos);
 
         if (blockEntity == null) {
@@ -141,10 +138,7 @@ public final class OurWorldInNBTModule extends DModule {
     public void onEnable() {
         final ClientWorld world = client.world;
 
-        if (world == null) {
-            return;
-        }
-
+        if (world == null) return;
         final ClientChunkManager clientChunkManager = world.getChunkManager();
         final ClientChunkManagerAccessor chunkManagerAccessor = (ClientChunkManagerAccessor) clientChunkManager;
         final ClientChunkManager.ClientChunkMap clientChunkMap = chunkManagerAccessor.getChunks();
@@ -155,11 +149,7 @@ public final class OurWorldInNBTModule extends DModule {
 
         for (int i = 0; i < chunkLength; i++) {
             final WorldChunk chunk = chunks.get(i);
-
-            if (chunk == null) {
-                continue;
-            }
-
+            if (chunk == null) continue;
             chunkList.add(chunk);
         }
 
@@ -194,11 +184,7 @@ public final class OurWorldInNBTModule extends DModule {
     @EventHandler
     public void onPreEntitiesRender(final EntityRenderPipelineEvent event) {
         final ClientPlayerEntity player = client.player;
-
-        if (player == null) {
-            return;
-        }
-
+        if (player == null) return;
         synchronized (this.blockPosToTextDisplay) {
             final Vec3d position = player.getPos();
             final Collection<DisplayEntity.TextDisplayEntity> textDisplayEntities = this.blockPosToTextDisplay.values()

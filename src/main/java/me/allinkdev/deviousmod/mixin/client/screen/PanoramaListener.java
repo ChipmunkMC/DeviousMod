@@ -26,10 +26,7 @@ public final class PanoramaListener {
     private CubeMapRenderer onGetCubeMap() {
         final Identifier directory = EventUtil.postEvent(new PanoramaDirectorySelectEvent(PANORAMA_IDENTIFIER)).getTextureDirectory();
 
-        if (directory.equals(PANORAMA_IDENTIFIER)) {
-            return PANORAMA_CUBE_MAP;
-        }
-
+        if (directory.equals(PANORAMA_IDENTIFIER)) return PANORAMA_CUBE_MAP;
         final CubeMapRenderer cubeMapRenderer = new CubeMapRenderer(directory);
         cubeMapRenderer.loadTexturesAsync(DeviousMod.CLIENT.getTextureManager(), Executors.newSingleThreadExecutor());
         return cubeMapRenderer;

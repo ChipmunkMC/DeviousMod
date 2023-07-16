@@ -15,8 +15,6 @@ public final class GlyphRendererListener {
     @Inject(method = "draw", at = @At("HEAD"), cancellable = true)
     private void onDraw(final boolean italic, final float x, final float y, final Matrix4f matrix, final VertexConsumer vertexConsumer,
                         final float red, final float green, final float blue, final float alpha, final int light, final CallbackInfo ci) {
-        if (EventUtil.postCancellable(new PreGlyphRenderEvent())) {
-            ci.cancel();
-        }
+        if (EventUtil.postCancellable(new PreGlyphRenderEvent())) ci.cancel();
     }
 }

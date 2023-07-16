@@ -16,7 +16,6 @@ public final class BootstrapImprover {
         } catch (Throwable ex) {
             DeviousMod.LOGGER.warn("Bootstrap option set failure", ex);
         }
-
     }
 
     @Inject(method = "initChannel", at = @At("HEAD"))

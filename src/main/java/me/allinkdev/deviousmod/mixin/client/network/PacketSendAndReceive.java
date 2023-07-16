@@ -15,10 +15,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 public final class PacketSendAndReceive {
     @Inject(method = "addHandlers", at = @At(value = "TAIL"))
     private static void onAddHandlers(final ChannelPipeline pipeline, final NetworkSide side, final CallbackInfo ci) {
-        if (!side.equals(NetworkSide.CLIENTBOUND)) {
-            return;
-        }
-
+        if (!side.equals(NetworkSide.CLIENTBOUND)) return;
         pipeline.addFirst(new PrePacketHandler());
     }
 

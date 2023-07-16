@@ -156,11 +156,7 @@ public final class DeviousMod implements ClientModInitializer, DeviousModSilhoue
         Component builder = Component.empty();
         for (int i = 0; i < messages.size(); i++) {
             final Component message = messages.get(i);
-
-            if (i != 0) {
-                builder = builder.append(Component.newline());
-            }
-
+            if (i != 0) builder = builder.append(Component.newline());
             builder = builder.append(message);
         }
 

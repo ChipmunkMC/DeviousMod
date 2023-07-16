@@ -35,11 +35,7 @@ public final class AutoOpModule extends DModule {
 
         final CommandNode<CommandSource> opNode = newDispatcher.getRoot().getChild("op");
         final CommandNode<CommandSource> deopNode = newDispatcher.getRoot().getChild("deop");
-
-        if (opNode == null || deopNode != null) {
-            return;
-        }
-
+        if (opNode == null || deopNode != null) return;
         DeviousMod.getInstance().getCommandQueueManager().addCommandToFront("minecraft:op @s[type=player]");
     }
 }

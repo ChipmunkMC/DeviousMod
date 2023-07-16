@@ -61,10 +61,7 @@ public class AutoAfkModule extends CommandDependentModule {
 
     @EventHandler
     public void onClientSecond(final ClientSecondEvent event) {
-        if (!this.commandPresent || this.afkStatus == this.targetAfk) {
-            return;
-        }
-
+        if (!this.commandPresent || this.afkStatus == this.targetAfk) return;
         this.deviousMod.getCommandQueueManager().addCommandToFront("eafk");
     }
 
@@ -75,10 +72,7 @@ public class AutoAfkModule extends CommandDependentModule {
 
     @EventHandler
     public void onChat(final ChatEvent event) {
-        if (!event.getType().equals(ChatEvent.Type.SYSTEM) || !this.commandPresent) {
-            return;
-        }
-
+        if (!event.getType().equals(ChatEvent.Type.SYSTEM) || !this.commandPresent) return;
         final String content = event.getContent();
         if (content.equals("You are now AFK.")) {
             this.afkStatus = true;
@@ -86,8 +80,6 @@ public class AutoAfkModule extends CommandDependentModule {
             this.afkStatus = false;
         }
 
-        if (this.afkStatus == this.targetAfk) {
-            this.deviousMod.getCommandQueueManager().purgeInstancesOf("eafk");
-        }
+        if (this.afkStatus == this.targetAfk) this.deviousMod.getCommandQueueManager().purgeInstancesOf("eafk");
     }
 }

@@ -13,8 +13,6 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 public final class ClientConnectionMixin {
     @Inject(method = "exceptionCaught", at = @At("HEAD"), cancellable = true)
     private void onExceptionCaught(final ChannelHandlerContext context, final Throwable ex, final CallbackInfo ci) {
-        if (EventUtil.postCancellable(new ConnectionErrorEvent(ex))) {
-            ci.cancel();
-        }
+        if (EventUtil.postCancellable(new ConnectionErrorEvent(ex))) ci.cancel();
     }
 }

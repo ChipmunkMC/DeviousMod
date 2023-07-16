@@ -21,22 +21,14 @@ public abstract class NetworkStateMixin {
     @Inject(method = "channelInactive", at = @At("HEAD"))
     public void onChannelInactive(final ChannelHandlerContext context, final CallbackInfo ci) {
         final PacketListener packetListener = this.getPacketListener();
-
-        if (packetListener instanceof ClientQueryPacketListener) {
-            return;
-        }
-
+        if (packetListener instanceof ClientQueryPacketListener) return;
         EventUtil.postEvent(new ConnectionEndEvent());
     }
 
     @Inject(method = "channelActive", at = @At("HEAD"))
     public void onChannelActive(final ChannelHandlerContext context, final CallbackInfo ci) {
         final PacketListener packetListener = this.getPacketListener();
-
-        if (packetListener instanceof ClientQueryPacketListener) {
-            return;
-        }
-
+        if (packetListener instanceof ClientQueryPacketListener) return;
         EventUtil.postEvent(new ConnectionStartEvent());
     }
 }

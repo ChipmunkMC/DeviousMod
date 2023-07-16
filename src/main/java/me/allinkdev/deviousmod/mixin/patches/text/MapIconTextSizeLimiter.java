@@ -25,16 +25,9 @@ public final class MapIconTextSizeLimiter {
 
     @Redirect(method = "<init>", at = @At(value = "FIELD", target = "Lnet/minecraft/item/map/MapIcon;text:Lnet/minecraft/text/Text;", opcode = Opcodes.PUTFIELD))
     private void onInit(final MapIcon instance, final Text value) {
-        if (value == null) {
-            return;
-        }
-
+        if (value == null) return;
         final String content = value.getString();
-
-        if (content.length() < 30) {
-            return;
-        }
-
+        if (content.length() < 30) return;
         text = LAG_ICON_TEXT;
     }
 }

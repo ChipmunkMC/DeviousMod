@@ -51,10 +51,7 @@ public final class ClientsideInventoryModule extends DModule {
     private void processCreativePacket(final CreativeInventoryActionC2SPacket creativeAction, final PacketC2SEvent event) {
         final ClientPlayerEntity player = client.player;
 
-        if (player == null) {
-            throw new IllegalStateException("Player null!");
-        }
-
+        if (player == null) throw new IllegalStateException("Player null!");
         final PlayerInventory inventory = player.getInventory();
         final ItemStack stack = creativeAction.getItemStack();
         final int networkSlot = creativeAction.getSlot();
@@ -82,10 +79,7 @@ public final class ClientsideInventoryModule extends DModule {
     private void interact() {
         final ClientPlayerEntity player = client.player;
 
-        if (player == null) {
-            throw new IllegalStateException("Player null!");
-        }
-
+        if (player == null) throw new IllegalStateException("Player null!");
         final PlayerInventory inventory = player.getInventory();
         final int selectedSlot = inventory.selectedSlot;
         final ItemStack selectedItem = inventory.getStack(selectedSlot);
@@ -111,27 +105,18 @@ public final class ClientsideInventoryModule extends DModule {
     public void onPacketReceive(final PacketS2CEvent event) {
         final Packet<?> packet = event.getPacket();
 
-        if (packet instanceof InventoryS2CPacket || packet instanceof ScreenHandlerSlotUpdateS2CPacket || packet instanceof UpdateSelectedSlotS2CPacket) {
+        if (packet instanceof InventoryS2CPacket || packet instanceof ScreenHandlerSlotUpdateS2CPacket || packet instanceof UpdateSelectedSlotS2CPacket)
             event.cancel();
-        }
     }
 
     @EventHandler
     public void onEndClientTick(final ClientTickEndEvent event) {
         final ClientPlayNetworkHandler networkHandler = client.getNetworkHandler();
 
-        if (networkHandler == null) {
-            return;
-        }
-
+        if (networkHandler == null) return;
         final ClientConnection connection = networkHandler.getConnection();
 
-        if (!connection.isOpen()) {
-            return;
-        }
-
-        for (final Packet<?> packet : Set.copyOf(sendNextTick)) {
-            connection.send(packet, PacketCallbacks.always(() -> sendNextTick.remove(packet)));
-        }
+        if (!connection.isOpen()) return;
+        for (final Packet<?> packet : Set.copyOf(sendNextTick)) connection.send(packet, PacketCallbacks.always(() -> sendNextTick.remove(packet)));
     }
 }

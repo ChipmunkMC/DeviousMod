@@ -22,8 +22,6 @@ public final class BeaconRenderListener {
                                      final float[] color,
                                      final float innerRadius, final float outerRadius,
                                      final CallbackInfo ci) {
-        if (EventUtil.postCancellable(new PreBeaconBeamRenderEvent())) {
-            ci.cancel();
-        }
+        if (EventUtil.postCancellable(new PreBeaconBeamRenderEvent())) ci.cancel();
     }
 }

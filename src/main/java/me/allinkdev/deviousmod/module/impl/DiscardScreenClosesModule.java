@@ -32,8 +32,6 @@ public final class DiscardScreenClosesModule extends DModule {
     public void onPacketRecieve(final PacketS2CEvent event) {
         final Packet<?> packet = event.getPacket();
 
-        if (packet instanceof CloseScreenS2CPacket || packet instanceof CloseHandledScreenC2SPacket) {
-            event.setCancelled(true);
-        }
+        if (packet instanceof CloseScreenS2CPacket || packet instanceof CloseHandledScreenC2SPacket) event.setCancelled(true);
     }
 }

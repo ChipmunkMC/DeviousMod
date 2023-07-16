@@ -20,10 +20,7 @@ public final class PacketHandler extends ChannelDuplexHandler {
         final PacketS2CEvent event = EventUtil.postEvent(new PacketS2CEvent(packet));
         final Packet<?> eventPacket = event.getPacket();
 
-        if (event.isCancelled() || eventPacket == null) {
-            return;
-        }
-
+        if (event.isCancelled() || eventPacket == null) return;
         super.channelRead(ctx, eventPacket);
     }
 
@@ -37,10 +34,7 @@ public final class PacketHandler extends ChannelDuplexHandler {
         final PacketC2SEvent event = EventUtil.postEvent(new PacketC2SEvent(packet));
         final Packet<?> eventPacket = event.getPacket();
 
-        if (event.isCancelled() || eventPacket == null) {
-            return;
-        }
-
+        if (event.isCancelled() || eventPacket == null) return;
         super.write(ctx, eventPacket, promise);
     }
 }

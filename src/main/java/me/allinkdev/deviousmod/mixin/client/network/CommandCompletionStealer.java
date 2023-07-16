@@ -16,11 +16,7 @@ public final class CommandCompletionStealer {
         final int id = packet.getCompletionId();
         final Suggestions suggestions = packet.getSuggestions();
         final boolean handled = CommandCompletionManager.handleCompletion(id, suggestions);
-
-        if (!handled) {
-            return;
-        }
-
+        if (!handled) return;
         ci.cancel();
     }
 }

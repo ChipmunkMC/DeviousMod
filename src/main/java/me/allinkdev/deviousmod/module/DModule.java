@@ -101,10 +101,7 @@ public abstract class DModule extends Module {
             DModuleManager.postLifecycleUpdate(this.eventManager, ModuleLifecycle.DISABLED, this);
         }
 
-        if (!shouldBroadcast) {
-            return;
-        }
-
+        if (!shouldBroadcast) return;
         final String moduleName = this.getModuleName();
         final Component feedback = Component.text(moduleName)
                 .append(Component.text(" is now "))

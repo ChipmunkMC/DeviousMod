@@ -42,30 +42,20 @@ public class InterceptorModule extends DModule {
     private void logRawPacketData(final String prefix, final boolean hexadecimal, final GenericPrePacketEvent event) {
         final byte[] signedBytes = event.getData();
         final int[] unsignedBytes = new int[signedBytes.length];
-
-        for (int i = 0; i < signedBytes.length; i++) {
-            unsignedBytes[i] = signedBytes[i] & 0xFF;
-        }
-
+        for (int i = 0; i < signedBytes.length; i++) unsignedBytes[i] = signedBytes[i] & 0xFF;
         final String display = hexadecimal ? String.join(" ", Arrays.stream(unsignedBytes).mapToObj(b -> String.format("%02x", b).toUpperCase()).toArray(String[]::new)) : Arrays.toString(unsignedBytes);
         DeviousMod.LOGGER.info("[{}] {}", prefix, display);
     }
 
     @EventHandler
     public void onPrePacketReceive(final PrePacketS2CEvent event) {
-        if (!this.settings.getSetting("serverside", Boolean.class).getValue()) {
-            return;
-        }
-
+        if (!this.settings.getSetting("serverside", Boolean.class).getValue()) return;
         this.logRawPacketData("S->C", this.settings.getSetting("hex", Boolean.class).getValue(), event);
     }
 
     @EventHandler
     public void onPrePacketSend(final PrePacketC2SEvent event) {
-        if (!this.settings.getSetting("clientside", Boolean.class).getValue()) {
-            return;
-        }
-
+        if (!this.settings.getSetting("clientside", Boolean.class).getValue()) return;
         this.logRawPacketData("C->S", this.settings.getSetting("hex", Boolean.class).getValue(), event);
     }
 }

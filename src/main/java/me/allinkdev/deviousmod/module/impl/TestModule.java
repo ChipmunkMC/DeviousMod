@@ -47,10 +47,7 @@ public final class TestModule extends DModule {
 
     @EventHandler
     public void onPacketC2S(final PacketS2CEvent event) {
-        if (!(event.getPacket() instanceof ChatMessageC2SPacket)) {
-            return;
-        }
-
+        if (!(event.getPacket() instanceof ChatMessageC2SPacket)) return;
         event.setPacket(new ChatMessageC2SPacket("Testing 123", Instant.now(), 0L, null, new LastSeenMessageList.Acknowledgment(0, BitSet.valueOf(new byte[0]))));
     }
 
@@ -63,10 +60,7 @@ public final class TestModule extends DModule {
 
     @EventHandler
     public void onPacketS2C(final PacketS2CEvent event) {
-        if (!(event.getPacket() instanceof ChatMessageS2CPacket)) {
-            return;
-        }
-
+        if (!(event.getPacket() instanceof ChatMessageS2CPacket)) return;
         event.setPacket(new ChatMessageS2CPacket(UUID.randomUUID(), 0, null, MessageBody.ofUnsigned("SEX!!!").toSerialized(MessageSignatureStorage.create()), Text.of("SEXU"), FilterMask.PASS_THROUGH, new MessageType.Serialized(0, Text.of("sxe"), Text.of("SAX"))));
     }
 }
