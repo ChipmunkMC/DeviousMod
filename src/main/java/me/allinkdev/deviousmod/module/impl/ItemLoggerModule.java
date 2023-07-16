@@ -5,7 +5,6 @@ import me.allinkdev.deviousmod.DeviousMod;
 import me.allinkdev.deviousmod.event.entity.living.impl.LivingEntityEquipmentUpdateEvent;
 import me.allinkdev.deviousmod.module.DModule;
 import me.allinkdev.deviousmod.module.DModuleManager;
-import me.allinkdev.deviousmod.util.IterUtil;
 import net.lenni0451.lambdaevents.EventHandler;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
@@ -13,55 +12,21 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtCompound;
 
 import java.io.IOException;
-import java.nio.file.DirectoryStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardOpenOption;
 import java.time.Instant;
-import java.util.Iterator;
-import java.util.List;
 import java.util.Set;
 import java.util.UUID;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
-import java.util.concurrent.atomic.AtomicInteger;
 
 public final class ItemLoggerModule extends DModule {
     private static final ExecutorService EXECUTOR = Executors.newCachedThreadPool();
     private static final Path ROOT_PATH = Path.of("logs", "deviousmod", "nbt");
 
-    // TODO: Actually fucking remove the lock system
-    static {
-        final AtomicInteger count = new AtomicInteger();
-
-        try {
-            scanDirectoryForLocksAndRemove(count, ROOT_PATH);
-        } catch (IOException e) {
-            throw new IllegalStateException("Failed to clear locks", e);
-        }
-
-        final int lockCount = count.get();
-
-        if (lockCount > 0) DeviousMod.LOGGER.warn("Cleared {} locks!", lockCount);
-    }
-
     public ItemLoggerModule(final DModuleManager moduleManager) {
         super(moduleManager);
-    }
-
-    private static void processPath(final AtomicInteger count, final Path path) throws IOException {
-        if (Files.isDirectory(path)) scanDirectoryForLocksAndRemove(count, path);
-    }
-
-
-    private static void scanDirectoryForLocksAndRemove(final AtomicInteger count, final Path path) throws IOException {
-        if (!Files.exists(path)) return;
-        final DirectoryStream<Path> directoryStream = Files.newDirectoryStream(path);
-        final Iterator<Path> pathIterator = directoryStream.iterator();
-        final List<Path> paths = IterUtil.toList(pathIterator);
-        directoryStream.close();
-
-        for (final Path childPath : paths) processPath(count, childPath);
     }
 
     @Override
@@ -159,8 +124,6 @@ public final class ItemLoggerModule extends DModule {
                 DeviousMod.LOGGER.error("Failed to create NBT log directory!", e);
                 return;
             }
-
-            // We want to implement locks as we're using more than one thread. It would be bad if we attempted to write to the same file in parallel!
 
             final String fileName = getFileName();
 
