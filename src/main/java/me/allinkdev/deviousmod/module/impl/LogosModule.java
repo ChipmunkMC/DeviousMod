@@ -44,7 +44,6 @@ public final class LogosModule extends DModule implements ImGuiLayer {
     @Override
     public void process() {
         if (client.options.debugEnabled || client.world == null) return;
-        client.inGameHud.setCanShowChatDisabledScreen(true); // TODO: What the fuck?
 
         ImGui.begin("internal_logos", ImGuiWindowFlags.NoMove | ImGuiWindowFlags.NoResize | ImGuiWindowFlags.NoBackground | ImGuiWindowFlags.NoTitleBar | ImGuiWindowFlags.AlwaysAutoResize);
         ImGui.setWindowPos(4, 4);
