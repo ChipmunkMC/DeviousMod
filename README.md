@@ -105,3 +105,7 @@ The key parameter (is obviously) the shared secret of the bot.
 `/keyring add HBot sha-256 COMMAND;NAME;TIMESTAMP;KEY UTF-8 4 10 <KEY>`
 
 ![/keyring add HBot sha-256 COMMAND;NAME;TIMESTAMP;KEY UTF-8 4 10 KEY](./.github/assets/hbot_example.png)
+
+## Prized Customer Testimonials
+
+![Gir_nhll is such a shy little girl](./.github/assets/gir_nhll_testimonial.png)
