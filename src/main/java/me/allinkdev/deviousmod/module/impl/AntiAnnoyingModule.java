@@ -21,10 +21,10 @@ public final class AntiAnnoyingModule extends DModule {
     @Override
     protected DModuleSettings.Builder getSettingsBuilder() {
         return super.getSettingsBuilder()
-                .addField("demo", "Ignore demo screen", "Prevents the server from opening the demo screen.", true)
-                .addField("end", "Ignore end screen", "Prevents the server from opening the end screen.", true)
-                .addField("rdi", "Ignored Reduced Debug Info", "Prevents the server from force enabling the reduced debug info setting.", true)
-                .addField("status_effect", "Ignore status effect state", "Prevents the server from disabling the status effect hud.", true);
+                .addField("demo", "No Demo Screen", "Prevents the server from opening the demo screen.", true)
+                .addField("end", "No End Screen", "Prevents the server from opening the end screen.", true)
+                .addField("rdi", "No Reduced Debug Info", "Prevents the server from force enabling the reduced debug info setting.", true)
+                .addField("status_effect", "No Status Effect State", "Prevents the server from disabling the status effect hud.", true);
     }
 
     @EventHandler
