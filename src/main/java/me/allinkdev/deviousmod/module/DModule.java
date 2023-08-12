@@ -1,7 +1,6 @@
 package me.allinkdev.deviousmod.module;
 
 import com.github.allinkdev.deviousmod.api.module.Module;
-import com.github.allinkdev.deviousmod.api.module.settings.ModuleSettings;
 import me.allinkdev.deviousmod.DeviousMod;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
@@ -49,25 +48,6 @@ public abstract class DModule extends Module {
     }
 
     public void init() {
-    }
-
-    @Override
-    public ModuleSettings getSettings() {
-        return this.settings;
-    }
-
-    @Override
-    public boolean getModuleState() {
-        return this.settings.getSetting("enabled", Boolean.class).getValue();
-    }
-
-    @Override
-    public void setModuleState(final boolean newState) {
-        try {
-            this.settings.writeValue("enabled", newState, Boolean.class);
-        } catch (IOException e) {
-            throw new UncheckedIOException("Failed to write module enabled state", e);
-        }
     }
 
     public void notifyModuleStateUpdate(final boolean newState) {

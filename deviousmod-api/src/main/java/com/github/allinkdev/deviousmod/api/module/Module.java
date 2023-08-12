@@ -6,6 +6,8 @@ import com.github.allinkdev.deviousmod.api.lifecycle.LifecycleTracker;
 import com.github.allinkdev.deviousmod.api.managers.ModuleManager;
 import com.github.allinkdev.deviousmod.api.module.settings.ModuleSettings;
 
+import java.io.IOException;
+import java.io.UncheckedIOException;
 import java.nio.file.Paths;
 
 /**
@@ -61,19 +63,29 @@ public abstract class Module extends GenericLifecycleTracker<ModuleLifecycle> im
     /**
      * @return the settings for this module
      */
-    public abstract ModuleSettings getSettings();
+    public ModuleSettings getSettings() {
+        return this.settings;
+    }
 
     /**
      * @return the toggle state of the module object (enabled: true, disabled: false)
      */
-    public abstract boolean getModuleState();
+    public boolean getModuleState() {
+        return this.getSettings().getSetting("enabled", Boolean.class).getValue();
+    }
 
     /**
      * Sets the toggle state of the module object to a boolean value.
      *
      * @param newState The new toggle state of the module object
      */
-    public abstract void setModuleState(final boolean newState);
+    public void setModuleState(final boolean newState) {
+        try {
+            this.getSettings().writeValue("enabled", newState, Boolean.class);
+        } catch (IOException e) {
+            throw new UncheckedIOException("Failed to write module enabled state", e);
+        }
+    }
 
     /**
      * Notifies the client about changes to this module's state.
