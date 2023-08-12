@@ -11,10 +11,7 @@ public class ImGuiHolderProxy implements ImGuiHolder {
     private ImGuiHolder actualHolder;
 
     public void setActualHolder(final ImGuiHolder actualHolder) {
-        if (this.actualHolder != null) {
-            throw new IllegalStateException("Tried to ovewrite an already present proxied holder!");
-        }
-
+        if (this.actualHolder != null) throw new IllegalStateException("Tried to overwrite an already present proxied holder!");
         this.actualHolder = actualHolder;
         this.layerQueue.forEach(this.actualHolder::addLayer);
         this.layerQueue.clear();
@@ -32,10 +29,7 @@ public class ImGuiHolderProxy implements ImGuiHolder {
 
     @Override
     public void render() {
-        if (this.actualHolder == null) {
-            return;
-        }
-
+        if (this.actualHolder == null) return;
         this.actualHolder.render();
     }
 
@@ -61,19 +55,13 @@ public class ImGuiHolderProxy implements ImGuiHolder {
 
     @Override
     public void newFrame() {
-        if (this.actualHolder == null) {
-            return;
-        }
-
+        if (this.actualHolder == null) return;
         this.actualHolder.newFrame();
     }
 
     @Override
     public void handleScrollCallback(final long id, final double xO, final double yO) {
-        if (this.actualHolder == null) {
-            return;
-        }
-
+        if (this.actualHolder == null) return;
         this.actualHolder.handleScrollCallback(id, xO, yO);
     }
 }
