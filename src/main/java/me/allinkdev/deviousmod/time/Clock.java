@@ -30,12 +30,12 @@ public final class Clock {
         return clockTask;
     }
 
-    private static final class ClockTask extends TimerTask {
+    public static final class ClockTask extends TimerTask {
         private final Runnable runnable;
         private final Object interruptLock = new Object();
         private boolean interrupted = false;
 
-        public ClockTask(final Runnable runnable) {
+        ClockTask(final Runnable runnable) {
             this.runnable = runnable;
         }
 
