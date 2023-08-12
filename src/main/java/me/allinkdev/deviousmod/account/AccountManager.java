@@ -1,8 +1,8 @@
 package me.allinkdev.deviousmod.account;
 
-import me.allinkdev.deviousmod.DeviousMod;
 import me.allinkdev.deviousmod.event.screen.impl.InitScreenEvent;
 import me.allinkdev.deviousmod.mixin.accessor.ScreenAccessor;
+import me.allinkdev.deviousmod.util.EventUtil;
 import net.lenni0451.lambdaevents.EventHandler;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.screen.Screen;
@@ -18,10 +18,10 @@ public final class AccountManager {
     private final MinecraftClient client;
     private final Session originalSession;
 
-    public AccountManager(final MinecraftClient client, final DeviousMod deviousMod) {
+    public AccountManager(final MinecraftClient client) {
         this.client = client;
         this.originalSession = cloneSession(client.session);
-        deviousMod.getEventManager().registerListener(this);
+        EventUtil.registerListener(this);
     }
 
     private static Session cloneSession(final Session original) {

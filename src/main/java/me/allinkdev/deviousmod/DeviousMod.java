@@ -130,7 +130,7 @@ public final class DeviousMod implements ClientModInitializer, DeviousModSilhoue
         this.clock = new Clock();
         this.commandQueueManager = new CommandQueueManager();
         this.renderManager = new RenderManager();
-        this.accountManager = new AccountManager(CLIENT, this);
+        this.accountManager = new AccountManager(CLIENT);
         this.botKeyProvider = new BotKeyProvider();
         this.keyBindManager = new DKeyBindManager(this);
         this.moduleManager = new DModuleManager(this);
