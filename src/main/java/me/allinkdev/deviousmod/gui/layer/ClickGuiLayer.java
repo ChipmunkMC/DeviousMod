@@ -66,7 +66,7 @@ public final class ClickGuiLayer extends AbstractImGuiLayer {
 
         final DModuleManager moduleManager = this.deviousMod.getModuleManager();
         final Set<Module> modules = moduleManager.getModules();
-        modules.stream().filter(m -> ((m.getExperimentality() == Experimentality.NONE) || m.getExperimentality() == Experimentality.WARN) || (m.getExperimentality() == Experimentality.HIDE && DeviousMod.IS_EXPERIMENTAL)).forEach(this::registerModule);
+        modules.stream().filter(m -> DeviousMod.isPermittedExperimentality(m.getExperimentality())).forEach(this::registerModule);
 
         EventUtil.registerListener(this);
     }

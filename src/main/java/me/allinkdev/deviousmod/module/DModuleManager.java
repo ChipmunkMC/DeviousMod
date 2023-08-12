@@ -1,6 +1,5 @@
 package me.allinkdev.deviousmod.module;
 
-import com.github.allinkdev.deviousmod.api.experiments.Experimentality;
 import com.github.allinkdev.deviousmod.api.managers.EventManager;
 import com.github.allinkdev.deviousmod.api.managers.ModuleManager;
 import com.github.allinkdev.deviousmod.api.module.Module;
@@ -35,7 +34,7 @@ public final class DModuleManager implements ModuleManager {
                         .map(Reflector::createNew)
                         .map(r -> r.create(this))
                         .map(Optional::orElseThrow), event.createModules(this).stream())
-                .filter(m -> m.getExperimentality() != Experimentality.HIDE || (m.getExperimentality() == Experimentality.HIDE && DeviousMod.IS_EXPERIMENTAL))
+                .filter(m -> DeviousMod.isPermittedExperimentality(m.getExperimentality()))
                 .toList();
 
         this.modules.addAll(newModules);

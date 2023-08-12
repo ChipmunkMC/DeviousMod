@@ -1,7 +1,6 @@
 package me.allinkdev.deviousmod.module.impl;
 
 import com.github.allinkdev.deviousmod.api.event.Cancellable;
-import com.github.allinkdev.deviousmod.api.experiments.Experimental;
 import com.github.allinkdev.deviousmod.api.module.settings.ModuleSettings;
 import me.allinkdev.deviousmod.event.render.block.PreBeaconBeamRenderEvent;
 import me.allinkdev.deviousmod.event.render.block.PreBlockEntityRenderEvent;
@@ -22,7 +21,6 @@ import net.lenni0451.lambdaevents.EventHandler;
 import net.minecraft.client.render.RenderLayer;
 import net.minecraft.entity.ItemEntity;
 
-@Experimental(value = "Recently added. Use with caution.", hide = false)
 public final class NoRenderModule extends DModule {
     public NoRenderModule(final DModuleManager moduleManager) {
         super(moduleManager);

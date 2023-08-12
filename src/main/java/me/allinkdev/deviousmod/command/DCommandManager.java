@@ -1,12 +1,12 @@
 package me.allinkdev.deviousmod.command;
 
 import com.github.allinkdev.deviousmod.api.Command;
+import com.github.allinkdev.deviousmod.api.experiments.Experimentality;
 import com.github.allinkdev.deviousmod.api.managers.CommandManager;
 import com.github.allinkdev.reflector.Reflector;
 import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.builder.LiteralArgumentBuilder;
 import me.allinkdev.deviousmod.DeviousMod;
-import com.github.allinkdev.deviousmod.api.experiments.Experimentality;
 import net.fabricmc.fabric.api.client.command.v2.FabricClientCommandSource;
 import net.minecraft.command.CommandRegistryAccess;
 
@@ -21,7 +21,7 @@ public final class DCommandManager implements CommandManager<FabricClientCommand
                 .map(Reflector::createNew)
                 .map(r -> r.create(deviousMod))
                 .map(Optional::orElseThrow)
-                .filter(c -> c.getExperimentality() == Experimentality.NONE || (c.getExperimentality() == Experimentality.HIDE && DeviousMod.IS_EXPERIMENTAL))
+                .filter(c -> DeviousMod.isPermittedExperimentality(c.getExperimentality()))
                 .toList();
 
         commands.addAll(newCommands);

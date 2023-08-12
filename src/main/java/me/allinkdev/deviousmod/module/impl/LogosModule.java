@@ -10,7 +10,7 @@ import net.minecraft.SharedConstants;
 
 public final class LogosModule extends DModule implements ImGuiLayer {
     private static final String GAME_VERSION = SharedConstants.getGameVersion().getName();
-    private static final String TEXT = "DeviousMod " + GAME_VERSION;
+    private static final String TEXT = "DeviousMod " + (DeviousMod.IS_SNAPSHOT ? "Development" : "Release") + " v" + DeviousMod.VERSION_STRING + " for " + GAME_VERSION + (DeviousMod.IS_EXPERIMENTAL ? " (experimental settings enabled)" : "");
 
     public LogosModule(final DModuleManager moduleManager) {
         super(moduleManager);

@@ -2,6 +2,7 @@ package me.allinkdev.deviousmod;
 
 import com.github.allinkdev.deviousmod.api.DeviousModSilhouette;
 import com.github.allinkdev.deviousmod.api.event.impl.imgui.ImGuiHolderOverrideEvent;
+import com.github.allinkdev.deviousmod.api.experiments.Experimentality;
 import com.github.allinkdev.deviousmod.api.gui.ImGuiHolder;
 import com.github.allinkdev.deviousmod.api.load.DeviousModEntrypoint;
 import com.github.allinkdev.deviousmod.api.managers.CommandManager;
@@ -32,7 +33,10 @@ import net.fabricmc.fabric.api.client.command.v2.FabricClientCommandSource;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.fabricmc.fabric.api.client.screen.v1.ScreenEvents;
 import net.fabricmc.loader.api.FabricLoader;
+import net.fabricmc.loader.api.ModContainer;
+import net.fabricmc.loader.api.Version;
 import net.fabricmc.loader.api.entrypoint.EntrypointContainer;
+import net.fabricmc.loader.api.metadata.ModMetadata;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
 import net.lenni0451.lambdaevents.LambdaManager;
@@ -41,13 +45,18 @@ import net.minecraft.client.option.KeyBinding;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.lang.management.ManagementFactory;
 import java.util.List;
 
 public final class DeviousMod implements ClientModInitializer, DeviousModSilhouette<FabricClientCommandSource, KeyBinding, LambdaManager> {
     public static final Logger LOGGER = LoggerFactory.getLogger("Devious Mod");
     public static final MinecraftClient CLIENT = MinecraftClient.getInstance();
-    public static final boolean IS_EXPERIMENTAL = ManagementFactory.getRuntimeMXBean().getInputArguments().stream().anyMatch(s -> s.startsWith("-agentlib:jdwp")) || Boolean.getBoolean("com.github.allinkdev.deviousmod.experimental");
+    public static final FabricLoader FABRIC_LOADER = FabricLoader.getInstance();
+    public static final ModContainer MOD_CONTAINER = FABRIC_LOADER.getModContainer("deviousmod").orElseThrow(() -> new IllegalStateException("DeviousMod not present"));
+    public static final ModMetadata METADATA = MOD_CONTAINER.getMetadata();
+    public static final Version VERSION = METADATA.getVersion();
+    public static final String VERSION_STRING = VERSION.getFriendlyString();
+    public static final boolean IS_SNAPSHOT = VERSION_STRING.endsWith("-SNAPSHOT");
+    public static final boolean IS_EXPERIMENTAL = FABRIC_LOADER.isDevelopmentEnvironment() || Boolean.getBoolean("com.github.allinkdev.deviousmod.experimental");
     private static DeviousMod INSTANCE;
 
     private EventManager<LambdaManager> eventManager;
@@ -60,6 +69,12 @@ public final class DeviousMod implements ClientModInitializer, DeviousModSilhoue
     private CommandQueueManager commandQueueManager;
     private ImGuiHolderProxy imGuiHolder;
     private Clock clock;
+
+    public static boolean isPermittedExperimentality(final Experimentality experimentality) {
+        if (experimentality == Experimentality.NONE) return true;
+        if (experimentality == Experimentality.HIDE && IS_EXPERIMENTAL) return true;
+        return experimentality == Experimentality.WARN && (IS_EXPERIMENTAL || IS_SNAPSHOT);
+    }
 
     public static DeviousMod getInstance() {
         return INSTANCE;
@@ -140,7 +155,7 @@ public final class DeviousMod implements ClientModInitializer, DeviousModSilhoue
 
         QueryManager.init(this);
 
-        ClientCommandRegistrationCallback.EVENT.register(commandManager::register);
+        ClientCommandRegistrationCallback.EVENT.register(this.commandManager::register);
 
         ClientTickEvents.START_CLIENT_TICK.register(ClientTickStartEvent::onStartTick);
         ClientTickEvents.END_CLIENT_TICK.register(ClientTickEndEvent::onTickEnd);
