@@ -49,7 +49,7 @@ public final class DModuleManager implements ModuleManager {
             this.updateModuleState(module, module.getModuleState(), false);
         }
     }
-    
+
     public static void postLifecycleUpdate(final EventManager<?> eventManager, final ModuleLifecycle to, final Module module) {
         TRANSITION_EVENT_FACTORY.create(module, to, eventManager::broadcastEvent).join();
     }
@@ -65,7 +65,7 @@ public final class DModuleManager implements ModuleManager {
     }
 
     private void checkLoaded() {
-        if (modules.size() < 1) {
+        if (modules.isEmpty()) {
             throw new IllegalStateException("Modules not initialised yet!");
         }
     }
@@ -111,14 +111,14 @@ public final class DModuleManager implements ModuleManager {
 
     @Override
     public Set<Module> getModules() {
-        checkLoaded();
+        this.checkLoaded();
 
         return Collections.unmodifiableSet(modules);
     }
 
     @Override
     public Optional<Module> findModule(final CharSequence name) {
-        checkLoaded();
+        this.checkLoaded();
 
         return modules.stream()
                 .filter(m -> m.getModuleName().equalsIgnoreCase((String) name))
