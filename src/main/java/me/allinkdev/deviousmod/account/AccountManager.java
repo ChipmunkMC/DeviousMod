@@ -14,7 +14,7 @@ import net.minecraft.util.Uuids;
 
 import java.util.Optional;
 
-public class AccountManager {
+public final class AccountManager {
     private final MinecraftClient client;
     private final Session originalSession;
 
