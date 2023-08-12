@@ -22,8 +22,8 @@ repositories {
 }
 
 dependencies {
-    compileOnlyApi("com.mojang:brigadier:1.1.8") // This dependency is marked as compile-only as it is expected to be provided in the environment of dependents.
-    shade("net.lenni0451:LambdaEvents:2.2.0")
+    compileOnlyApi("com.mojang:brigadier:${project.property("brigadier_version")}") // This dependency is marked as compile-only as it is expected to be provided in the environment of dependents.
+    shade("net.lenni0451:LambdaEvents:${project.property("lambdaevents_version")}")
 }
 
 configurations {
