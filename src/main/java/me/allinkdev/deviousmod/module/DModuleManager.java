@@ -34,7 +34,7 @@ public final class DModuleManager implements ModuleManager {
                         .allSubClassesInSubPackage("impl")
                         .map(Reflector::createNew)
                         .map(r -> r.create(this))
-                        .map(Optional::orElseThrow), event.getNewModules().stream())
+                        .map(Optional::orElseThrow), event.createModules(this).stream())
                 .filter(m -> m.getExperimentality() != Experimentality.HIDE || (m.getExperimentality() == Experimentality.HIDE && DeviousMod.IS_EXPERIMENTAL))
                 .toList();
 
