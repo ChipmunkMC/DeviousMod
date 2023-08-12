@@ -11,6 +11,7 @@ import me.allinkdev.deviousmod.account.AccountManager;
 import me.allinkdev.deviousmod.command.DCommandManager;
 import me.allinkdev.deviousmod.command.queue.CommandQueueManager;
 import me.allinkdev.deviousmod.event.DEventManager;
+import me.allinkdev.deviousmod.event.screen.impl.InitScreenEvent;
 import me.allinkdev.deviousmod.event.time.tick.impl.ClientTickEndEvent;
 import me.allinkdev.deviousmod.event.time.tick.impl.ClientTickStartEvent;
 import me.allinkdev.deviousmod.event.time.tick.world.impl.WorldTickEndEvent;
@@ -29,6 +30,7 @@ import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.fabric.api.client.command.v2.ClientCommandRegistrationCallback;
 import net.fabricmc.fabric.api.client.command.v2.FabricClientCommandSource;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
+import net.fabricmc.fabric.api.client.screen.v1.ScreenEvents;
 import net.fabricmc.loader.api.FabricLoader;
 import net.fabricmc.loader.api.entrypoint.EntrypointContainer;
 import net.kyori.adventure.text.Component;
@@ -145,6 +147,9 @@ public final class DeviousMod implements ClientModInitializer, DeviousModSilhoue
 
         ClientTickEvents.START_WORLD_TICK.register(WorldTickStartEvent::onWorldTickStart);
         ClientTickEvents.START_WORLD_TICK.register(WorldTickEndEvent::onWorldTickEnd);
+
+        ScreenEvents.AFTER_INIT.register(InitScreenEvent::onAfterInit);
+
         entrypoints.forEach(e -> e.onLoad(this));
     }
 
