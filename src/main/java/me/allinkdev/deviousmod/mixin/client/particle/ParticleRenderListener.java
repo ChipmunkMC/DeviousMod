@@ -14,11 +14,10 @@ import java.util.Queue;
 
 @Mixin(ParticleManager.class)
 public final class ParticleRenderListener {
-    @SuppressWarnings("all")
     @Redirect(method = "renderParticles", at = @At(value = "INVOKE", target = "Ljava/util/Map;get(Ljava/lang/Object;)Ljava/lang/Object;"))
-    private Object onRenderParticles(final Map instance, final Object o) {
-        final ParticleTextureSheet textureSheet = (ParticleTextureSheet) o;
-        final Queue<Particle> particleBatch = (Queue<Particle>) instance.get(textureSheet);
+    private Object onRenderParticles(final Map<ParticleTextureSheet, Queue<Particle>> instance, final Object o) {
+        if (!(o instanceof final ParticleTextureSheet textureSheet)) return null;
+        final Queue<Particle> particleBatch = instance.get(textureSheet);
         if (particleBatch == null) return null;
         return EventUtil.postCancellable(new PreParticleBatchRenderEvent(textureSheet, particleBatch)) ? null : particleBatch;
     }
