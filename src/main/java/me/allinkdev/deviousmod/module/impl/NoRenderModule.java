@@ -23,7 +23,7 @@ import net.minecraft.client.render.RenderLayer;
 import net.minecraft.entity.ItemEntity;
 
 @Experimental(value = "Recently added. Use with caution.", hide = false)
-public class NoRenderModule extends DModule {
+public final class NoRenderModule extends DModule {
     public NoRenderModule(final DModuleManager moduleManager) {
         super(moduleManager);
     }

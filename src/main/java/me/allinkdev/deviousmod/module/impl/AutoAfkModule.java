@@ -9,7 +9,7 @@ import me.allinkdev.deviousmod.module.CommandDependentModule;
 import me.allinkdev.deviousmod.module.DModuleManager;
 import net.lenni0451.lambdaevents.EventHandler;
 
-public class AutoAfkModule extends CommandDependentModule {
+public final class AutoAfkModule extends CommandDependentModule {
     private boolean afkStatus;
     private boolean targetAfk;
 

@@ -12,7 +12,7 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(TextureManager.class)
-public class TextureManagerListener {
+public final class TextureManagerListener {
     @Inject(method = "registerTexture", at = @At("HEAD"))
     private void onRegisterTexture(final Identifier id, final AbstractTexture texture, final CallbackInfo ci) {
         EventUtil.postEvent(new TextureLoadEvent(texture));

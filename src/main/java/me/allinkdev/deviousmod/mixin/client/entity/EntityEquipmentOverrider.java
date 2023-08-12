@@ -19,7 +19,7 @@ import org.spongepowered.asm.mixin.Overwrite;
 import org.spongepowered.asm.mixin.Shadow;
 
 @Mixin(ClientPlayNetworkHandler.class)
-public class EntityEquipmentOverrider {
+public final class EntityEquipmentOverrider {
     @Shadow
     @Final
     private MinecraftClient client;
@@ -33,7 +33,7 @@ public class EntityEquipmentOverrider {
      */
     @Overwrite
     public void onEntityEquipmentUpdate(final EntityEquipmentUpdateS2CPacket packet) {
-        NetworkThreadUtils.forceMainThread(packet, (ClientPlayPacketListener) this, this.client);
+        NetworkThreadUtils.forceMainThread(packet, (ClientPlayPacketListener) (Object) this, this.client);
         final Entity entity = this.world.getEntityById(packet.getId());
 
         if (!(entity instanceof final LivingEntity livingEntity)) return;

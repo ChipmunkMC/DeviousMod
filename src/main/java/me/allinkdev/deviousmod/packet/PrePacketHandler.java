@@ -13,7 +13,7 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.Arrays;
 
-public class PrePacketHandler extends ChannelDuplexHandler {
+public final class PrePacketHandler extends ChannelDuplexHandler {
     @Override
     public void write(final ChannelHandlerContext ctx, final Object msg, final ChannelPromise promise) throws Exception {
         if (msg instanceof final ByteBuf byteBuf) {

@@ -11,7 +11,7 @@ import net.lenni0451.lambdaevents.EventHandler;
 
 import java.util.Arrays;
 
-public class InterceptorModule extends DModule {
+public final class InterceptorModule extends DModule {
     public InterceptorModule(final DModuleManager moduleManager) {
         super(moduleManager);
     }
