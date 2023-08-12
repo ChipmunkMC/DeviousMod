@@ -18,8 +18,8 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 public final class DModuleManager implements ModuleManager {
-    private static final Set<Module> modules = new HashSet<>();
     private static final ModuleLifecycleTransitionEventFactory TRANSITION_EVENT_FACTORY = new ModuleLifecycleTransitionEventFactory();
+    private final Set<Module> modules = new HashSet<>();
     private final DeviousMod deviousMod;
     private final EventManager<?> eventManager;
 
@@ -38,12 +38,12 @@ public final class DModuleManager implements ModuleManager {
                 .filter(m -> m.getExperimentality() != Experimentality.HIDE || (m.getExperimentality() == Experimentality.HIDE && DeviousMod.IS_EXPERIMENTAL))
                 .toList();
 
-        modules.addAll(newModules);
+        this.modules.addAll(newModules);
 
-        DeviousMod.LOGGER.info("Loaded {} modules!", modules.size());
+        DeviousMod.LOGGER.info("Loaded {} modules!", this.modules.size());
         final DKeyBindManager keyBindManager = (DKeyBindManager) this.deviousMod.getKeyBindManager();
 
-        for (final Module module : modules) {
+        for (final Module module : this.modules) {
             initModule(module, keyBindManager);
 
             this.updateModuleState(module, module.getModuleState(), false);
@@ -59,13 +59,13 @@ public final class DModuleManager implements ModuleManager {
     }
 
     public Set<String> getModuleNames() {
-        return modules.stream()
+        return this.modules.stream()
                 .map(Module::getModuleName)
                 .collect(Collectors.toUnmodifiableSet());
     }
 
     private void checkLoaded() {
-        if (modules.isEmpty()) {
+        if (this.modules.isEmpty()) {
             throw new IllegalStateException("Modules not initialised yet!");
         }
     }
@@ -83,13 +83,13 @@ public final class DModuleManager implements ModuleManager {
         module.init();
         this.postLifecycleUpdate(ModuleLifecycle.INITIALIZED, module);
 
-        deviousMod.getEventManager().registerListener(module);
+        this.deviousMod.getEventManager().registerListener(module);
         this.postLifecycleUpdate(ModuleLifecycle.LOADED, module);
     }
 
     @Override
     public void unload(final Module module) {
-        deviousMod.getEventManager().unregisterListener(module);
+        this.deviousMod.getEventManager().unregisterListener(module);
 
         this.postLifecycleUpdate(ModuleLifecycle.UNLOADED, module);
     }
@@ -113,14 +113,14 @@ public final class DModuleManager implements ModuleManager {
     public Set<Module> getModules() {
         this.checkLoaded();
 
-        return Collections.unmodifiableSet(modules);
+        return Collections.unmodifiableSet(this.modules);
     }
 
     @Override
     public Optional<Module> findModule(final CharSequence name) {
         this.checkLoaded();
 
-        return modules.stream()
+        return this.modules.stream()
                 .filter(m -> m.getModuleName().equalsIgnoreCase((String) name))
                 .findFirst();
     }
