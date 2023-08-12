@@ -49,15 +49,7 @@ public final class DModuleManager implements ModuleManager {
             this.updateModuleState(module, module.getModuleState(), false);
         }
     }
-
-    @Deprecated(forRemoval = true)
-    public static Set<String> getModuleNamesStatically() {
-        final DeviousMod deviousMod = DeviousMod.getInstance();
-        final DModuleManager moduleManager = deviousMod.getModuleManager();
-
-        return moduleManager.getModuleNames();
-    }
-
+    
     public static void postLifecycleUpdate(final EventManager<?> eventManager, final ModuleLifecycle to, final Module module) {
         TRANSITION_EVENT_FACTORY.create(module, to, eventManager::broadcastEvent).join();
     }
