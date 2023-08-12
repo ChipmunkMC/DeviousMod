@@ -1,12 +1,12 @@
 package me.allinkdev.deviousmod.module.impl;
 
+import com.github.allinkdev.deviousmod.api.module.settings.ModuleSettings;
 import me.allinkdev.deviousmod.event.effect.ShowStatusEffectIconEvent;
 import me.allinkdev.deviousmod.event.network.packet.impl.PacketS2CEvent;
 import me.allinkdev.deviousmod.event.screen.impl.SetScreenEvent;
 import me.allinkdev.deviousmod.event.self.SelfReducedDebugInfoEvent;
 import me.allinkdev.deviousmod.module.DModule;
 import me.allinkdev.deviousmod.module.DModuleManager;
-import me.allinkdev.deviousmod.module.DModuleSettings;
 import net.lenni0451.lambdaevents.EventHandler;
 import net.minecraft.client.gui.screen.CreditsScreen;
 import net.minecraft.client.gui.screen.DemoScreen;
@@ -20,6 +20,10 @@ import net.minecraft.network.packet.s2c.play.OpenWrittenBookS2CPacket;
 public final class AntiAnnoyingModule extends DModule {
     private long lastClose;
     private long lastOpen;
+
+    public AntiAnnoyingModule(final DModuleManager moduleManager) {
+        super(moduleManager);
+    }
 
     private void reset() {
         this.lastClose = 0;
@@ -36,12 +40,8 @@ public final class AntiAnnoyingModule extends DModule {
         this.reset();
     }
 
-    public AntiAnnoyingModule(final DModuleManager moduleManager) {
-        super(moduleManager);
-    }
-
     @Override
-    protected DModuleSettings.Builder getSettingsBuilder() {
+    protected ModuleSettings.Builder getSettingsBuilder() {
         return super.getSettingsBuilder()
                 .addField("demo", "No Demo Screen", "Prevents the server from opening the demo screen.", true)
                 .addField("end", "No End Screen", "Prevents the server from opening the end screen.", true)

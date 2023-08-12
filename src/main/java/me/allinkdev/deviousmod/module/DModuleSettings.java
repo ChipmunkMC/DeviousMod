@@ -37,6 +37,16 @@ public final class DModuleSettings extends AbstractDataStore implements ModuleSe
     }
 
     @Override
+    public boolean doesPathExist() {
+        return Files.exists(this.path);
+    }
+
+    @Override
+    public void createDirectories() throws IOException {
+        Files.createDirectories(this.path.getParent());
+    }
+
+    @Override
     public void save() throws IOException {
         final JsonObject jsonObject = new JsonObject();
         this.settings.forEach((key, value) -> this.addToJsonObject(jsonObject, key, value));
@@ -119,7 +129,7 @@ public final class DModuleSettings extends AbstractDataStore implements ModuleSe
         return this.getKeys().size() > 1; // We always have one key for the "enabled" setting.
     }
 
-    public static final class Builder {
+    public static final class Builder implements ModuleSettings.Builder {
         private final Map<String, DSetting<Object>> objectMap = new Object2ObjectArrayMap<>();
         private @Nullable Path path;
 
@@ -132,17 +142,20 @@ public final class DModuleSettings extends AbstractDataStore implements ModuleSe
             return new DSetting<>(name, friendlyName, description, defaultValue);
         }
 
+        @Override
         public Builder addField(final @NotNull String name, final @NotNull String friendlyName, final @NotNull String description, final @NotNull Object defaultValue) {
             this.throwIfExists(name);
             this.objectMap.put(name, this.getAsSetting(defaultValue, name, friendlyName, description, defaultValue.getClass()));
             return this;
         }
 
+        @Override
         public Builder setPath(final @NotNull Path path) {
             this.path = path;
             return this;
         }
 
+        @Override
         public DModuleSettings build() {
             if (this.path == null) throw new IllegalArgumentException("Tried to construct a module settings instance without first setting a path!");
             return new DModuleSettings(this.path, this.objectMap);

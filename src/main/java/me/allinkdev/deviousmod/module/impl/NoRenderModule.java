@@ -2,6 +2,7 @@ package me.allinkdev.deviousmod.module.impl;
 
 import com.github.allinkdev.deviousmod.api.event.Cancellable;
 import com.github.allinkdev.deviousmod.api.experiments.Experimental;
+import com.github.allinkdev.deviousmod.api.module.settings.ModuleSettings;
 import me.allinkdev.deviousmod.event.render.block.PreBeaconBeamRenderEvent;
 import me.allinkdev.deviousmod.event.render.block.PreBlockEntityRenderEvent;
 import me.allinkdev.deviousmod.event.render.block.PreUncullableBlockEntityRenderEvent;
@@ -16,7 +17,6 @@ import me.allinkdev.deviousmod.event.render.world.PreStarRenderEvent;
 import me.allinkdev.deviousmod.event.render.world.PreWeatherRenderEvent;
 import me.allinkdev.deviousmod.module.DModule;
 import me.allinkdev.deviousmod.module.DModuleManager;
-import me.allinkdev.deviousmod.module.DModuleSettings;
 import net.fabricmc.loader.api.FabricLoader;
 import net.lenni0451.lambdaevents.EventHandler;
 import net.minecraft.client.render.RenderLayer;
@@ -44,8 +44,8 @@ public class NoRenderModule extends DModule {
     }
 
     @Override
-    protected DModuleSettings.Builder getSettingsBuilder() {
-        final DModuleSettings.Builder moduleSettings = super.getSettingsBuilder()
+    protected ModuleSettings.Builder getSettingsBuilder() {
+        final ModuleSettings.Builder moduleSettings = super.getSettingsBuilder()
                 .addField("obfuscation", "No Obfuscation", "Prevents obfuscated glyph rendering.", true)
                 .addField("glyphs", "No Glyphs", "Disables glyph rendering.", false)
                 .addField("entities", "No Entities", "Disables entity rendering.", false)

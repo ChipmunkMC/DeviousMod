@@ -5,6 +5,7 @@ import com.github.allinkdev.deviousmod.api.managers.EventManager;
 import com.github.allinkdev.deviousmod.api.managers.ModuleManager;
 import com.github.allinkdev.deviousmod.api.module.Module;
 import com.github.allinkdev.deviousmod.api.module.ModuleLifecycle;
+import com.github.allinkdev.deviousmod.api.module.settings.ModuleSettings;
 import com.github.allinkdev.reflector.Reflector;
 import me.allinkdev.deviousmod.DeviousMod;
 import me.allinkdev.deviousmod.event.api.factory.module.ModuleLifecycleTransitionEventFactory;
@@ -12,6 +13,7 @@ import me.allinkdev.deviousmod.event.api.module.ModuleManagerInitializeEventImpl
 import me.allinkdev.deviousmod.keybind.DKeyBindManager;
 
 import java.util.*;
+import java.util.function.Supplier;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -29,10 +31,10 @@ public final class DModuleManager implements ModuleManager {
         eventManager.broadcastEvent(event);
 
         final List<Module> newModules = Stream.concat(Reflector.createNew(DModule.class)
-                .allSubClassesInSubPackage("impl")
-                .map(Reflector::createNew)
-                .map(r -> r.create(this))
-                .map(Optional::orElseThrow), event.getNewModules().stream())
+                        .allSubClassesInSubPackage("impl")
+                        .map(Reflector::createNew)
+                        .map(r -> r.create(this))
+                        .map(Optional::orElseThrow), event.getNewModules().stream())
                 .filter(m -> m.getExperimentality() != Experimentality.HIDE || (m.getExperimentality() == Experimentality.HIDE && DeviousMod.IS_EXPERIMENTAL))
                 .toList();
 
@@ -129,6 +131,11 @@ public final class DModuleManager implements ModuleManager {
         return modules.stream()
                 .filter(m -> m.getModuleName().equalsIgnoreCase((String) name))
                 .findFirst();
+    }
+
+    @Override
+    public Supplier<ModuleSettings.Builder> getModuleSettingsBuilderSupplier() {
+        return DModuleSettings::builder;
     }
 
     public DeviousMod getDeviousMod() {

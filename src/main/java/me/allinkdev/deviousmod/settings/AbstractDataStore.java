@@ -21,14 +21,6 @@ public abstract class AbstractDataStore {
         this.path = path.isAbsolute() ? path : BASE_PATH.resolve(path);
     }
 
-    public boolean doesPathExist() {
-        return Files.exists(this.path);
-    }
-
-    public void createDirectories() throws IOException {
-        Files.createDirectories(this.path.getParent());
-    }
-
     public void delete() throws IOException {
         Files.deleteIfExists(this.path);
     }

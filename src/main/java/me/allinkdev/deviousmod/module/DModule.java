@@ -11,19 +11,16 @@ import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.io.UncheckedIOException;
-import java.nio.file.Path;
 import java.util.List;
 
 public abstract class DModule extends Module {
     protected final Logger logger = LoggerFactory.getLogger("Devious Mod/" + this.getClass().getSimpleName());
     protected final DeviousMod deviousMod;
     protected final MinecraftClient client = DeviousMod.CLIENT;
-    protected volatile DModuleSettings settings;
 
     protected DModule(final DModuleManager moduleManager) {
-        super();
+        super(moduleManager);
         this.deviousMod = moduleManager.getDeviousMod();
-        this.settings = this.getSettingsBuilder().build();
 
         if (!this.settings.doesPathExist()) {
             try {
@@ -51,12 +48,7 @@ public abstract class DModule extends Module {
         return state ? Component.text("enabled", NamedTextColor.GREEN) : Component.text("disabled", NamedTextColor.RED);
     }
 
-    public void init() {}
-
-    protected DModuleSettings.Builder getSettingsBuilder() {
-        return new DModuleSettings.Builder()
-                .setPath(Path.of("modules", this.getModuleName().toLowerCase() + ".json"))
-                .addField("enabled", "", "", false);
+    public void init() {
     }
 
     @Override

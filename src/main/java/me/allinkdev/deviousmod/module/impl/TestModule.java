@@ -1,12 +1,12 @@
 package me.allinkdev.deviousmod.module.impl;
 
 import com.github.allinkdev.deviousmod.api.experiments.Experimental;
+import com.github.allinkdev.deviousmod.api.module.settings.ModuleSettings;
 import me.allinkdev.deviousmod.DeviousMod;
 import me.allinkdev.deviousmod.event.network.packet.impl.PacketS2CEvent;
 import me.allinkdev.deviousmod.event.screen.impl.InitScreenEvent;
 import me.allinkdev.deviousmod.module.DModule;
 import me.allinkdev.deviousmod.module.DModuleManager;
-import me.allinkdev.deviousmod.module.DModuleSettings;
 import net.lenni0451.lambdaevents.EventHandler;
 import net.minecraft.client.gui.widget.PressableTextWidget;
 import net.minecraft.network.message.*;
@@ -40,7 +40,7 @@ public final class TestModule extends DModule {
     }
 
     @Override
-    protected DModuleSettings.Builder getSettingsBuilder() {
+    protected ModuleSettings.Builder getSettingsBuilder() {
         return super.getSettingsBuilder()
                 .addField("test_field", "Test Field", "Testy westy :3", true);
     }

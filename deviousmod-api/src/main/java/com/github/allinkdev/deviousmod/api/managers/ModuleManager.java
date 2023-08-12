@@ -1,9 +1,11 @@
 package com.github.allinkdev.deviousmod.api.managers;
 
 import com.github.allinkdev.deviousmod.api.module.Module;
+import com.github.allinkdev.deviousmod.api.module.settings.ModuleSettings;
 
 import java.util.Optional;
 import java.util.Set;
+import java.util.function.Supplier;
 
 /**
  * Class for storing &amp; loading modules
@@ -40,4 +42,9 @@ public interface ModuleManager {
      * @return an {@link Optional<Module>} that could contain the found module
      */
     Optional<Module> findModule(final CharSequence name);
+
+    /**
+     * @return a function that supplies new module settings builder instances
+     */
+    Supplier<ModuleSettings.Builder> getModuleSettingsBuilderSupplier();
 }

@@ -1,6 +1,7 @@
 package com.github.allinkdev.deviousmod.api.module.settings;
 
 import java.io.IOException;
+import java.nio.file.Path;
 import java.util.Set;
 
 /**
@@ -47,4 +48,61 @@ public interface ModuleSettings {
      * @return whether there are any adjustable settings for this module
      */
     boolean hasSettings();
+
+    /**
+     * @return if the path the settings target exists
+     */
+    boolean doesPathExist();
+
+    /**
+     * Creates the directories that house the settings target
+     *
+     * @throws IOException if the directory creation failed
+     */
+    void createDirectories() throws IOException;
+
+    /**
+     * Saves the settings to disk
+     *
+     * @throws IOException if saving the settings to disk failed
+     */
+    void save() throws IOException;
+
+    /**
+     * Loads the settings from disk
+     *
+     * @throws IOException if loading the settings from disk failed
+     */
+    void load() throws IOException;
+
+    /**
+     * A class that provides the dynamic specification of {@link ModuleSettings} objects
+     */
+    interface Builder {
+        /**
+         * Adds a field to the builder
+         *
+         * @param name         the name of the field
+         * @param friendlyName the name to show to the user
+         * @param description  the description that will be shown to the user
+         * @param defaultValue the value the setting will default to if no value override is present
+         * @return this builder
+         */
+        Builder addField(final String name, final String friendlyName, final String description, final Object defaultValue);
+
+        /**
+         * Sets the path of the builder
+         *
+         * @param path the new path
+         * @return this builder
+         */
+        Builder setPath(final Path path);
+
+        /**
+         * Builds the builder into a {@link ModuleSettings} implementation
+         *
+         * @return the built {@link ModuleSettings} instance
+         */
+        ModuleSettings build();
+    }
 }

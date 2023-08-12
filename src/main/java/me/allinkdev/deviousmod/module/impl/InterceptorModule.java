@@ -1,12 +1,12 @@
 package me.allinkdev.deviousmod.module.impl;
 
+import com.github.allinkdev.deviousmod.api.module.settings.ModuleSettings;
 import me.allinkdev.deviousmod.DeviousMod;
 import me.allinkdev.deviousmod.event.network.packet.GenericPrePacketEvent;
 import me.allinkdev.deviousmod.event.network.packet.impl.PrePacketC2SEvent;
 import me.allinkdev.deviousmod.event.network.packet.impl.PrePacketS2CEvent;
 import me.allinkdev.deviousmod.module.DModule;
 import me.allinkdev.deviousmod.module.DModuleManager;
-import me.allinkdev.deviousmod.module.DModuleSettings;
 import net.lenni0451.lambdaevents.EventHandler;
 
 import java.util.Arrays;
@@ -27,7 +27,7 @@ public class InterceptorModule extends DModule {
     }
 
     @Override
-    protected DModuleSettings.Builder getSettingsBuilder() {
+    protected ModuleSettings.Builder getSettingsBuilder() {
         return super.getSettingsBuilder()
                 .addField("hex", "Hexadecimal View", "Displays the bytes in hexadecimal", true)
                 .addField("clientside", "Show Clientside", "Displays packets that the client sends to the server.", true)
