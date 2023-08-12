@@ -8,7 +8,7 @@ version = "1.3.0-SNAPSHOT"
 description = "Minecraft-independent Java 8+ API exposing silhouettes of DeviousMod classes"
 java.sourceCompatibility = JavaVersion.VERSION_1_8
 
-val shade: Configuration by configurations.creating
+val require: Configuration by configurations.creating
 
 java {
     withSourcesJar()
@@ -23,20 +23,20 @@ repositories {
 
 dependencies {
     compileOnlyApi("com.mojang:brigadier:${project.property("brigadier_version")}") // This dependency is marked as compile-only as it is expected to be provided in the environment of dependents.
-    shade("net.lenni0451:LambdaEvents:${project.property("lambdaevents_version")}")
+    require("net.lenni0451:LambdaEvents:${project.property("lambdaevents_version")}")
 }
 
 configurations {
-    api { extendsFrom(shade) }
-    implementation { extendsFrom(shade) }
+    api { extendsFrom(require) }
+    implementation { extendsFrom(require) }
 }
 
 tasks {
     jar {
-        dependsOn(shade)
+        dependsOn(require)
         duplicatesStrategy = DuplicatesStrategy.EXCLUDE
 
-        from(shade.map { zipTree(it) })
+        from(require.map { zipTree(it) })
     }
 }
 
