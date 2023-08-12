@@ -1,8 +1,6 @@
 package me.allinkdev.deviousmod.module;
 
-import com.github.allinkdev.deviousmod.api.managers.EventManager;
 import com.github.allinkdev.deviousmod.api.module.Module;
-import com.github.allinkdev.deviousmod.api.module.ModuleLifecycle;
 import com.github.allinkdev.deviousmod.api.module.settings.ModuleSettings;
 import me.allinkdev.deviousmod.DeviousMod;
 import net.kyori.adventure.text.Component;
@@ -20,15 +18,11 @@ public abstract class DModule extends Module {
     protected final Logger logger = LoggerFactory.getLogger("Devious Mod/" + this.getClass().getSimpleName());
     protected final DeviousMod deviousMod;
     protected final MinecraftClient client = DeviousMod.CLIENT;
-    private final DModuleManager moduleManager;
-    private final EventManager<?> eventManager;
     protected volatile DModuleSettings settings;
 
     protected DModule(final DModuleManager moduleManager) {
         super();
-        this.moduleManager = moduleManager;
         this.deviousMod = moduleManager.getDeviousMod();
-        this.eventManager = this.deviousMod.getEventManager();
         this.settings = this.getSettingsBuilder().build();
 
         if (!this.settings.doesPathExist()) {
@@ -57,9 +51,7 @@ public abstract class DModule extends Module {
         return state ? Component.text("enabled", NamedTextColor.GREEN) : Component.text("disabled", NamedTextColor.RED);
     }
 
-    public void init() {
-        DModuleManager.postLifecycleUpdate(this.eventManager, ModuleLifecycle.INITIALIZED, this);
-    }
+    public void init() {}
 
     protected DModuleSettings.Builder getSettingsBuilder() {
         return new DModuleSettings.Builder()
@@ -84,38 +76,16 @@ public abstract class DModule extends Module {
         } catch (IOException e) {
             throw new UncheckedIOException("Failed to write module enabled state", e);
         }
-
-        this.notifyModuleStateUpdate(true);
     }
 
-    public void notifyModuleStateUpdate(final boolean shouldBroadcast) {
-        final boolean state = this.getModuleState();
-
-        if (state) {
-            this.onEnable();
-            moduleManager.load(this);
-            DModuleManager.postLifecycleUpdate(this.eventManager, ModuleLifecycle.ENABLED, this);
-        } else {
-            this.onDisable();
-            moduleManager.unload(this);
-            DModuleManager.postLifecycleUpdate(this.eventManager, ModuleLifecycle.DISABLED, this);
-        }
-
-        if (!shouldBroadcast) return;
+    public void notifyModuleStateUpdate(final boolean newState) {
         final String moduleName = this.getModuleName();
         final Component feedback = Component.text(moduleName)
                 .append(Component.text(" is now "))
-                .append(getStatusComponent(state))
+                .append(getStatusComponent(newState))
                 .append(Component.text("."));
 
         deviousMod.sendMessage(feedback);
-
-    }
-
-    public void toggle() {
-        final boolean currentState = this.getModuleState();
-
-        this.setModuleState(!currentState);
     }
 
     protected void sendMessage(final Component component) {

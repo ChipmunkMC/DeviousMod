@@ -44,6 +44,13 @@ public abstract class Module extends GenericLifecycleTracker<ModuleLifecycle> im
     public abstract boolean getModuleState();
 
     /**
+     * Notifies the client about changes to this module's state.
+     *
+     * @param newState The new toggle state of the module object
+     */
+    public abstract void notifyModuleStateUpdate(final boolean newState);
+
+    /**
      * Sets the toggle state of the module object to a boolean value.
      *
      * @param newState The new toggle state of the module object
@@ -54,11 +61,6 @@ public abstract class Module extends GenericLifecycleTracker<ModuleLifecycle> im
      * Initializes the module. Should be called on world initialization &amp; module enable.
      */
     public abstract void init();
-
-    /**
-     * Inverts the module object's toggle state.
-     */
-    public abstract void toggle();
 
     /**
      * Always invoked when the module object's toggle state is set to "true".

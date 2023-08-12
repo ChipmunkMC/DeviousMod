@@ -42,4 +42,9 @@ public interface ModuleSettings {
      * @return an unmodifiable set containing all the registered keys
      */
     Set<String> getKeys();
+
+    /**
+     * @return whether there are any adjustable settings for this module
+     */
+    boolean hasSettings();
 }

@@ -51,9 +51,7 @@ public final class ClickGuiLayer extends AbstractImGuiLayer {
             categoryModuleMap.put(category, moduleSet);
         }
 
-        final boolean hasSettings = module.getSettings().getKeys().size() > 1;
-
-        if (!hasSettings) {
+        if (!module.getSettings().hasSettings()) {
             return;
         }
 
@@ -175,11 +173,15 @@ public final class ClickGuiLayer extends AbstractImGuiLayer {
 
     @EventHandler
     public void onTick(final ClientTickEndEvent event) {
+        if (this.deviousMod == null) {
+            throw new IllegalStateException("DeviousMod somehow null!");
+        }
+
         if (this.moduleToggleMap.isEmpty()) {
             return;
         }
 
-        this.moduleToggleMap.forEach(Module::setModuleState);
+        this.moduleToggleMap.forEach((module, newState) -> this.deviousMod.getModuleManager().updateModuleState(module, newState, true));
         this.moduleToggleMap.clear();
     }
 }

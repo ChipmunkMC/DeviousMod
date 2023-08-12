@@ -32,10 +32,11 @@ public final class SettingsWidget extends AbstractImGuiLayer {
                 final Setting<?> value = settings.getSetting(key, settingClass);
 
                 if (value.getValue() instanceof final Boolean bool) {
-                    final boolean clicked = ImGui.checkbox(value.getFriendlyName(), bool);
+                    final String name = value.getFriendlyName() != null ? value.getFriendlyName() : value.getName();
+                    final boolean clicked = ImGui.checkbox(name, bool);
                     final boolean hovered = ImGui.isItemHovered();
 
-                    if (hovered) {
+                    if (hovered && value.getDescription() != null) {
                         ImGui.beginTooltip();
                         ImGui.text(value.getDescription());
                         ImGui.endTooltip();

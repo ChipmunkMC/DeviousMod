@@ -45,7 +45,7 @@ public final class DModuleSettings extends AbstractDataStore implements ModuleSe
     }
 
     @Override
-    protected void load(final JsonElement jsonElement) throws IOException {
+    protected void load(final JsonElement jsonElement) {
         if (!jsonElement.isJsonObject()) {
             throw new IllegalArgumentException("Found unexpected non-JSON object in module settings!");
         }
@@ -112,6 +112,11 @@ public final class DModuleSettings extends AbstractDataStore implements ModuleSe
     @Override
     public Set<String> getKeys() {
         return Collections.unmodifiableSet(this.settings.keySet());
+    }
+
+    @Override
+    public boolean hasSettings() {
+        return this.getKeys().size() > 1; // We always have one key for the "enabled" setting.
     }
 
     public static final class Builder {

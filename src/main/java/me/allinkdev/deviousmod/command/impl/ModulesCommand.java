@@ -58,7 +58,7 @@ public final class ModulesCommand extends DCommand {
             throw moduleAlreadyDisabled;
         }
 
-        module.setModuleState(newState);
+        this.deviousMod.getModuleManager().updateModuleState(module, !state, true);
     }
 
     private Component constructModuleListStatus(final Module module) {
@@ -163,7 +163,7 @@ public final class ModulesCommand extends DCommand {
 
     @Override
     public LiteralArgumentBuilder<FabricClientCommandSource> getNode() {
-        final ModuleArgumentType type = ModuleArgumentType.getType();
+        final ModuleArgumentType type = ModuleArgumentType.getType(moduleManager);
 
         return ClientCommandManager.literal("modules")
                 .then(ClientCommandManager.literal("enable")

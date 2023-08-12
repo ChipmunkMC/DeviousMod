@@ -18,6 +18,7 @@ public final class DEventManager implements EventManager<LambdaManager> {
 
     public DEventManager() {
         this.lambdaManager.setRegisterSuperHandler(true);
+        this.lambdaManager.setAlwaysCallParents(true);
     }
 
     @Override

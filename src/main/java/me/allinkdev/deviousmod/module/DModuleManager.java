@@ -8,13 +8,15 @@ import com.github.allinkdev.deviousmod.api.module.ModuleLifecycle;
 import com.github.allinkdev.reflector.Reflector;
 import me.allinkdev.deviousmod.DeviousMod;
 import me.allinkdev.deviousmod.event.api.factory.module.ModuleLifecycleTransitionEventFactory;
+import me.allinkdev.deviousmod.event.api.module.ModuleManagerInitializeEventImpl;
 import me.allinkdev.deviousmod.keybind.DKeyBindManager;
 
 import java.util.*;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public final class DModuleManager implements ModuleManager {
-    private static final Set<DModule> modules = new HashSet<>();
+    private static final Set<Module> modules = new HashSet<>();
     private static final ModuleLifecycleTransitionEventFactory TRANSITION_EVENT_FACTORY = new ModuleLifecycleTransitionEventFactory();
     private final DeviousMod deviousMod;
     private final EventManager<?> eventManager;
@@ -22,13 +24,15 @@ public final class DModuleManager implements ModuleManager {
     public DModuleManager(final DeviousMod deviousMod) {
         this.deviousMod = deviousMod;
         this.eventManager = deviousMod.getEventManager();
-        this.eventManager.registerListener(this);
 
-        final List<? extends DModule> newModules = Reflector.createNew(DModule.class)
+        final ModuleManagerInitializeEventImpl event = new ModuleManagerInitializeEventImpl();
+        eventManager.broadcastEvent(event);
+
+        final List<Module> newModules = Stream.concat(Reflector.createNew(DModule.class)
                 .allSubClassesInSubPackage("impl")
                 .map(Reflector::createNew)
                 .map(r -> r.create(this))
-                .map(Optional::orElseThrow)
+                .map(Optional::orElseThrow), event.getNewModules().stream())
                 .filter(m -> m.getExperimentality() != Experimentality.HIDE || (m.getExperimentality() == Experimentality.HIDE && DeviousMod.IS_EXPERIMENTAL))
                 .toList();
 
@@ -37,10 +41,10 @@ public final class DModuleManager implements ModuleManager {
         DeviousMod.LOGGER.info("Loaded {} modules!", modules.size());
         final DKeyBindManager keyBindManager = (DKeyBindManager) this.deviousMod.getKeyBindManager();
 
-        for (final DModule module : modules) {
+        for (final Module module : modules) {
             initModule(module, keyBindManager);
 
-            module.notifyModuleStateUpdate(false);
+            this.updateModuleState(module, module.getModuleState(), false);
         }
     }
 
@@ -62,7 +66,7 @@ public final class DModuleManager implements ModuleManager {
 
     public Set<String> getModuleNames() {
         return modules.stream()
-                .map(DModule::getModuleName)
+                .map(Module::getModuleName)
                 .collect(Collectors.toUnmodifiableSet());
     }
 
@@ -72,7 +76,7 @@ public final class DModuleManager implements ModuleManager {
         }
     }
 
-    public void initModule(final DModule module, final DKeyBindManager keyBindManager) {
+    public void initModule(final Module module, final DKeyBindManager keyBindManager) {
         final GenericModuleKeyBind genericModuleKeyBind = new GenericModuleKeyBind(this.deviousMod, module);
 
         keyBindManager.register(genericModuleKeyBind);
@@ -83,8 +87,9 @@ public final class DModuleManager implements ModuleManager {
     @Override
     public void load(final Module module) {
         module.init();
-        deviousMod.getEventManager().registerListener(module);
+        this.postLifecycleUpdate(ModuleLifecycle.INITIALIZED, module);
 
+        deviousMod.getEventManager().registerListener(module);
         this.postLifecycleUpdate(ModuleLifecycle.LOADED, module);
     }
 
@@ -93,6 +98,21 @@ public final class DModuleManager implements ModuleManager {
         deviousMod.getEventManager().unregisterListener(module);
 
         this.postLifecycleUpdate(ModuleLifecycle.UNLOADED, module);
+    }
+
+    public void updateModuleState(final Module module, final boolean newState, final boolean shouldBroadcast) {
+        module.setModuleState(newState);
+        if (shouldBroadcast) module.notifyModuleStateUpdate(newState);
+
+        if (newState) {
+            module.onEnable();
+            this.load(module);
+            DModuleManager.postLifecycleUpdate(this.eventManager, ModuleLifecycle.ENABLED, module);
+        } else {
+            module.onDisable();
+            this.unload(module);
+            DModuleManager.postLifecycleUpdate(this.eventManager, ModuleLifecycle.DISABLED, module);
+        }
     }
 
     @Override
@@ -108,7 +128,6 @@ public final class DModuleManager implements ModuleManager {
 
         return modules.stream()
                 .filter(m -> m.getModuleName().equalsIgnoreCase((String) name))
-                .map(m -> (Module) m)
                 .findFirst();
     }
 
