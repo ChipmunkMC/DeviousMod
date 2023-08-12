@@ -87,12 +87,13 @@ public final class ClickGuiLayer extends AbstractImGuiLayer {
 
         if (experimental) {
             ImGui.pushStyleColor(ImGuiCol.Header, 100, 10, 14, 255);
-            ImGui.pushStyleColor(ImGuiCol.HeaderHovered, 255, 22, 48, 255);
+            ImGui.pushStyleColor(ImGuiCol.HeaderHovered, 255, 43, 55, 255);
+            ImGui.pushStyleColor(ImGuiCol.HeaderActive, 150, 22, 48, 255);
         }
 
         final boolean isOpen = ImGui.treeNodeEx(moduleName + suffix, flags);
         if (experimental) {
-            ImGui.popStyleColor(2);
+            ImGui.popStyleColor(3);
         }
         final boolean clicked;
 
