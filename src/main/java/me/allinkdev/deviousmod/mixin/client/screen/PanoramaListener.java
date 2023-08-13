@@ -28,7 +28,7 @@ public final class PanoramaListener {
 
         if (directory.equals(PANORAMA_IDENTIFIER)) return PANORAMA_CUBE_MAP;
         final CubeMapRenderer cubeMapRenderer = new CubeMapRenderer(directory);
-        cubeMapRenderer.loadTexturesAsync(DeviousMod.CLIENT.getTextureManager(), Executors.newSingleThreadExecutor());
+        cubeMapRenderer.loadTexturesAsync(DeviousMod.CLIENT.getTextureManager(), Executors.newCachedThreadPool());
         return cubeMapRenderer;
     }
 }
