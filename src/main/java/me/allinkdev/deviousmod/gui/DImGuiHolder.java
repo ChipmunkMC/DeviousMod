@@ -16,7 +16,7 @@ import java.util.Collections;
 import java.util.List;
 
 public final class DImGuiHolder implements ImGuiHolder {
-    private final List<ImGuiLayer> LAYERS = Collections.synchronizedList(new ArrayList<>());
+    private final List<ImGuiLayer> layers = Collections.synchronizedList(new ArrayList<>());
     private ImGuiImplGl3 imGuiImplGl3;
     private ImGuiImplGlfw imGuiImplGlfw;
 
@@ -50,28 +50,25 @@ public final class DImGuiHolder implements ImGuiHolder {
         }
 
         fontConfig.destroy();
-
-        imGuiImplGlfw.init(handle, true);
-        imGuiImplGl3.init();
-
+        this.imGuiImplGlfw.init(handle, true);
+        this.imGuiImplGl3.init();
     }
 
     public ImGuiImplGl3 getImGuiImplGl3() {
-        return imGuiImplGl3;
+        return this.imGuiImplGl3;
     }
 
     public ImGuiImplGlfw getImGuiImplGlfw() {
-        return imGuiImplGlfw;
+        return this.imGuiImplGlfw;
     }
 
     public void addLayer(final ImGuiLayer layer) {
         layer.layerInit();
-
-        LAYERS.add(layer);
+        this.layers.add(layer);
     }
 
     public void removeLayer(final ImGuiLayer layer) {
-        LAYERS.remove(layer);
+        this.layers.remove(layer);
     }
 
     @Override
@@ -80,7 +77,7 @@ public final class DImGuiHolder implements ImGuiHolder {
         ImGui.newFrame();
         this.render();
         ImGui.render();
-        imGuiImplGl3.renderDrawData(ImGui.getDrawData());
+        this.imGuiImplGl3.renderDrawData(ImGui.getDrawData());
     }
 
     @Override
@@ -89,8 +86,8 @@ public final class DImGuiHolder implements ImGuiHolder {
     }
 
     public void create() {
-        imGuiImplGlfw = new ImGuiImplGlfw();
-        imGuiImplGl3 = new ImGuiImplGl3();
+        this.imGuiImplGlfw = new ImGuiImplGlfw();
+        this.imGuiImplGl3 = new ImGuiImplGl3();
     }
 
     public void process(final ImGuiLayer layer) {
@@ -103,6 +100,6 @@ public final class DImGuiHolder implements ImGuiHolder {
     }
 
     public void render() {
-        LAYERS.forEach(this::process);
+        this.layers.forEach(this::process);
     }
 }
