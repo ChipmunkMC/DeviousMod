@@ -21,7 +21,6 @@
     "client.network.CommandInterceptor",
     "client.network.PacketSendAndReceive",
     "client.network.TimeListener",
-    "client.network.packet.PacketSendAndReceive",
     "client.particle.ParticleRenderListener",
     "client.render.block.BeaconRenderListener",
     "client.render.glyph.DrawerMixin",
@@ -64,7 +63,8 @@
     "patches.text.DoubleArrayFix",
     "patches.text.MapIconTextSizeLimiter",
     "patches.text.NullComponentFallback",
-    "patches.text.PlaceholderLimiter"
+    "patches.text.PlaceholderLimiter",
+    "patches.text.StackOverflowFix"
   ],
   "mixinPriority": 2000,
   "priority": 2000
