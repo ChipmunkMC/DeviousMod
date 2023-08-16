@@ -11,6 +11,5 @@
         </module>
         <module name="FinalClass"/>
         <module name="FinalParameters"/>
-	<module name="SuppressionCommentFilter"/>
     </module>
 </module>
