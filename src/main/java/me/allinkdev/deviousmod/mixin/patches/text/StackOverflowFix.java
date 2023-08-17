@@ -23,16 +23,23 @@ public final class StackOverflowFix {
     @Unique
     private boolean isOver(final JsonElement element, final AtomicInteger totalDepth) {
         if (element instanceof JsonPrimitive) return false;
-        if (totalDepth.incrementAndGet() > 127) return true;
+        if (totalDepth.get() > 127) return true;
         if (element instanceof final JsonArray jsonArray) {
+            totalDepth.incrementAndGet();
             for (final JsonElement jsonElement : jsonArray) if (isOver(jsonElement, totalDepth)) return true;
         } else if (element instanceof final JsonObject jsonObject) {
             final JsonElement with;
             final JsonElement extra;
             if (jsonObject.has("text") && (extra = jsonObject.get("extra")) instanceof final JsonArray extraArr) {
-                for (final JsonElement jsonElement : extraArr) if (isOver(jsonElement, totalDepth)) return true;
+                totalDepth.incrementAndGet();
+                for (final JsonElement jsonElement : extraArr) {
+                    if (isOver(jsonElement, totalDepth)) return true;
+                }
             } else if (jsonObject.has("translate") && (with = jsonObject.get("with")) instanceof final JsonArray withArr) {
-                for (final JsonElement jsonElement : withArr) if (isOver(jsonElement, totalDepth)) return true;
+                totalDepth.incrementAndGet();
+                for (final JsonElement jsonElement : withArr) {
+                    if (isOver(jsonElement, totalDepth)) return true;
+                }
             }
         }
         return false;
