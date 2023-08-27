@@ -4,10 +4,10 @@ This is the premiere creative utility client.
 
 ## Features
 
-- Crash prevention (decorated pot crash, double text array crash, null component exception)
+- Crash prevention (decorated pot crash, double text array crash, null component exception, component stack overflow exploit)
 - Freeze prevention (particle freeze, translation placeholder freeze, area effect cloud freeze, map icon count/name
   length freeze)
-- Clientside/serverside kick prevention (tell kick, completion kick)
+- Clientside/serverside kick prevention (completion kick)
 - Higher packet priority
 - Watchdog (currently only watches the main thread)
 - Chat tweaking (infinite chat, no "chat normalization")
@@ -15,17 +15,31 @@ This is the premiere creative utility client.
 
 ## Modules
 
+- AntiAnnoying (Prevents common annoyances)
+- AntiIcu (Prevents you from being icu controlled)
+- AntiMute (Prevents you from being muted)
+- AutoAfk (Automatically un/marks you as AFK when you un/focus the window)
+- AutoCommandSpy (Automatically re/enables CommandSpy)
+- AutoOp (Automatically re-ops you when you lose operator status)
+- AutoVanish (Automatically maintains vanish status)
+- ClientsideBookViewer (Views books fully clientside to evade TotalFreedomMod restrictions on the reading of books)
 - ClientsideInventory (does not inform the server of any updates you make to your inventory unless necessary and ignores
   any updates it may make) (creative only)
-- ItemLogger (logs the NBT of items that other players hold)
 - CommandPlaceholders (executes every command suggestion)
 - ConnectionErrorCanceller (ignores connection errors)
-- Logos (just a watermark)
+- DiscardScreenCloses (Discards screen close packets sent by the server)
+- GamemodeEnforcer (Enforces the player's requested gamemode)
+- Interceptor (Prints the raw bytes received by/sent to the client in console output)
+- ItemLogger (logs the NBT of items that other players hold)
+- KaboomPanoramas (Replaces the vanilla panoramas with those of Kaboom clones)
+- Logos (Displays a DeviousMod watermark in the top left of your screen)
 - Monitor (displays gamemode changes & server lag status)
+- MovementEnforcer (Prevents you from being teleported)
 - NoItemUseCooldown (removes the cooldown between using items)
-- TrueSight (allows you to see invisible entities)
+- NoRender (Disables rendering of certain game aspects)
 - OurWorldInNBT (experimental module which allows you to see the NBT of tile entities) (requires operator)
-
+- TrueSight (allows you to see invisible entities)
+  
 # Commands
 
 - /bval - Use the hashing system of a Kaboom bot.
@@ -34,12 +48,14 @@ This is the premiere creative utility client.
 - /keyring - Manage your Kaboom bot keys.
 - /getnbt - Displays the NBT of any items in your hand/offhand(s)
 - /prettynbt - Pretty prints a given NBT tag
+- /modules - Displays all modules and allows you to toggle them
+- /panorama - Captures a panorma of the current world/view
 
 ## Building
 
-No builds are currently provided for your convenience. Please execute the following command after cloning this
-repository, in the same directory as the cloned repository, depending on your operating
-system, after configuring your environment variables to use a Java 17 JDK.
+Please execute the following command after cloning this repository, in the same directory 
+as the cloned repository, depending on your operating  system, after configuring your 
+environment variables to use a Java 17 JDK.
 
 ### Windows
 
