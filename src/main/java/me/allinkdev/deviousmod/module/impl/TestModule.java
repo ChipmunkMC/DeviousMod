@@ -7,6 +7,7 @@ import me.allinkdev.deviousmod.event.network.packet.impl.PacketS2CEvent;
 import me.allinkdev.deviousmod.event.screen.impl.InitScreenEvent;
 import me.allinkdev.deviousmod.module.DModule;
 import me.allinkdev.deviousmod.module.DModuleManager;
+import net.kyori.adventure.text.Component;
 import net.lenni0451.lambdaevents.EventHandler;
 import net.minecraft.client.gui.widget.PressableTextWidget;
 import net.minecraft.network.message.*;
@@ -42,7 +43,20 @@ public final class TestModule extends DModule {
     @Override
     protected ModuleSettings.Builder getSettingsBuilder() {
         return super.getSettingsBuilder()
-                .addField("test_field", "Test Field", "Testy westy :3", true);
+                .addField("test_field", "Test Field", "Testy westy :3", true)
+                .addField("test_str", "Test String", "mrrow", "abc def")
+                .addField("test_str2", "Test String Two", "woah", "will it work");
+    }
+
+    @Override
+    public void onEnable() {
+        super.onEnable();
+
+        if (this.client.inGameHud == null) return;
+        deviousMod.sendMessage(Component.text("values: "
+                + this.settings.getSetting("test_str", String.class).getValue()
+                + ", "
+                + this.settings.getSetting("test_str2", String.class).getValue()));
     }
 
     @EventHandler
