@@ -34,6 +34,7 @@ public final class SettingsWidget extends AbstractImGuiLayer {
                 final Class<?> settingClass = settings.getValueClass(key);
                 final Setting<?> value = settings.getSetting(key, settingClass);
                 final String name = value.getFriendlyName() != null ? value.getFriendlyName() : value.getName();
+
                 if (value.getValue() instanceof final Boolean bool) {
                     final boolean clicked = ImGui.checkbox(name, bool);
 
@@ -45,15 +46,12 @@ public final class SettingsWidget extends AbstractImGuiLayer {
                     if (ImGui.inputText(name, IMSTRING_TEMP)) {
                         settings.writeValue(key, IMSTRING_TEMP.get(), (Class<? super String>) settingClass);
                     }
+                } else {
+                    value.render(module, settings);
                 }
 
-                final boolean hovered = ImGui.isItemHovered();
-
-                if (hovered && value.getDescription() != null) {
-                    ImGui.beginTooltip();
-                    System.out.println(value.getDescription());
-                    ImGui.text(value.getDescription());
-                    ImGui.endTooltip();
+                if (ImGui.isItemHovered()) {
+                    value.renderDescription(module, settings);
                 }
             } catch (IOException e) {
                 throw new UncheckedIOException("Failed to update value of setting " + key, e);

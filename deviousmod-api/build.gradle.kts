@@ -23,6 +23,7 @@ repositories {
 
 dependencies {
     compileOnlyApi("com.mojang:brigadier:${project.property("brigadier_version")}") // This dependency is marked as compile-only as it is expected to be provided in the environment of dependents.
+    compileOnlyApi("io.github.spair:imgui-java-binding:${project.property("imgui_version")}")
     require("net.lenni0451:LambdaEvents:${project.property("lambdaevents_version")}")
 }
 
