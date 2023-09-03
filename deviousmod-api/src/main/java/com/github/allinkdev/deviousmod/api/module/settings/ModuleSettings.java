@@ -91,6 +91,15 @@ public interface ModuleSettings {
         Builder addField(final String name, final String friendlyName, final String description, final Object defaultValue);
 
         /**
+         * Adds a field to the builder
+         *
+         * @param setting the setting
+         * @param <T>     the value type
+         * @return this builder
+         */
+        <T> Builder addSetting(final Setting<T> setting);
+
+        /**
          * Sets the path of the builder
          *
          * @param path the new path

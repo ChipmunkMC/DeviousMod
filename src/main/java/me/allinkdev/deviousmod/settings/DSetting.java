@@ -49,6 +49,7 @@ public final class DSetting<T> implements Setting<T> {
         return this.value;
     }
 
+    @Override
     public void setValue(final T newValue) {
         this.value = newValue;
     }

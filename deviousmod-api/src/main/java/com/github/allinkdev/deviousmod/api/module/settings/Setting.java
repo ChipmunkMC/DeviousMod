@@ -33,6 +33,13 @@ public interface Setting<T> {
     Class<T> getValueClass();
 
     /**
+     * Set the value for this setting
+     *
+     * @param newValue The new value to set
+     */
+    void setValue(final T newValue);
+
+    /**
      * Renders the setting for the ClickGUI
      *
      * @param module   the module this setting is for

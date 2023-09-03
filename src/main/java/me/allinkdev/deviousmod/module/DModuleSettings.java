@@ -19,9 +19,9 @@ import java.util.Map;
 import java.util.Set;
 
 public final class DModuleSettings extends AbstractDataStore implements ModuleSettings {
-    private final Map<String, DSetting<Object>> settings;
+    private final Map<String, Setting<Object>> settings;
 
-    DModuleSettings(final @NotNull Path path, final Map<String, DSetting<Object>> settings) {
+    DModuleSettings(final @NotNull Path path, final Map<String, Setting<Object>> settings) {
         super(path);
 
         this.settings = settings;
@@ -31,7 +31,7 @@ public final class DModuleSettings extends AbstractDataStore implements ModuleSe
         return new Builder();
     }
 
-    private void addToJsonObject(final JsonObject jsonObject, final String key, final DSetting<?> value) {
+    private void addToJsonObject(final JsonObject jsonObject, final String key, final Setting<?> value) {
         final JsonElement jsonElement = GSON.toJsonTree(value.getValue());
         jsonObject.add(key, jsonElement);
     }
@@ -68,7 +68,7 @@ public final class DModuleSettings extends AbstractDataStore implements ModuleSe
                 continue;
             }
 
-            final DSetting<Object> settingData = this.settings.get(key);
+            final Setting<Object> settingData = this.settings.get(key);
             final Class<?> settingClass = settingData.getValueClass();
             final JsonElement element = jsonObject.get(key);
             final Object asObject = GSON.fromJson(element, settingClass);
@@ -89,7 +89,7 @@ public final class DModuleSettings extends AbstractDataStore implements ModuleSe
     @Override
     @SuppressWarnings("unchecked")
     public <T> Setting<T> getSetting(final String name, final Class<T> clazz) {
-        final DSetting<?> setting = this.settings.get(name);
+        final Setting<?> setting = this.settings.get(name);
 
         if (setting == null) throw new NullPointerException("Tried to read a field that didn't exist: " + name);
         final Class<?> actualClass = setting.getValueClass();
@@ -101,7 +101,7 @@ public final class DModuleSettings extends AbstractDataStore implements ModuleSe
 
     @Override
     public <T> void writeValue(final String name, final T object, final Class<T> clazz) throws IOException {
-        final DSetting<Object> setting = this.settings.get(name);
+        final Setting<Object> setting = this.settings.get(name);
 
         if (setting == null) throw new NullPointerException("Tried to set a field that doesn't exist: " + name);
         final Class<?> actualClass = setting.getValueClass();
@@ -114,7 +114,7 @@ public final class DModuleSettings extends AbstractDataStore implements ModuleSe
 
     @Override
     public Class<?> getValueClass(final String name) {
-        final DSetting<?> setting = this.settings.get(name);
+        final Setting<?> setting = this.settings.get(name);
         if (setting == null) throw new NullPointerException("Tried to query the class of a field that didn't exist: " + name);
         return setting.getValueClass();
     }
@@ -130,7 +130,7 @@ public final class DModuleSettings extends AbstractDataStore implements ModuleSe
     }
 
     public static final class Builder implements ModuleSettings.Builder {
-        private final Map<String, DSetting<Object>> objectMap = new Object2ObjectArrayMap<>();
+        private final Map<String, Setting<Object>> objectMap = new Object2ObjectArrayMap<>();
         private @Nullable Path path;
 
         private void throwIfExists(final String name) {
@@ -146,6 +146,13 @@ public final class DModuleSettings extends AbstractDataStore implements ModuleSe
         public Builder addField(final @NotNull String name, final @NotNull String friendlyName, final @NotNull String description, final @NotNull Object defaultValue) {
             this.throwIfExists(name);
             this.objectMap.put(name, this.getAsSetting(defaultValue, name, friendlyName, description, defaultValue.getClass()));
+            return this;
+        }
+
+        @Override
+        public <T> Builder addSetting(final @NotNull Setting<T> setting) {
+            this.throwIfExists(setting.getName());
+            this.objectMap.put(setting.getName(), (Setting<Object>) setting);
             return this;
         }
 
